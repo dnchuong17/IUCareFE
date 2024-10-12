@@ -82,7 +82,7 @@ const Login = () => {
           </div>
         </div>
         <div className="mt-8 flex justify-center items-center">
-          <p className="font-medium text-base">Don't have an account?</p>
+          <p className="font-medium text-base">Do not have an account?</p>
           <button className="text-blue-500 text-base font-medium ml-2np px-2">
             Sign up
           </button>

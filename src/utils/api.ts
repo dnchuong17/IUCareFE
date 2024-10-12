@@ -17,28 +17,33 @@ export class Api {
     //login nhan 1 doi tuong la LoginRequest
     const { account, password } = loginRequest; //account contains the value of attribute account, password the same
     console.log(account, password);
-    const result1 = await this.axiosObject.post("/auth/patientLogin", {
+    const result1 = await this.axiosObject.post("/auth/doctorLogin", {
       account: account,
       password: password,
     });
-    console.log(result1.data);
+    localStorage.setItem("accessToken", result1.data.access_token);
+    localStorage.setItem("refreshToken", result1.data.refresh_token);
     return result1.data;
   }
 
   async register(registerRequest: RegisterRequest) {
+    try {
+      const { doctorName, address, phone, account, password, department_id } =
+        registerRequest; //account contains the value of attribute account, password the same
+      console.log(doctorName, address, phone, account, password, department_id);
+      const result2 = await this.axiosObject.post("/auth/doctorRegister", {
+        doctorName: doctorName,
+        address: address,
+        phone: phone,
+        account: account,
+        password: password,
+        department_id: department_id,
+      });
+      console.log(result2.data);
+      return result2.data;
+    } catch (error) {
+      console.log(error);
+    }
     //register nhan 1 doi tuong la LoginRequest
-    const { account, password, patientName, address, major, phone } =
-      registerRequest; //account contains the value of attribute account, password the same
-    console.log(account, password, patientName, address, major, phone);
-    const result2 = await this.axiosObject.post("/auth/patientRegister", {
-      account: account,
-      password: password,
-      patientName: patientName,
-      address: address,
-      major: major,
-      phone: phone,
-    });
-    console.log(result2.data);
-    return result2.data;
   }
 }

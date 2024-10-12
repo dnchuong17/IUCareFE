@@ -1,8 +1,8 @@
 export class RegisterRequest {
+  doctorName: string;
+  address: string;
+  phone: string;
   account: string;
   password: string;
-  patientName: string;
-  address: string;
-  major: string;
-  phone: string;
+  department_id: number;
 }

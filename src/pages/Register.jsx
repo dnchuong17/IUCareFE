@@ -4,32 +4,64 @@ import { Api } from "../utils/API";
 import { RegisterRequest } from "../utils/request/registerRequest";
 
 const Register = () => {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
+  const [doctorName, setDoctorName] = useState("");
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
+  const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
-  const [rePassword, setRePassword] = useState("");
+  const [department_id, setDepartment_id] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const api = new Api();
-
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-    console.log(email, username, password, rePassword);
+
+    // if (password !== rePassword) {
+    //   setErrorMessage("Passwords do not match");
+    //   return;
+    // }
+
+    console.log(doctorName, address, phone, account, password, department_id);
     const registerRequest = new RegisterRequest();
-    registerRequest.email = email;
-    registerRequest.account = username;
+    registerRequest.doctorName = doctorName;
+    registerRequest.address = address;
+    registerRequest.phone = phone;
+    registerRequest.account = account;
     registerRequest.password = password;
-    registerRequest.rePassword = rePassword;
-    await api.register(registerRequest);
+    registerRequest.department_id = department_id;
+
+    try {
+      // Sử dụng phương thức POST
+      const result = await api.register(registerRequest);
+      console.log(result);
+      setSuccessMessage("Registration successful!");
+      setErrorMessage("");
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("Registration failed. Please try again.");
+      setSuccessMessage("");
+    }
   };
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-    console.log(email);
+  const handleDoctorNameChange = (event) => {
+    setDoctorName(event.target.value);
+    console.log(doctorName);
   };
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-    console.log(username);
+  const handleAddressChange = (event) => {
+    setAddress(event.target.value);
+    console.log(address);
+  };
+
+  const handlePhoneChange = (event) => {
+    setPhone(event.target.value);
+    console.log(phone);
+  };
+
+  const handleAccountChange = (event) => {
+    setAccount(event.target.value);
+    console.log(account);
   };
 
   const handlePasswordChange = (event) => {
@@ -37,9 +69,9 @@ const Register = () => {
     console.log(password);
   };
 
-  const handleRePasswordChange = (event) => {
-    setRePassword(event.target.value);
-    console.log(rePassword);
+  const handleDepartment_idChange = (event) => {
+    setDepartment_id(event.target.value);
+    console.log(department_id);
   };
 
   return (
@@ -53,28 +85,52 @@ const Register = () => {
             Please enter your details.
           </p>
         </div>
-
-        <form className="mt-8 space-y-4">
+        <form className="mt-8 space-y-4" onSubmit={onSubmitHandler}>
           <div>
-            <label className="text-lg font-medium">Username</label>
+            <label id="doctorName" className="text-lg font-medium">
+              Doctor Name
+            </label>
             <input
-              onChange={handleUsernameChange}
+              type="text"
+              onChange={handleDoctorNameChange}
               className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent"
-              placeholder="Enter your username"
+              placeholder="Enter your name"
               required
             />
           </div>
 
           <div>
-            <label className="text-lg font-medium">Email</label>
+            <label className="text-lg font-medium">Address</label>
             <input
-              onChange={handleEmailChange}
+              onChange={handleAddressChange}
               className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent"
-              placeholder="Enter your email"
-              type="email"
+              placeholder="Enter your address"
+              type="text"
               required
             />
           </div>
+          <div>
+            <label className="text-lg font-medium">Phone Number</label>
+            <input
+              onChange={handlePhoneChange}
+              className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent"
+              placeholder="Enter your phone number"
+              type="number"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-lg font-medium">Account</label>
+            <input
+              onChange={handleAccountChange}
+              className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent"
+              placeholder="Enter your account"
+              type="text"
+              required
+            />
+          </div>
+
           <div>
             <label className="text-lg font-medium">Password</label>
             <input
@@ -87,16 +143,24 @@ const Register = () => {
           </div>
 
           <div>
-            <label className="text-lg font-medium">Re-enter password</label>
+            <label className="text-lg font-medium">Department IDt</label>
             <input
-              onChange={handleRePasswordChange}
+              onChange={handleDepartment_idChange}
               className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent"
-              placeholder="Re-enter your password"
-              type="password"
+              placeholder="Enter your department ID"
+              type="number"
               required
             />
           </div>
         </form>
+        {successMessage && (
+          <div className="mt-4 text-green-500 font-medium">
+            {successMessage}
+          </div>
+        )}
+        {errorMessage && (
+          <div className="mt-4 text-red-500 font-medium">{errorMessage}</div>
+        )}
 
         <div className="mt-8 flex justify-between items-center">
           <div>

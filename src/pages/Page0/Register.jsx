@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { Api } from "../utils/API";
-import { RegisterRequest } from "../utils/request/registerRequest";
+import { Api } from "../../utils/API";
+import { RegisterRequest } from "../../utils/request/registerRequest";
 
 const Register = () => {
   const [doctorName, setDoctorName] = useState("");

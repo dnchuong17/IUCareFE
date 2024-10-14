@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { Api } from "../utils/API";
-import { LoginRequest } from "../utils/request/loginRequest";
+import { Api } from "../../utils/API";
+import { LoginRequest } from "../../utils/request/loginRequest";
 
 const Login = () => {
   const [username, setUsername] = useState("");

@@ -44,6 +44,5 @@ export class Api {
     } catch (error) {
       console.log(error);
     }
-    //register nhan 1 doi tuong la LoginRequest
   }
 }

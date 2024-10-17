@@ -4,11 +4,13 @@ import { Api } from "../utils/API";
 import { LoginRequest } from "../utils/request/loginRequest";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineUser, AiOutlineLock } from "react-icons/ai";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginMessage, setLoginMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const api = new Api();
   const navigate = useNavigate();
@@ -20,16 +22,35 @@ const Login = () => {
     loginRequest.password = password;
     // api.login(loginRequest);
 
+    // try {
+    //   const result1 = await api.login(loginRequest);
+    //   console.log("Access Token:", result1.access_token); // Log access token
+    //   if (result1.success) {
+    //     setLoginMessage("Login successful!");
+    //   } else {
+    //     setLoginMessage("Account does not exist.");
+    //   }
+    // } catch (error) {
+    //   console.error("Login failed:", error);
+    //   setLoginMessage(
+    //     "Login failed. Please check your credentials and try again."
+    //   );
+    // }
+
     try {
       const response = await api.login(loginRequest);
 
-      if (response.success) {
+      if (response) {
         setLoginMessage("Login successful!");
+        navigate("/home"); // Điều hướng tới trang home nếu đăng nhập thành công
       } else {
         setLoginMessage("Account does not exist.");
       }
     } catch (error) {
-      setLoginMessage("An error occurred. Please try again.");
+      console.error("Login failed:", error);
+      setLoginMessage(
+        "Login failed. Please check your credentials and try again."
+      );
     }
   };
 
@@ -45,14 +66,30 @@ const Login = () => {
   return (
     <div className="relative">
       {loginMessage && (
-        <div className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-white p-6 rounded-lg shadow-lg">
-          <p className="text-lg font-bold">{loginMessage}</p>
-          <button
-            onClick={() => setLoginMessage("")}
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+        <div
+          className={`fixed top-0 left-1/2 transform -translate-x-1/2 mt-4 p-4 rounded-lg shadow-lg w-1/3 ${
+            loginMessage === "Login successful!"
+              ? "bg-green-500"
+              : "bg-red-100 border-2 border-red-500"
+          }`}
+        >
+          <p
+            className={`text-lg font-bold text-center ${
+              loginMessage === "Login successful!"
+                ? "text-white"
+                : "text-red-700"
+            }`}
           >
-            Close
-          </button>
+            {loginMessage}
+          </p>
+          <div className="flex justify-center mt-3">
+            <button
+              onClick={() => setLoginMessage("")}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Close
+            </button>
+          </div>
         </div>
       )}
 
@@ -85,12 +122,21 @@ const Login = () => {
                 <AiOutlineLock className="text-gray-500" />
                 Password
               </label>
-              <input
-                onChange={handlePasswordChange}
-                type="password"
-                className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent shadow-lg"
-                placeholder="Enter your password"
-              />
+
+              <div className="relative flex items-center">
+                <input
+                  onChange={handlePasswordChange}
+                  type={showPassword ? "text" : "password"}
+                  className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent shadow-lg"
+                  placeholder="Enter your password"
+                />
+                <div
+                  className="absolute right-3 inset-y-0 flex items-center cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </div>
+              </div>
             </div>
 
             <div className="mt-8 flex justify-between items-center">

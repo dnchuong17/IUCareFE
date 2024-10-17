@@ -100,7 +100,7 @@ const Register = () => {
       // Sử dụng phương thức POST
       const result = await api.register(registerRequest);
       console.log(result);
-      setSuccessMessage("Registration successful!");
+      // setSuccessMessage("Registration successful!");
       setErrorMessage("");
       navigate("/login");
     } catch (error) {

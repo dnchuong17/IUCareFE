@@ -5,7 +5,14 @@ export default {
       "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      height: {
+        '3/10': '30vh', // Custom height class for 3/10 of the viewport height
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    //require('daisyui'),
+  ],
+  
 }

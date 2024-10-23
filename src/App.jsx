@@ -1,19 +1,19 @@
 import { Routes, Route } from "react-router-dom";
-{/* import Home from "./pages/Home";
+{
+  /* import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import About from "./pages/About";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer.jsx";
-*/}
+*/
+}
 
 import Page0 from "./pages/Page0/Page0"; // Import Page0
 import Page1 from "./pages/Page1/Page1"; // Import Page1
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer.jsx";
-
-
 
 const App = () => {
   return (
@@ -36,13 +36,12 @@ const App = () => {
             path="/*"
             element={
               <>
-                <Navbar />
                 <Page0 />
-                <Footer />
               </>
             }
           />
-          <Route path="/page1/*" element={<Page1 />} /> {/* Add route for Page1 */}
+          <Route path="/page1/*" element={<Page1 />} />{" "}
+          {/* Add route for Page1 */}
         </Routes>
         {/*       <Footer /> */}
       </div>

@@ -10,18 +10,21 @@ import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 
 const Page0 = () => {
-    return (
-        <Routes>
-            <Route path="about" element={<About />} />
-            <Route path="appointment" element={<Appointment />} />
-            <Route path="doctor" element={<Doctor />} />
-            <Route path="home" element={<Home />} />
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
-            <Route path="*" element={<Hero />} />
-
-        </Routes>
-    );
+  return (
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="about" element={<About />} />
+        <Route path="appointment" element={<Appointment />} />
+        <Route path="doctor" element={<Doctor />} />
+        <Route path="home" element={<Home />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="/" element={<Hero />} />
+      </Routes>
+      <Footer />
+    </>
+  );
 };
 
 export default Page0;

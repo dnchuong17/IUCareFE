@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { Api } from "../utils/API";
-import { RegisterRequest } from "../utils/request/registerRequest";
+import { Api } from "../../utils/API.ts";
+import { LoginRequest } from "../../utils/request/loginRequest.ts";
+import { RegisterRequest } from "../../utils/request/registerRequest.ts";
 import { useNavigate } from "react-router-dom";
 import {
   FiEye,

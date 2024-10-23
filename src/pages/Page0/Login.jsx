@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { Api } from "../utils/API";
-import { LoginRequest } from "../utils/request/loginRequest";
+
+import { Api } from "../../utils/API";
+
+import { LoginRequest } from "../../utils/request/loginRequest";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineUser, AiOutlineLock } from "react-icons/ai";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -42,7 +44,7 @@ const Login = () => {
 
       if (response) {
         setLoginMessage("Login successful!");
-        navigate("/home"); // Điều hướng tới trang home nếu đăng nhập thành công
+        navigate("/page1"); // Điều hướng tới trang home nếu đăng nhập thành công
       } else {
         setLoginMessage("Account does not exist.");
       }

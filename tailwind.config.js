@@ -7,7 +7,13 @@ export default {
   theme: {
     extend: {
       height: {
-        '3/10': '30vh', // Custom height class for 3/10 of the viewport height
+        '3/10': '30vh',
+      },
+      fontFamily: {
+        outfit: ['Outfit', 'sans-serif'],
+        prata: ['Prata', 'serif'],
+        poppins: ['Poppins', 'sans-serif'],
+        roboto: ['Roboto', 'sans-serif'],
       },
     },
   },

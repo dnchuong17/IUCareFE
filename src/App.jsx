@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Page1 from "./pages/Page1/Page1.jsx"
 import Page0 from "./pages/Page0/Page0";
+import Foorter from "./components/Footer.jsx"
 const App = () => {
     return (
         <div>
@@ -24,6 +25,7 @@ const App = () => {
                 </Routes>
             </div>
             </div>
+
         </div>
 
 

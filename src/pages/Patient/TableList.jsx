@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { FiCheckCircle, FiSearch, FiFilter, FiSort } from "react-icons/fi";
+import { FiCheckCircle, FiSearch, FiFilter, FiSettings } from "react-icons/fi";
 import Patients from "./Patients";
 
 const TableList = () => {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [patientsCount, setPatientsCount] = useState(0);
     const totalPages = 4;
 
     const handleAddPatient = () => {
@@ -12,12 +13,12 @@ const TableList = () => {
     };
 
     const handlePageChange = (page) => {
-        setCurrentPage(page); // Update the current page
+        setCurrentPage(page);
     };
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 px-4">
-            {/* Header Section */}
+            {/* Add Patient*/}
             <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-5xl flex justify-between items-center">
                 <div className="flex items-center space-x-3">
                     <span className="bg-gray-200 p-3 rounded-full flex items-center justify-center">
@@ -25,12 +26,13 @@ const TableList = () => {
                     </span>
                     <div>
                         <h1 className="text-xl font-semibold text-gray-700">Patients</h1>
-                        <p className="text-gray-500">0</p>
+                        <p className="text-gray-500">{patientsCount}</p>
                     </div>
                 </div>
                 <button
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 flex items-center space-x-2"
                     onClick={handleAddPatient}
+                    aria-label="Add Patient"
                 >
                     <FiCheckCircle /> <span>Add Patient</span>
                 </button>
@@ -46,13 +48,20 @@ const TableList = () => {
                             type="text"
                             placeholder="Search..."
                             className="w-2/3 border border-gray-300 rounded-md px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            aria-label="Search patients"
                         />
                     </div>
                     <div className="flex space-x-3">
-                        <button className="flex items-center space-x-1 text-sm text-gray-600 hover:text-blue-600">
-                            <FiSort /> <span>Sort</span>
+                        <button
+                            className="flex items-center space-x-1 text-sm text-gray-600 hover:text-blue-600"
+                            aria-label="Sort patients"
+                        >
+                            <FiSettings /> <span>Sort</span>
                         </button>
-                        <button className="flex items-center space-x-1 text-sm text-gray-600 hover:text-blue-600">
+                        <button
+                            className="flex items-center space-x-1 text-sm text-gray-600 hover:text-blue-600"
+                            aria-label="Filter patients"
+                        >
                             <FiFilter /> <span>Filter</span>
                         </button>
                     </div>
@@ -96,6 +105,7 @@ const TableList = () => {
                                         : "bg-gray-200 text-gray-700"
                                 } text-sm font-semibold hover:bg-blue-600`}
                                 onClick={() => handlePageChange(i + 1)}
+                                aria-label={`Go to page ${i + 1}`}
                             >
                                 {i + 1}
                             </button>

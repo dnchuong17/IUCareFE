@@ -18,7 +18,7 @@ const TableList = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 px-4">
-            {/* Add Patient*/}
+            {/* Add  Patient*/}
             <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-5xl flex justify-between items-center">
                 <div className="flex items-center space-x-3">
                     <span className="bg-gray-200 p-3 rounded-full flex items-center justify-center">

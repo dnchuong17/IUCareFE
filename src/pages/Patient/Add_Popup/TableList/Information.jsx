@@ -10,7 +10,7 @@ const Information = () => {
                         <label className="block text-lg font-semibold text-gray-700 mb-2">First Name *</label>
                         <input
                             type="text"
-                            placeholder="Nguyen"
+                            placeholder="Tran"
                             className="border border-gray-300 p-3 rounded-lg w-full focus:ring focus:ring-blue-300"
                         />
                     </div>
@@ -18,7 +18,7 @@ const Information = () => {
                         <label className="block text-lg font-semibold text-gray-700 mb-2">Last Name *</label>
                         <input
                             type="text"
-                            placeholder="Van A"
+                            placeholder="Thi Diem"
                             className="border border-gray-300 p-3 rounded-lg w-full focus:ring focus:ring-blue-300"
                         />
                     </div>
@@ -55,7 +55,7 @@ const Information = () => {
                         <label className="block text-lg font-semibold text-gray-700 mb-2">Phone Number *</label>
                         <input
                             type="text"
-                            placeholder="0903812312"
+                            placeholder="0334040072"
                             className="border border-gray-300 p-3 rounded-lg w-full focus:ring focus:ring-blue-300"
                         />
                     </div>
@@ -64,7 +64,7 @@ const Information = () => {
                     <label className="block text-lg font-semibold text-gray-700 mb-2">Address *</label>
                     <input
                         type="text"
-                        placeholder="268 Lý Thường Kiệt, Ward 14, District 10, Ho Chi Minh City"
+                        placeholder="International University, Di An, Binh Duong"
                         className="border border-gray-300 p-3 rounded-lg w-full focus:ring focus:ring-blue-300"
                     />
                 </div>
@@ -73,7 +73,7 @@ const Information = () => {
                         <label className="block text-lg font-semibold text-gray-700 mb-2">Email</label>
                         <input
                             type="email"
-                            placeholder="nguyenvana@gmail.com"
+                            placeholder="tranthidiem@gmail.com"
                             className="border border-gray-300 p-3 rounded-lg w-full focus:ring focus:ring-blue-300"
                         />
                     </div>

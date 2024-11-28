@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FiCheckCircle, FiSearch, FiFilter, FiSettings } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 import { IoPerson } from "react-icons/io5";
 import Sidebar from "../Page1/Sidebar.jsx";
 
@@ -23,14 +23,14 @@ const TableList = () => {
             {/* Patient */}
             <div className="flex-grow flex justify-center items-start py-10">
                 <div className="w-full max-w-7xl bg-white rounded-lg shadow-lg p-10">
-                    {/* Adding */}
+                    {/* Quantifiers */}
                     <div className="flex justify-between items-center mb-10">
                         <div className="flex items-center space-x-4">
                             <span className="bg-gray-200 p-4 rounded-full flex items-center justify-center">
                                 <IoPerson className="h-8 w-8 text-blue-600" />
                             </span>
                             <div>
-                                <h1 className="text-3xl font-semibold text-gray-700">Patients</h1>
+                                <h1 className="text-3xl font-semibold text-gray-700">Quantifiers</h1>
                                 <p className="text-gray-500 text-lg">{patientsCount}</p>
                             </div>
                         </div>
@@ -39,7 +39,7 @@ const TableList = () => {
                     {/* Patient List */}
                     <div className="mt-6">
                         {/* Searching */}
-                        <div className="p-5 flex justify-between items-center bg-gray-50 rounded-lg mb-6 shadow-sm">
+                        <div className="p-5 flex justify-between items-center rounded-lg mb-6">
                             <div className="relative w-full">
                                 <FiSearch
                                     className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl"/>

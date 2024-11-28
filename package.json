@@ -13,6 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mui/icons-material": "^5.16.8",
     "axios": "^1.7.7",
     "daisyui": "^4.12.13",
     "moment": "^2.30.1",

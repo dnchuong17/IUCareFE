@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Page1 from "./pages/Page1/Page1.jsx";
 import Page0 from "./pages/Page0/Page0";
 import TableList from "./pages/Patient/TableList.jsx";
+import MedicalRecord from "./pages/Patient/Medical Record/MedicalRecord.jsx";
 
 const App = () => {
     return (
@@ -25,6 +26,7 @@ const App = () => {
                         />
                         <Route path="/page1/*" element={<Page1 />} />
                         <Route path="/tableList" element={<TableList />} />
+                        <Route path="/medicalRecord" element={<MedicalRecord />} />
                     </Routes>
                 </div>
             </div>

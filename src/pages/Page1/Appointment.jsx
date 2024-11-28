@@ -3,6 +3,7 @@ import { FaClock } from 'react-icons/fa';
 
 
 
+
 const Appointment = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [name, setName] = useState('');
@@ -51,7 +52,10 @@ const Appointment = () => {
         setTime('');
         setDate('');
         setNameError('');
+        console.log('Name:', name);
+        console.log('Student ID:', studentId);
         toggleModal();
+
     };
 
     const handleClearAppointments = () => {
@@ -59,7 +63,7 @@ const Appointment = () => {
     };
 
     return (
-        <div className="fixed right-11 bottom-7 rounded-xl shadow-md h-1/2 w-4/6 bg-white md:w-3/4 md:h-3/5 z-20 p-4">
+        <div className="fixed top-30 right-11 bottom-5 rounded-xl shadow-md h-1/2 w-4/6 bg-white md:w-3/4 md:h-3/5 z-20 p-4 rounded-lg shadow-lg" style={{ height: '400px', overflowY: 'scroll' }}>
             <button className="absolute top-2 right-2 w-16 h-8 bg-blue-500 text-white rounded-md flex items-center justify-center hover:bg-blue-700 transition-colors duration-300" onClick={toggleModal}>
                 +
             </button>
@@ -75,7 +79,7 @@ const Appointment = () => {
                             </button>
                         </div>
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
-                            <div className="bg-blue-100 p-4 rounded-lg text-gray-700">
+                            <div className="bg-blue-100 p-3 rounded-lg text-gray-700">
                                 <div className="flex items-center">
                                     <input
                                         type="text"
@@ -88,7 +92,7 @@ const Appointment = () => {
                                     {nameError && <p className="text-red-500">{nameError}</p>}
                                 </div>
                             </div>
-                            <div className="bg-blue-100 p-4 rounded-lg text-gray-700">
+                            <div className="bg-blue-100 p-3 rounded-lg text-gray-700">
                                 <div className="flex items-center">
                                     <input
                                         type="text"
@@ -145,23 +149,26 @@ const Appointment = () => {
                                 <p className="text-gray-700">{appointment.studentId}</p>
                             </div>
 
-                            <hr className="my-3 border-gray-300 border-dashed" />
-                            <div className="text-gray-700">
-                                <p className="font-light">
-                                    <FaClock className="inline-block mr-1 text-black-100" />
-                                    <strong>Time:</strong> {appointment.time}
-                                </p>
+                            <hr className="my-5 border-gray-300 border-dashed" />
+                            <div className="flex justify-between items-center text-gray-700">
+                                <div>
+                                    <p className="font-light">
+                                        <FaClock className="inline-block mr-1 text-black-100" /> {appointment.time}
+                                    </p>
+                                    <p className="font-light mx-5">
+                                        {new Date(appointment.date).toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })}
+                                    </p>
+                                </div>
+                                <button className="bg-blue-500 text-white px-4 py-2 rounded">
+                                    Examining
+                                </button>
                             </div>
-                            <div className="mx-5 text-gray-700">
-                                <p className="font-light">
-                                    <strong>Date:</strong> {appointment.date}
-
-                                </p>
+                            <hr className="my-4 border-gray-300 border-dashed" />
+                            <div className="flex justify-end">
+                                <button className="text-yellow-500 hover:text-yellow-700 transition-colors duration-300">
+                                    View details
+                                </button>
                             </div>
-                            <hr className="my-2 border-gray-300 border-dashed" />
-                            <button className="text-yellow-500 hover:text-yellow-700 transition-colors duration-300">
-                                View details
-                            </button>
                         </div>
                     ))}
                 </div>

@@ -39,14 +39,14 @@ const Sidebar = () => {
                     <div className='group flexCenter space-x-1 bg-white-500 text-gray-600 p-2 md:p-1 rounded-lg mt-5 cursor-pointer px-3 hover:bg-blue-200 hover:bg-opacity-50 hover:text-blue-700 transition-colors duration-300'>
                         <HiHome className="text-blue-300 group-hover:text-blue-700 ml-5 text-2xl" />
                         <Link to="/" className="flex items-center space-x-1 w-full">
-                            <button className="w-full text-left text-lg  md:text-base lg:text-lg p-2 md:p-1 lg:p-3">Home</button>
+                            <button className="w-full text-left ml-10 mr-10 text-lg md:text-base lg:text-lg p-2 md:p-1 lg:p-3">Home</button>
                         </Link>
                     </div>
                     <div className='group flexCenter space-x-1 bg-white-500 text-gray-600 p-2 md:p-1 rounded-lg mt-5 cursor-pointer px-3  hover:bg-blue-200 hover:bg-opacity-50 hover:text-blue-700 transition-colors duration-300'>
                         <FaCalendarAlt className="text-blue-300 group-hover:text-blue-700 ml-5 text-2xl" />
 
                         <Link to="/page2" className="flex items-center space-x-1 w-full">
-                            <button className="w-full text-left text-lg  md:text-base lg:text-lg p-2 md:p-1 lg:p-3">Schedule</button>
+                            <button className="w-full text-left  ml-8 text-lg  md:text-base lg:text-lg p-2 md:p-1 lg:p-3">Schedule</button>
 
                         </Link>
                     </div>
@@ -55,21 +55,21 @@ const Sidebar = () => {
                         <FaUserMd className="text-blue-300 group-hover:text-blue-700 ml-5 text-2xl" />
 
                         <Link to="/page3" className="flex items-center space-x-1 w-full">
-                            <button className="w-full text-left text-lg  md:text-base lg:text-lg p-2 md:p-1 lg:p-3">Appointment</button>
+                            <button className="w-full text-left ml-5 text-lg  md:text-base lg:text-lg p-2 md:p-1 lg:p-3">Appointment</button>
                         </Link>
                     </div>
 
                     <div className='group flexCenter space-x-1 bg-white-500 text-gray-600 p-2 md:p-1 rounded-lg mt-5 cursor-pointer px-3 hover:bg-blue-200 hover:bg-opacity-50 hover:text-blue-700 transition-colors duration-300'>
                         <FaUserAstronaut className="text-blue-300 group-hover:text-blue-700 ml-5 text-2xl" />
                         <Link to="/page4" className="flex items-center space-x-1 w-full">
-                            <button className="w-full text-left text-lg  md:text-base lg:text-lg p-2 md:p-1 lg:p-3">Patient</button>
+                            <button className="w-full text-left ml-10 text-lg  md:text-base lg:text-lg p-2 md:p-1 lg:p-3">Patient</button>
                         </Link>
                     </div>
                     <div className='group flexCenter space-x-1 bg-white-500 text-gray-600 p-2 md:p-1 rounded-lg mt-5 cursor-pointer px-3 hover:bg-blue-200 hover:bg-opacity-50 hover:text-blue-700 transition-colors duration-300'>
                         <FaUser className="text-blue-300 group-hover:text-blue-700 ml-5 text-2xl" />
 
                         <Link to="/page4" className="flex items-center space-x-1 w-full">
-                            <button className="w-full text-left text-lg  md:text-base lg:text-lg p-2 md:p-1 lg:p-3">Profile</button>
+                            <button className="w-full text-left ml-10 text-lg  md:text-base lg:text-lg p-2 md:p-1 lg:p-3">Profile</button>
                         </Link>
                     </div>
                 </div>

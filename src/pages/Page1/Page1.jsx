@@ -2,6 +2,8 @@ import React from "react";
 import Sidebar from "./Sidebar";
 import Calendar from "./Calendar";
 import Appointment from "./Appointment";
+import CreateAppointment from "./CreateAppointment";
+import SearchPatient from "./SearchPatient";
 
 const Page1 = () => {
   return (
@@ -9,10 +11,14 @@ const Page1 = () => {
       <div className="flex">
         <Sidebar />
         <Calendar />
+
+        <div className="flex flex-row ">
+          <CreateAppointment />
+          <SearchPatient />
+        </div>
         <Appointment />
       </div>
     </div>
-
   );
 };
 

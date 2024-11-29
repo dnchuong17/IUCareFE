@@ -5,7 +5,7 @@ import Appointment from "./Appointment";
 import CreateAppointment from "./CreateAppointment";
 import SearchPatient from "./SearchPatient";
 
-const Page1 = () => {
+const AppointmentPage = () => {
   return (
     <div style={{ backgroundColor: '#F3F8FF', minHeight: '100vh', padding: '1rem' }}>
       <div className="flex">
@@ -22,4 +22,4 @@ const Page1 = () => {
   );
 };
 
-export default Page1;
+export default AppointmentPage;

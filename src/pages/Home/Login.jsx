@@ -26,7 +26,7 @@ const Login = () => {
 
       if (response) {
         window.alert("Login successfully!");
-        navigate("/appointment"); // Redirect to Appointment page
+        navigate("/page1"); // Redirect to Appointment page
       } else {
         window.alert("Login failed: Account does not exist.");
       }

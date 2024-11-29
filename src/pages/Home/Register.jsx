@@ -123,7 +123,7 @@
               <form className="mt-5 space-y-4" onSubmit={onSubmitHandler}>
                 <div>
                   <label className="text-lg font-medium flex items-center gap-2">
-                    <FiUser className="text-gray-500" /> Doctor Name
+                    <FiUser className="text-gray-500"/> Doctor Name
                   </label>
                   <input
                       type="text"
@@ -140,7 +140,7 @@
 
                 <div>
                   <label className="text-lg font-medium flex items-center gap-2">
-                    <FiHome className="text-gray-500" /> Address
+                    <FiHome className="text-gray-500"/> Address
                   </label>
                   <input
                       type="text"
@@ -157,7 +157,7 @@
 
                 <div>
                   <label className="text-lg font-medium flex items-center gap-2">
-                    <FiPhone className="text-gray-500" /> Phone Number
+                    <FiPhone className="text-gray-500"/> Phone Number
                   </label>
                   <input
                       type="tel"
@@ -174,7 +174,7 @@
 
                 <div>
                   <label className="text-lg font-medium flex items-center gap-2">
-                    <FiUserCheck className="text-gray-500" /> Account
+                    <FiUserCheck className="text-gray-500"/> Account
                   </label>
                   <input
                       type="email"
@@ -191,16 +191,24 @@
 
                 <div>
                   <label className="text-lg font-medium flex items-center gap-2">
-                    <FiLock className="text-gray-500" /> Password
+                    <FiLock className="text-gray-500"/> Password
                   </label>
+                  <div className="relative flex">
                   <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
                       placeholder="Enter your password"
                       required
                   />
+                  <div
+                      className="absolute right-3 inset-y-0 flex items-center cursor-pointer"
+                      onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <FiEyeOff/> : <FiEye/>}
+                  </div>
+                  </div>
                   {errorMessages.password && (
                       <p className="text-red-500">{errorMessages.password}</p>
                   )}
@@ -208,16 +216,24 @@
 
                 <div>
                   <label className="text-lg font-medium flex items-center gap-2">
-                    <FiLock className="text-gray-500" /> Confirm Password
+                    <FiLock className="text-gray-500"/> Confirm Password
                   </label>
+                  <div className="relative flex">
                   <input
-                      type="password"
+                      type={showConfirmPassword ? "text" : "password"}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
                       placeholder="Confirm your password"
                       required
                   />
+                  <div
+                      className="absolute right-3 inset-y-0 flex items-center cursor-pointer"
+                      onClick={() => setShowConfirmPassword(!confirmPassword)}
+                  >
+                    {showConfirmPassword ? <FiEyeOff/> : <FiEye/>}
+                  </div>
+                  </div>
                   {errorMessages.confirmPassword && (
                       <p className="text-red-500">{errorMessages.confirmPassword}</p>
                   )}
@@ -225,7 +241,7 @@
 
                 <div>
                   <label className="text-lg font-medium flex items-center gap-2">
-                    <FiClipboard className="text-gray-500" /> Department ID
+                    <FiClipboard className="text-gray-500"/> Department ID
                   </label>
                   <input
                       type="number"
@@ -240,17 +256,38 @@
                   )}
                 </div>
 
-                <button
-                    type="submit"
-                    className="active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all py-3 rounded-xl bg-blue-500 text-white text-lg font-bold"
-                >
-                  Sign Up
-                </button>
-              </form>
-            </div>
+                <div className="flex flex-col mt-8 gap-y-4">
+                  <button
+                      type="submit"
+                      className="active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all py-3 rounded-xl bg-blue-500 text-white text-lg font-bold"
+                  >
+                    Register
+                  </button>
+                  <div className="flexCenter gap-2 rounded-xl border-2 border-gray-100">
+                    <FcGoogle/>
+                    <button
+                        className="flex py-3 items-center justify-center gap-2 active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all">
+                      Sign in with Google
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mt-8 flex justify-center items-center">
+                  <p className="font-medium text-base">Have an account?</p>
+                  <button
+                      onClick={() => navigate("/login")}
+                      className="text-blue-500 text-base font-medium ml-2"
+                  >
+                    Register
+                  </button>
+                </div>
+
+            </form>
           </div>
-        </motion.div>
-    );
+        </div>
+  </motion.div>
+  )
+    ;
   };
 
   export default Register;

@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import Sidebar from "../../Page1/Sidebar.jsx";
-import { FiSearch } from "react-icons/fi";
+import { FiSearch, FiTrash } from "react-icons/fi";
+import { Api } from "../../../utils/api.ts";
 
 const MedicalRecord = () => {
+    const [searchQuery, setSearchQuery] = useState("");
+    const [medicationList, setMedicationList] = useState([]);
+    const [filteredMedications, setFilteredMedications] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [activeSection, setActiveSection] = useState(null);
     const [formData, setFormData] = useState({
         patientName: "",
@@ -11,6 +16,38 @@ const MedicalRecord = () => {
         treatmentDetails: "",
         prescriptionDetails: "",
     });
+    const api = new Api();
+    const handleSearchChange = async (e) => {
+        const query = e.target.value;
+        setSearchQuery(query);
+
+        if (query.trim()) {
+            setIsLoading(true);
+            try {
+                const medicines = await api.searchMedicine(query); // Call API to find medicine name
+                setFilteredMedications(medicines); // Array for medicine name
+            } catch (error) {
+                console.error("Error fetching medicines:", error);
+                setFilteredMedications([]);
+            } finally {
+                setIsLoading(false);
+            }
+        } else {
+            setFilteredMedications([]);
+        }
+    };
+
+    const handleSelectMedication = (name) => {
+        if (!medicationList.includes(name)) {
+            setMedicationList((prev) => [...prev, name]); // Adding medicine
+        }
+        setSearchQuery(""); // Delete searching
+        setFilteredMedications([]); // Delete a number of medicine name from suggestion list
+    };
+
+    const handleDeleteMedication = (name) => {
+        setMedicationList((prev) => prev.filter((med) => med !== name));
+    };
 
     const toggleSection = (section) => {
         setActiveSection((prev) => (prev === section ? null : section));
@@ -128,21 +165,55 @@ const MedicalRecord = () => {
                         <div>
                             <label className="text-blue-700 font-medium text-xl">Prescription</label>
                             <div className="relative w-full">
-                                <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl" />
+                                <FiSearch
+                                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl"/>
                                 <input
                                     type="text"
+                                    value={searchQuery}
+                                    onChange={handleSearchChange}
                                     placeholder="Search..."
                                     className="w-full border border-gray-300 rounded-md pl-10 pr-4 py-3 text-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                                     aria-label="Search patients"
                                 />
                             </div>
+                            {isLoading && <p className="text-gray-500 mt-2">Loading...</p>}
+                            {!isLoading && filteredMedications.length > 0 && (
+                                <ul className="absolute z-10 bg-white border border-gray-300 rounded-md w-full mt-2 shadow-lg">
+                                    {filteredMedications.map((name, index) => (
+                                        <li
+                                            key={index}
+                                            className="p-2 hover:bg-blue-100 cursor-pointer"
+                                            onClick={() => handleSelectMedication(name)}
+                                        >
+                                            {name}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </div>
+
+                        <ul className="mt-4 space-y-2">
+                            {medicationList.map((name, index) => (
+                                <li
+                                    key={index}
+                                    className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow"
+                                >
+                                    <div>
+                                        <strong>{name}</strong>
+                                    </div>
+                                    <FiTrash
+                                        className="text-red-500 text-xl cursor-pointer hover:text-red-700"
+                                        onClick={() => handleDeleteMedication(name)}
+                                    />
+                                </li>
+                            ))}
+                        </ul>
                     </div>
 
                     {/* Right Section */}
                     <div
                         className="bg-white shadow-lg rounded-lg p-6 space-y-4"
-                        style={{ maxHeight: "100vh", overflowY: "auto" }}
+                        style={{maxHeight: "100vh", overflowY: "auto"}}
                     >
                         {/* Patient Information */}
                         <div>

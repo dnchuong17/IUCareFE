@@ -4,6 +4,7 @@ import TableList from "./pages/Patient/TableList.jsx";
 import MedicalRecord from "./pages/Patient/Medical Record/MedicalRecord.jsx";
 import HomePage from "./pages/Home/HomePage.jsx";
 import Information from "./pages/Patient/Medical Record/Information.jsx"
+import TopLoader from "./components/TopLoader.jsx";
 
 const App = () => {
     return (
@@ -16,6 +17,7 @@ const App = () => {
                     className="bg-[#6285c25b] absolute -z-10 top-[-1rem] left-[-35rem] h-[31.25rem] w-[50rem] rounded-full blur-[10rem] md:left-[-33rem] lg:left-[-28rem] xl:left-[-15rem] 2xl:left-[-5rem]"
                 />
                 <div className="flex flex-col h-screen">
+                    <TopLoader /> 
                     <Routes>
                         <Route
                             path="/*"

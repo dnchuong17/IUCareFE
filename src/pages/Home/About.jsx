@@ -1,9 +1,18 @@
 import React from "react";
 import { assets } from "../../assets/assets";
+import { motion } from 'framer-motion'
 
 function About() {
   return (
-      <div className=" text-gray-800 font-sans py-16">
+      <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 1,
+            delay: 1,
+            ease: [0, 0.71, 0.2, 1.01],
+          }}
+          className=" text-gray-800 font-sans py-16">
 
         <div className="max-w-screen-lg mx-auto text-center px-4">
           <h2 className="text-5xl font-bold mb-6 font-poppins">ABOUT IU HEALTHCARE</h2>
@@ -39,7 +48,7 @@ function About() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
   );
 }
 

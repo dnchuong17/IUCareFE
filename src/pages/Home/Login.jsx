@@ -9,7 +9,6 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loginMessage, setLoginMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const api = new Api();
@@ -25,54 +24,27 @@ const Login = () => {
       const response = await api.login(loginRequest);
 
       if (response) {
-        setLoginMessage("Login successful!");
-        // navigate("/");
-        setTimeout (() => {
-          navigate("/page1");
-        },3000);
+        window.alert("Login successfully!");
+        navigate("/appointment"); // Redirect to Appointment page
       } else {
-        setLoginMessage("Account does not exist.");
+        window.alert("Login failed: Account does not exist.");
       }
     } catch (error) {
       console.error("Login failed:", error);
-      setLoginMessage("Login failed. Please check your credentials and try again.");
+      window.alert("Login failed. Please check your credentials and try again.");
     }
   };
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
   };
+
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
 
   return (
-      <div className="relative px-20 ">
-        {loginMessage && (
-            <div
-                className={`fixed top-0 left-1/2 transform -translate-x-1/2 mt-24 p-4 rounded-lg shadow-lg w-1/3 ${
-                    loginMessage === "Login successful!" ? "bg-green-50 border-2 border-green-500" : "bg-red-100 border-2 border-red-500"
-                }`}
-            >
-              <p
-                  className={`text-lg font-bold text-center ${
-                      loginMessage === "Login successful!" ? "text-black" : "text-red-700"
-                  }`}
-              >
-                {loginMessage}
-              </p>
-              <div className="flex justify-center mt-3">
-                <button
-                    onClick={() => setLoginMessage("")}
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                  Close
-                </button>
-
-              </div>
-            </div>
-        )}
-
+      <div className="relative px-20">
         <div className="flex flex-col lg:flex-row bg-white px-10 py-20 rounded-3xl border-2 border-blue-500">
           <div className="w-full lg:w-2/5 flex flex-col items-center justify-center p-12 bg-cover bg-center">
             <h1 className="text-5xl font-semibold text-blue-500 drop-shadow-lg text-center">
@@ -129,7 +101,7 @@ const Login = () => {
 
               <div className="flex flex-col mt-8 gap-y-4">
                 <button
-                    onClick={onSubmitHandler}
+                    type="submit"
                     className="active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all py-3 rounded-xl bg-blue-500 text-white text-lg font-bold"
                 >
                   Sign In

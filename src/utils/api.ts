@@ -42,23 +42,16 @@ export class Api {
     }
   }
 
-  async register(registerRequest: RegisterRequest) {
+  async register(registerRequest) {
     try {
-      const { doctorName, address, phone, account, password, department_id } =
-        registerRequest; //account contains the value of attribute account, password the same
-      console.log(doctorName, address, phone, account, password, department_id);
-      const result2 = await this.axiosObject.post("/auth/doctorRegister", {
-        doctorName: doctorName,
-        address: address,
-        phone: phone,
-        account: account,
-        password: password,
-        department_id: department_id,
-      });
-      console.log(result2.data);
+      const result2 = await this.axiosObject.post("/auth/doctorRegister", registerRequest);
+      console.log("Server response:", result2.data);
       return result2.data;
     } catch (error) {
-      console.log(error);
+      console.error("Registration failed:", error.response?.data || error.message);
+      throw error; // Re-throw error for higher-level handling
     }
   }
+
+
 }

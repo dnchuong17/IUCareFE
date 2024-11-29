@@ -42,10 +42,10 @@ export class Api {
     }
   }
 
-  async searchMedicine(query: string): Promise<string[]> {
+  async searchMedicine(medicine_name: string): Promise<string[]> {
     try {
       const response = await this.axiosObject.get("/medicine", {
-        params: { query }, // Gửi tham số query
+        params: { medicine_name }, // Gửi tham số query
       });
       return response.data; // Trả về danh sách tên thuốc
     } catch (error) {

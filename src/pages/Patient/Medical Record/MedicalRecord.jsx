@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Sidebar from "../../Page1/Sidebar.jsx";
-import Information from "./Information.jsx";
-import Diagnosis from "./Diagnosis.jsx";
+import { FiSearch } from "react-icons/fi";
 
 const MedicalRecord = () => {
     const [activeSection, setActiveSection] = useState(null);
@@ -42,23 +41,23 @@ const MedicalRecord = () => {
 
     return (
         <div className="flex min-h-screen">
-
             {/* Sidebar */}
             <div className="w-1/5 bg-white shadow-lg">
                 <Sidebar />
             </div>
 
+            {/* Main Content */}
             <div className="flex-grow p-8 space-y-6">
-
-                {/* Medical Record*/}
+                {/* Medical Record Form */}
                 <div className="bg-gradient-to-b from-blue-500 via-blue-400 to-blue-300 shadow-lg rounded-lg p-6">
                     <h1 className="text-3xl font-bold text-white mb-6">Medical Record</h1>
                     <form onSubmit={handleSubmit}>
                         <div className="flex space-x-4 items-end">
-
                             {/* Patient Name */}
                             <div className="flex flex-col w-1/2">
-                                <label className="text-blue-950 font-medium text-xl">Patient Name</label>
+                                <label className="text-blue-950 font-medium text-xl">
+                                    Patient Name
+                                </label>
                                 <input
                                     type="text"
                                     name="patientName"
@@ -71,7 +70,9 @@ const MedicalRecord = () => {
 
                             {/* Doctor Name */}
                             <div className="flex flex-col w-1/2">
-                                <label className="text-blue-900 font-medium text-xl">Doctor Name</label>
+                                <label className="text-blue-900 font-medium text-xl">
+                                    Doctor Name
+                                </label>
                                 <input
                                     type="text"
                                     name="doctorName"
@@ -93,12 +94,13 @@ const MedicalRecord = () => {
                     </form>
                 </div>
 
-                {/* Information */}
+                {/* Sections */}
                 <div className="grid grid-cols-3 gap-6">
-                    {/* Left */}
+                    {/* Left Section */}
                     <div className="col-span-2 bg-white shadow-lg rounded-lg p-6 space-y-4">
+                        {/* Diagnosis */}
                         <div>
-                            <label className="text-blue-700 font-medium text-xl">Sick</label>
+                            <label className="text-blue-700 font-medium text-xl">Diagnosis</label>
                             <textarea
                                 name="sickDetails"
                                 value={formData.sickDetails}
@@ -108,6 +110,8 @@ const MedicalRecord = () => {
                                 rows="4"
                             />
                         </div>
+
+                        {/* Treatment */}
                         <div>
                             <label className="text-blue-700 font-medium text-xl">Treatment</label>
                             <textarea
@@ -120,26 +124,25 @@ const MedicalRecord = () => {
                             />
                         </div>
 
+                        {/* Prescription */}
                         <div>
                             <label className="text-blue-700 font-medium text-xl">Prescription</label>
-                            <textarea
-                                name="prescriptionDetails"
-                                value={formData.prescriptionDetails}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                rows="8"
-                                placeholder="Enter prescription details"
-                            ></textarea>
+                            <div className="relative w-full">
+                                <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl" />
+                                <input
+                                    type="text"
+                                    placeholder="Search..."
+                                    className="w-full border border-gray-300 rounded-md pl-10 pr-4 py-3 text-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                    aria-label="Search patients"
+                                />
+                            </div>
                         </div>
                     </div>
 
-                    {/* Right */}
+                    {/* Right Section */}
                     <div
                         className="bg-white shadow-lg rounded-lg p-6 space-y-4"
-                        style={{
-                            maxHeight: "100vh",
-                            overflowY: "auto",
-                        }}
+                        style={{ maxHeight: "100vh", overflowY: "auto" }}
                     >
                         {/* Patient Information */}
                         <div>
@@ -151,22 +154,22 @@ const MedicalRecord = () => {
                             </button>
                             {activeSection === "patientInfo" && (
                                 <div className="mt-4 p-4 bg-gray-50 rounded-lg shadow">
-                                    <Information onClose={() => toggleSection(null)} />
+                                    <p>Patient Information will be displayed here.</p>
                                 </div>
                             )}
                         </div>
 
-                        {/* Diagnosis */}
+                        {/* Allergy */}
                         <div>
                             <button
                                 className="bg-blue-100 text-blue-700 rounded-lg p-4 shadow w-full text-left"
-                                onClick={() => toggleSection("diagnosis")}
+                                onClick={() => toggleSection("allergy")}
                             >
-                                <h2 className="font-medium text-xl">Diagnosis</h2>
+                                <h2 className="font-medium text-xl">Allergy</h2>
                             </button>
-                            {activeSection === "diagnosis" && (
+                            {activeSection === "allergy" && (
                                 <div className="mt-4 p-4 bg-gray-50 rounded-lg shadow">
-                                    <Diagnosis onClose={() => toggleSection(null)} />
+                                    <p>Allergy details will be displayed here.</p>
                                 </div>
                             )}
                         </div>

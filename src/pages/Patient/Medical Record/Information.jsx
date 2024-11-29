@@ -1,127 +1,121 @@
 import React, { useState } from "react";
-import { AiOutlineClose } from "react-icons/ai";
 
-const Information = ({ onClose }) => {
-    const [patientInfo, setPatientInfo] = useState({
+const Information = () => {
+    const [info, setInfo] = useState({
         fullName: "",
-        student_id: "",
-        address: "",
+        studentID: "",
         major: "",
         phone: "",
+        address: "",
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setPatientInfo((prev) => ({ ...prev, [name]: value }));
+        setInfo({
+            ...info,
+            [name]: value,
+        });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        // Check details
-        const { fullName, student_id, address, major, phone } = patientInfo;
-        if (
-            fullName.trim() &&
-            student_id.trim() &&
-            address.trim() &&
-            major.trim() &&
-            phone.trim()
-        ) {
-            alert("Patient information submitted successfully!");
-        } else {
-            alert("Fail. Please check details.");
-        }
+        alert("Information saved successfully!");
+        console.log(info);
     };
 
     return (
-        <div className="bg-white shadow-lg rounded-lg p-6 relative">
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="w-full max-w-screen-xl bg-white rounded-lg shadow-2xl p-12">
+                <h1 className="text-4xl font-extrabold text-gray-800 text-center mb-12">
+                    Information Form
+                </h1>
+                <form onSubmit={handleSubmit} className="space-y-8">
+                    {/* Full Name */}
+                    <div>
+                        <label className="block text-lg font-semibold text-gray-700">
+                            Full Name
+                        </label>
+                        <input
+                            type="text"
+                            name="fullName"
+                            value={info.fullName}
+                            onChange={handleChange}
+                            className="mt-2 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xl p-4"
+                            placeholder="Enter full name"
+                        />
+                    </div>
 
-            {/* Close */}
-            <button
-                onClick={onClose}
-                className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 focus:outline-none"
-            >
-                <AiOutlineClose className="w-6 h-6" />
-            </button>
+                    {/* Student ID */}
+                    <div>
+                        <label className="block text-lg font-semibold text-gray-700">
+                            Student ID
+                        </label>
+                        <input
+                            type="text"
+                            name="studentID"
+                            value={info.studentID}
+                            onChange={handleChange}
+                            className="mt-2 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xl p-4"
+                            placeholder="Enter student ID"
+                        />
+                    </div>
 
-            <h2 className="text-2xl font-bold mb-4">Patient Information</h2>
+                    {/* Major */}
+                    <div>
+                        <label className="block text-lg font-semibold text-gray-700">
+                            Major
+                        </label>
+                        <input
+                            type="text"
+                            name="major"
+                            value={info.major}
+                            onChange={handleChange}
+                            className="mt-2 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xl p-4"
+                            placeholder="Enter major"
+                        />
+                    </div>
 
-            {/* Information */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Phone */}
+                    <div>
+                        <label className="block text-lg font-semibold text-gray-700">
+                            Phone
+                        </label>
+                        <input
+                            type="text"
+                            name="phone"
+                            value={info.phone}
+                            onChange={handleChange}
+                            className="mt-2 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xl p-4"
+                            placeholder="Enter phone number"
+                        />
+                    </div>
 
-                {/* Full Name */}
-                <div>
-                    <label className="text-gray-600 font-medium">Full Name</label>
-                    <input
-                        name="fullName"
-                        type="text"
-                        value={patientInfo.fullName}
-                        onChange={handleChange}
-                        className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter full name"
-                    />
-                </div>
+                    {/* Address */}
+                    <div>
+                        <label className="block text-lg font-semibold text-gray-700">
+                            Address
+                        </label>
+                        <input
+                            type="text"
+                            name="address"
+                            value={info.address}
+                            onChange={handleChange}
+                            className="mt-2 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xl p-4"
+                            placeholder="Enter address"
+                        />
+                    </div>
 
-                {/* Student ID */}
-                <div>
-                    <label className="text-gray-600 font-medium">Student ID</label>
-                    <input
-                        name="student_id"
-                        type="text"
-                        value={patientInfo.student_id}
-                        onChange={handleChange}
-                        className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter Student ID"
-                    />
-                </div>
-
-                {/* Address */}
-                <div>
-                    <label className="text-gray-600 font-medium">Address</label>
-                    <input
-                        name="address"
-                        type="text"
-                        value={patientInfo.address}
-                        onChange={handleChange}
-                        className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter address"
-                    />
-                </div>
-
-                {/* Major */}
-                <div>
-                    <label className="text-gray-600 font-medium">Major</label>
-                    <input
-                        name="major"
-                        type="text"
-                        value={patientInfo.major}
-                        onChange={handleChange}
-                        className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter major"
-                    />
-                </div>
-
-                {/* Phone */}
-                <div>
-                    <label className="text-gray-600 font-medium">Phone</label>
-                    <input
-                        name="phone"
-                        type="text"
-                        value={patientInfo.phone}
-                        onChange={handleChange}
-                        className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter phone number"
-                    />
-                </div>
-
-                {/* Submit  */}
-                <button
-                    type="submit"
-                    className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-lg font-semibold"
-                >
-                    Submit
-                </button>
-            </form>
+                    {/* Submit Button */}
+                    <div className="text-center">
+                        <button
+                            type="submit"
+                            className="bg-blue-600 text-white px-12 py-4 rounded-lg shadow-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-500 text-2xl font-bold transition-transform transform hover:scale-105"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 };

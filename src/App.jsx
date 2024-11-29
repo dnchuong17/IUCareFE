@@ -1,8 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import Page1 from "./pages/Page1/Page1.jsx";
-import Page0 from "./pages/Page0/Page0";
 import TableList from "./pages/Patient/TableList.jsx";
 import MedicalRecord from "./pages/Patient/Medical Record/MedicalRecord.jsx";
+import HomePage from "./pages/Home/HomePage.jsx";
+import Information from "./pages/Patient/Medical Record/Information.jsx"
 
 const App = () => {
     return (
@@ -20,13 +21,15 @@ const App = () => {
                             path="/*"
                             element={
                                 <div>
-                                    <Page0 />
+                                    <HomePage />
                                 </div>
                             }
                         />
                         <Route path="/page1/*" element={<Page1 />} />
                         <Route path="/tableList" element={<TableList />} />
                         <Route path="/medicalRecord" element={<MedicalRecord />} />
+                        <Route path="/information" element={<Information />} />
+
                     </Routes>
                 </div>
             </div>

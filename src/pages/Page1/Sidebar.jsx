@@ -68,7 +68,7 @@ const Sidebar = () => {
                     <div className='group flexCenter space-x-1 bg-white-500 text-gray-600 p-2 md:p-1 rounded-lg mt-5 cursor-pointer px-3 hover:bg-orange-500 hover:bg-opacity-50 hover:text-orange-700 transition-colors duration-300'>
                         <FaUser className="text-blue-300 group-hover:text-orange-700 ml-5" />
 
-                        <Link to="/page4" className="flex items-center space-x-1 w-full">
+                        <Link to="/doctorProfile" className="flex items-center space-x-1 w-full">
                             <button className="w-full text-lg  md:text-base lg:text-lg p-2 md:p-1 lg:p-3">Profile</button>
                         </Link>
                     </div>

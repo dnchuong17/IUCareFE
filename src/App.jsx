@@ -4,6 +4,7 @@ import TableList from "./pages/Patient/TableList.jsx";
 import MedicalRecord from "./pages/Patient/Medical Record/MedicalRecord.jsx";
 import HomePage from "./pages/Home/HomePage.jsx";
 import Information from "./pages/Patient/Medical Record/Information.jsx"
+import DoctorProfile from "./pages/Doctor/Profile.jsx"
 
 const App = () => {
     return (
@@ -29,6 +30,7 @@ const App = () => {
                         <Route path="/tableList" element={<TableList />} />
                         <Route path="/medicalRecord" element={<MedicalRecord />} />
                         <Route path="/information" element={<Information />} />
+                        <Route path="/doctorProfile" element={<DoctorProfile />} />
 
                     </Routes>
                 </div>

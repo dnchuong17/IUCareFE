@@ -42,6 +42,20 @@ export class Api {
     }
   }
 
+
+  // Hàm lấy thông tin bác sĩ
+  async getDoctorInfo(doctorId) {
+    try {
+      const response = await this.axiosObject.get(`/doctor/${doctorId}`);
+      return response.data; // Trả về thông tin bác sĩ
+    } catch (error) {
+      console.error("Failed to fetch doctor information:", error.response?.data || error.message);
+      throw error;
+    }
+  }
+
+
+
   async searchMedicine(medicine_name: string): Promise<string[]> {
     try {
       const response = await this.axiosObject.get("/medicine", {

@@ -4,6 +4,7 @@ import { RegisterRequest } from "./request/registerRequest";
 
 export class Api {
   private axiosObject: AxiosInstance;
+
   constructor() {
     this.axiosObject = axios.create({
       baseURL: "http://localhost:2024",
@@ -13,18 +14,6 @@ export class Api {
   getAxiosObject() {
     return this.axiosObject;
   }
-  // async login(loginRequest: LoginRequest) {
-  //   //login nhan 1 doi tuong la LoginRequest
-  //   const { account, password } = loginRequest; //account contains the value of attribute account, password the same
-  //   console.log(account, password);
-  //   const result1 = await this.axiosObject.post("/auth/doctorLogin", {
-  //     account: account,
-  //     password: password,
-  //   });
-  //   localStorage.setItem("accessToken", result1.data.access_token);
-  //   localStorage.setItem("refreshToken", result1.data.refresh_token);
-  //   return result1.data;
-  // }
 
   async login(loginRequest) {
     const { account, password } = loginRequest;
@@ -53,6 +42,7 @@ export class Api {
     }
   }
 
+
   // Hàm lấy thông tin bác sĩ
   async getDoctorInfo(doctorId) {
     try {
@@ -65,4 +55,16 @@ export class Api {
   }
 
 
+
+  async searchMedicine(medicine_name: string): Promise<string[]> {
+    try {
+      const response = await this.axiosObject.get("/medicine", {
+        params: { medicine_name }, // Gửi tham số query
+      });
+      return response.data; // Trả về danh sách tên thuốc
+    } catch (error) {
+      console.error("Error fetching medicines:", error.response?.data || error.message);
+      throw error;
+    }
+  }
 }

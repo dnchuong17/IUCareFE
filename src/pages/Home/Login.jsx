@@ -5,6 +5,7 @@ import { LoginRequest } from "../../utils/request/loginRequest";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineUser, AiOutlineLock } from "react-icons/ai";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { motion } from 'framer-motion'
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -25,7 +26,7 @@ const Login = () => {
 
       if (response) {
         window.alert("Login successfully!");
-        navigate("/appointment"); // Redirect to Appointment page
+        navigate("/page1"); // Redirect to Appointment page
       } else {
         window.alert("Login failed: Account does not exist.");
       }
@@ -44,7 +45,15 @@ const Login = () => {
   };
 
   return (
-      <div className="relative px-20">
+      <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 1,
+            delay: 1,
+            ease: [0, 0.71, 0.2, 1.01],
+          }}
+          className="relative px-20">
         <div className="flex flex-col lg:flex-row bg-white px-10 py-20 rounded-3xl border-2 border-blue-500">
           <div className="w-full lg:w-2/5 flex flex-col items-center justify-center p-12 bg-cover bg-center">
             <h1 className="text-5xl font-semibold text-blue-500 drop-shadow-lg text-center">
@@ -126,7 +135,7 @@ const Login = () => {
             </form>
           </div>
         </div>
-      </div>
+      </motion.div>
   );
 };
 

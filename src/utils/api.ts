@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { LoginRequest } from "./request/loginRequest";
 import { RegisterRequest } from "./request/registerRequest";
+import { DoctorInforModel } from "../model/doctorInfor.model"
 
 export class Api {
   private axiosObject: AxiosInstance;
@@ -9,6 +10,9 @@ export class Api {
     this.axiosObject = axios.create({
       baseURL: "http://localhost:2024",
       withCredentials: true, //Cho phép gửi cookie và thông tin xác thực khác trong các yêu cầu
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
     });
   }
   getAxiosObject() {
@@ -43,18 +47,6 @@ export class Api {
   }
 
 
-  // Hàm lấy thông tin bác sĩ
-  async getDoctorInfo(doctorId) {
-    try {
-      const response = await this.axiosObject.get(`/doctor/${doctorId}`);
-      return response.data; // Trả về thông tin bác sĩ
-    } catch (error) {
-      console.error("Failed to fetch doctor information:", error.response?.data || error.message);
-      throw error;
-    }
-  }
-
-
 
   async searchMedicine(medicine_name: string): Promise<string[]> {
     try {
@@ -67,4 +59,41 @@ export class Api {
       throw error;
     }
   }
+
+  async getDoctorByAccount(account: string) {
+    try {
+      const response = await this.axiosObject.get(`/doctor/account/${account}`);
+      console.log("response", response);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching doctor by account:", error.response?.data || error.message);
+      throw error;
+    }
+  }
+
+  async getDoctorById(doctor_id: string) {
+    try {
+      const response = await this.axiosObject.get(`/doctor/${doctor_id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching doctor by ID:", error.response?.data || error.message);
+      throw error;
+    }
+  }
+
+  async updateDoctorInfo(doctorId: string, doctorInfor: DoctorInforModel ) {
+    try {
+      const response = await this.axiosObject.patch(`/doctor/change_information/${doctorId}`, doctorInfor);
+     console.log(response.data)
+      return response.data;
+    } catch (error) {
+      console.error("Update failed:", error.response?.data || error.message);
+      throw error;
+    }
+  }
+
+
+
+
+
 }

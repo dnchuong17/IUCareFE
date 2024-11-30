@@ -25,6 +25,8 @@ const Login = () => {
       const response = await api.login(loginRequest);
 
       if (response) {
+
+        localStorage.setItem("account", username);
         window.alert("Login successfully!");
         navigate("/page1"); // Redirect to Appointment page
       } else {

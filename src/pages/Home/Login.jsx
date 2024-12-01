@@ -27,8 +27,9 @@ const Login = () => {
       if (response) {
 
         localStorage.setItem("account", username);
+        localStorage.setItem("doctor_id", response.doctor_id);
         window.alert("Login successfully!");
-        navigate("/page1"); // Redirect to Appointment page
+        navigate("/page1");
       } else {
         window.alert("Login failed: Account does not exist.");
       }

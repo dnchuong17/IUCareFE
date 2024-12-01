@@ -11,7 +11,7 @@ const HomePage = () => {
   return (
       <div>
           <div>
-              <div className="relative overflow-hidden">
+              <div className="relative">
                   <div
                       className="bg-[#4cbcd831] absolute -z-10 top-[-6rem] right-[11rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[10rem]"/>
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Api } from "../../utils/api.ts"; // Import API class
+import { Api } from "../../utils/api.ts";
 
 const Information = () => {
     const [info, setInfo] = useState({
@@ -11,7 +11,7 @@ const Information = () => {
         department_name: "",
         department_number: "",
     });
-    const api = new Api(); // Create instance of API class
+    const api = new Api();
 
     useEffect(() => {
         const fetchDoctorInfo = async () => {
@@ -51,15 +51,14 @@ const Information = () => {
     };
 
     const handleSave = async () => {
-        // Create payload with updated information
+        // To payload with updated information
         const updatedData = {
             password: info.password !== "********" ? info.password : undefined,
             doctor_address: info.doctor_address,
             doctor_phone: info.doctor_phone,
         };
-        console.log(updatedData)
 
-        // Filter out fields that do not need to be updated
+        // Filter out fields that don't need to be updated
         const filteredData = Object.entries(updatedData).reduce((acc, [key, value]) => {
             if (value !== undefined && value !== "") {
                 acc[key] = value;
@@ -74,7 +73,6 @@ const Information = () => {
         }
 
         try {
-            // Send the update request
             console.log("Payload being sent:", filteredData);
             await api.updateDoctorInfo(info.doctor_id, filteredData);
 
@@ -82,12 +80,11 @@ const Information = () => {
             setInfo((prevState) => ({
                 ...prevState,
                 ...filteredData,
-                password: "********", // Reset password placeholder after saving
+                password: "********", // Reset password
             }));
 
             localStorage.setItem("doctorInfo", JSON.stringify({ ...info, ...filteredData }));
 
-            // Alert success
             alert("Information updated successfully!");
         } catch (error) {
             console.error("Error updating information:", error.response?.data || error.message);
@@ -162,7 +159,7 @@ const Information = () => {
                         </div>
                     </div>
 
-                    {/* Save Button */}
+                    {/* Save */}
                     <div className="text-center mt-8">
                         <button
                             type="button"

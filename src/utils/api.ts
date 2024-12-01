@@ -93,6 +93,29 @@ export class Api {
   }
 
 
+  async createPatient (informationRequest) {
+    try {
+      const response = await this.axiosObject.post("/patient/create", informationRequest);
+      console.log("Server response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Create information failed:", error.response?.data || error.message);
+      throw error;
+    }
+  }
+
+  async getPatient(studentId: string) {
+    try {
+      const response = await this.axiosObject.get(`/patient/information`, {
+        params: { studentId },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching patient information:", error.response?.data || error.message);
+      throw error;
+    }
+  }
+
 
 
 

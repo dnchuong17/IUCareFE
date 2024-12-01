@@ -19,8 +19,17 @@ const Information = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        alert("Information saved successfully!");
-        console.log(info);
+        const studentData = {
+            fullName: info.fullName,
+            studentID: info.studentID,
+            phone: info.phone,
+            department: info.department,
+            address: info.address,
+        };
+        const existingData = JSON.parse(localStorage.getItem('students')) || [];
+        existingData.push(studentData);
+        localStorage.setItem('students', JSON.stringify(existingData));
+        alert('Data saved successfully!');
     };
 
     return (

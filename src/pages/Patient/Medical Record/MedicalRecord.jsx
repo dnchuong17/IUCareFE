@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Sidebar from "../../Page1/Sidebar.jsx";
+import Sidebar from "../../Appointment/Sidebar.jsx";
 import { FiSearch, FiTrash } from "react-icons/fi";
 import { Api } from "../../../utils/api.ts";
 
@@ -166,7 +166,7 @@ const MedicalRecord = () => {
                             <label className="text-blue-700 font-medium text-xl">Prescription</label>
                             <div className="relative w-full">
                                 <FiSearch
-                                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl"/>
+                                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl" />
                                 <input
                                     type="text"
                                     value={searchQuery}
@@ -213,7 +213,7 @@ const MedicalRecord = () => {
                     {/* Right Section */}
                     <div
                         className="bg-white shadow-lg rounded-lg p-6 space-y-4"
-                        style={{maxHeight: "100vh", overflowY: "auto"}}
+                        style={{ maxHeight: "100vh", overflowY: "auto" }}
                     >
                         {/* Patient Information */}
                         <div>

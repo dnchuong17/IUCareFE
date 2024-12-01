@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { IoPerson } from "react-icons/io5";
-import Sidebar from "../Page1/Sidebar.jsx";
+import Sidebar from "../Appointment/Sidebar.jsx";
 
 const TableList = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -16,7 +16,7 @@ const TableList = () => {
     return (
         <div className="flex min-h-screen">
             {/* Sidebar */}
-            <div className="w-1/5">
+            <div className="w-1/4 right-12 left-2">
                 <Sidebar />
             </div>
 
@@ -42,7 +42,7 @@ const TableList = () => {
                         <div className="p-5 flex justify-between items-center rounded-lg mb-6">
                             <div className="relative w-full">
                                 <FiSearch
-                                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl"/>
+                                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl" />
                                 <input
                                     type="text"
                                     placeholder="Search..."
@@ -57,24 +57,24 @@ const TableList = () => {
                         <div className="overflow-x-auto rounded-lg shadow">
                             <table className="w-full text-left border-collapse">
                                 <thead>
-                                <tr className="bg-blue-100 rounded-t-lg">
-                                    <th className="px-8 py-5 text-gray-700 font-semibold text-lg">No.</th>
-                                    <th className="px-8 py-5 text-gray-700 font-semibold text-lg">Doctor</th>
-                                    <th className="px-8 py-5 text-gray-700 font-semibold text-lg">Sick</th>
-                                    <th className="px-8 py-5 text-gray-700 font-semibold text-lg">Treatment</th>
-                                    <th className="px-8 py-5 text-gray-700 font-semibold text-lg">Date</th>
-                                    <th className="px-8 py-5 text-gray-700 font-semibold text-lg">Time</th>
-                                    <th className="px-8 py-5 text-gray-700 font-semibold text-lg text-center">
-                                        View Details
-                                    </th>
-                                </tr>
+                                    <tr className="bg-blue-100 rounded-t-lg">
+                                        <th className="px-8 py-5 text-gray-700 font-semibold text-lg">No.</th>
+                                        <th className="px-8 py-5 text-gray-700 font-semibold text-lg">Doctor</th>
+                                        <th className="px-8 py-5 text-gray-700 font-semibold text-lg">Sick</th>
+                                        <th className="px-8 py-5 text-gray-700 font-semibold text-lg">Treatment</th>
+                                        <th className="px-8 py-5 text-gray-700 font-semibold text-lg">Date</th>
+                                        <th className="px-8 py-5 text-gray-700 font-semibold text-lg">Time</th>
+                                        <th className="px-8 py-5 text-gray-700 font-semibold text-lg text-center">
+                                            View Details
+                                        </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td colSpan="7" className="text-center py-10 text-gray-500 italic text-lg">
-                                        No data available
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td colSpan="7" className="text-center py-10 text-gray-500 italic text-lg">
+                                            No data available
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -85,11 +85,10 @@ const TableList = () => {
                                 {Array.from({ length: totalPages }, (_, i) => (
                                     <button
                                         key={i}
-                                        className={`w-12 h-12 rounded-full ${
-                                            currentPage === i + 1
-                                                ? "bg-blue-500 text-white"
-                                                : "bg-gray-200 text-gray-700"
-                                        } text-lg font-semibold hover:bg-blue-600`}
+                                        className={`w-12 h-12 rounded-full ${currentPage === i + 1
+                                            ? "bg-blue-500 text-white"
+                                            : "bg-gray-200 text-gray-700"
+                                            } text-lg font-semibold hover:bg-blue-600`}
                                         onClick={() => handlePageChange(i + 1)}
                                         aria-label={`Go to page ${i + 1}`}
                                     >

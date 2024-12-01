@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Api } from "../../utils/api.ts";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "../Page1/Sidebar.jsx";
 
-const Information = () => {
+const Profile = () => {
     const [info, setInfo] = useState({
         doctor_id: "",
         doctor_name: "",
@@ -18,7 +20,14 @@ const Information = () => {
         const fetchDoctorInfo = async () => {
             const account = localStorage.getItem("account");
             if (!account) {
-                alert("Account is missing. Please log in again.");
+                toast.error("Account is missing. Please log in again.", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
                 return;
             }
 
@@ -26,7 +35,14 @@ const Information = () => {
                 const doctorData = await api.getDoctorByAccount(account);
                 const doctorId = doctorData?.doctor_id;
                 if (!doctorId) {
-                    alert("Doctor ID is missing from server response.");
+                    toast.error("Doctor ID is missing from server response.", {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
                     return;
                 }
 
@@ -36,7 +52,14 @@ const Information = () => {
                 localStorage.setItem("doctorInfo", JSON.stringify(infoWithId));
             } catch (error) {
                 console.error("Error fetching doctor information:", error.response?.data || error.message);
-                alert("Failed to fetch doctor information.");
+                toast.error("Failed to fetch doctor information.", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         };
 
@@ -69,7 +92,14 @@ const Information = () => {
 
         // If there's nothing to update, alert the user
         if (Object.keys(filteredData).length === 0) {
-            alert("No changes to save!");
+            toast.info("No changes to save!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
             return;
         }
 
@@ -86,14 +116,69 @@ const Information = () => {
 
             localStorage.setItem("doctorInfo", JSON.stringify({ ...info, ...filteredData }));
 
-            alert("Information updated successfully!");
+            toast.success("Information updated successfully!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (error) {
             console.error("Error updating information:", error.response?.data || error.message);
-            alert(`Failed to update information. Error: ${error.response?.data?.message || error.message}`);
+            toast.error(`Failed to update information. Error: ${error.response?.data?.message || error.message}`, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
     return (
+        <div
+            className="min-h-screen flex items-center justify-center p-6">
+            <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-10">
+                <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Doctor Profile</h1>
+                <form className="space-y-6">
+                    {/* Full Name */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-lg font-semibold text-gray-700">Full Name</label>
+                            <input
+                                type="text"
+                                name="doctor_name"
+                                value={info.doctor_name}
+                                onChange={handleChange}
+                                disabled
+                                className="w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg p-3 mt-2 bg-gray-100 cursor-not-allowed"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-lg font-semibold text-gray-700">Password</label>
+                            <input
+                                type="password"
+                                name="password"
+                                value={info.password}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg p-3 mt-2"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Address and Phone */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-lg font-semibold text-gray-700">Address</label>
+                            <input
+                                type="text"
+                                name="doctor_address"
+                                value={info.doctor_address}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg p-3 mt-2"
+                            />
         <div className="flex">
             {/* Sidebar */}
             <div className="w-1/5 bg-white shadow-lg">
@@ -177,8 +262,9 @@ const Information = () => {
                     </form>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 };
 
-export default Information;
+export default Profile;

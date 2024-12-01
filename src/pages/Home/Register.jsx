@@ -84,6 +84,12 @@ const Register = () => {
           pauseOnHover: true,
           draggable: true,
         });
+        // Wait for the toast to close before navigating
+        toast.onChange(({ status }) => {
+          if (status === "removed") {
+            navigate("/login");
+          }
+        });
         navigate("/login");
       }
     } catch (error) {
@@ -283,6 +289,10 @@ const Register = () => {
                   Register
                 </button>
                 <div className="flexCenter gap-2 rounded-xl border-2 border-gray-100">
+                  <FcGoogle />
+                  <button
+                      className="flex py-3 items-center justify-center gap-2 active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all"
+                  >
                   <FcGoogle/>
                   <button
                       className="flex py-3 items-center justify-center gap-2 active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all">
@@ -303,6 +313,7 @@ const Register = () => {
             </form>
           </div>
         </div>
+        <ToastContainer />
         <ToastContainer/>
       </motion.div>
   );

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Sidebar from "../../Page1/Sidebar.jsx";
-import { FiSearch, FiTrash } from "react-icons/fi";
+import { FiSearch, FiTrash, FiX } from "react-icons/fi";
 import { Api } from "../../../utils/api.ts";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const MedicalRecord = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -17,6 +19,7 @@ const MedicalRecord = () => {
         prescriptionDetails: "",
     });
     const api = new Api();
+
     const handleSearchChange = async (e) => {
         const query = e.target.value;
         setSearchQuery(query);
@@ -58,7 +61,7 @@ const MedicalRecord = () => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const { patientName, doctorName, sickDetails, treatmentDetails, prescriptionDetails } =
             formData;
@@ -70,9 +73,35 @@ const MedicalRecord = () => {
             treatmentDetails.trim() &&
             prescriptionDetails.trim()
         ) {
-            alert("Medical Record created successfully!");
+            try {
+                toast.success("Medical Record created successfully!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    onClose: () => navigate("/page1"),
+                });
+            } catch (error) {
+                toast.error("Failed to create Medical Record. Please try again.", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+            }
         } else {
-            alert("Fail. Please check details.");
+            toast.error("Fail. Please check details.", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
@@ -262,6 +291,7 @@ const MedicalRecord = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 };

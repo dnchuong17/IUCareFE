@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Api } from "../../../utils/api";
 import { useNavigate } from "react-router-dom";
 import { FiX } from "react-icons/fi";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Information = () => {
     const api = new Api();
@@ -17,8 +19,6 @@ const Information = () => {
     });
 
     const [loading, setLoading] = useState(false);
-    const [successMessage, setSuccessMessage] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -31,22 +31,40 @@ const Information = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setSuccessMessage("");
-        setErrorMessage("");
 
         try {
             const response = await api.createPatient(info);
 
             if (response) {
-                setSuccessMessage("Patient information saved successfully!");
+                toast.success("Patient information saved successfully!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    onClose: () => navigate("/page1"),
+                });
             } else {
-                setErrorMessage("Failed to save information. API did not return a response.");
+                toast.error("Failed to save information. API did not return a response.", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         } catch (error) {
             console.error("Error saving information:", error);
-            setErrorMessage(
-                error.response?.data?.message || "Failed to save information. Please try again."
-            );
+            toast.error(error.response?.data?.message || "Failed to save information. Please try again.", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } finally {
             setLoading(false);
         }
@@ -58,39 +76,6 @@ const Information = () => {
                 <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">
                     Patient Information Form
                 </h1>
-
-                {/* Success Message */}
-                {successMessage && (
-                    <div className="bg-green-100 text-green-700 p-4 rounded-lg mb-6 relative">
-                        {/* Close */}
-                        <FiX
-                            className="absolute top-2 right-2 text-green-700 hover:text-green-900 cursor-pointer"
-                            size={20}
-                            onClick={() => setSuccessMessage("")}
-                        />
-                        <p className="text-center mb-4">{successMessage}</p>
-                        <div className="text-center">
-                            <button
-                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                                onClick={() => navigate("/page1")}
-                            >
-                                OK
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                {/* Error Message */}
-                {errorMessage && (
-                    <div className="bg-red-100 text-red-700 p-4 rounded-lg mb-6 relative">
-                        <FiX
-                            className="absolute top-2 right-2 text-red-700 hover:text-red-900 cursor-pointer"
-                            size={20}
-                            onClick={() => setErrorMessage("")}
-                        />
-                        <p className="text-center">{errorMessage}</p>
-                    </div>
-                )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Full Name */}
@@ -190,6 +175,7 @@ const Information = () => {
                     </div>
                 </form>
             </div>
+            <ToastContainer />
         </div>
     );
 };

@@ -5,7 +5,9 @@ import { LoginRequest } from "../../utils/request/loginRequest";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineUser, AiOutlineLock } from "react-icons/ai";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -25,17 +27,37 @@ const Login = () => {
       const response = await api.login(loginRequest);
 
       if (response) {
-
         localStorage.setItem("account", username);
         localStorage.setItem("doctor_id", response.doctor_id);
-        window.alert("Login successfully!");
-        navigate("/page1");
+        toast.success("Login successful!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          onClose: () => navigate("/page1"),
+        });
       } else {
-        window.alert("Login failed: Account does not exist.");
+        toast.error("Login failed: Account does not exist.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       }
     } catch (error) {
       console.error("Login failed:", error);
-      window.alert("Login failed. Please check your credentials and try again.");
+      toast.error("Login failed. Please check your credentials and try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
@@ -56,7 +78,8 @@ const Login = () => {
             delay: 1,
             ease: [0, 0.71, 0.2, 1.01],
           }}
-          className="relative px-20">
+          className="relative px-20"
+      >
         <div className="flex flex-col lg:flex-row bg-white px-10 py-20 rounded-3xl border-2 border-blue-500">
           <div className="w-full lg:w-2/5 flex flex-col items-center justify-center p-12 bg-cover bg-center">
             <h1 className="text-5xl font-semibold text-blue-500 drop-shadow-lg text-center">
@@ -138,6 +161,7 @@ const Login = () => {
             </form>
           </div>
         </div>
+        <ToastContainer />
       </motion.div>
   );
 };

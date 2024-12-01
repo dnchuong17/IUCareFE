@@ -13,6 +13,8 @@ import {
   FiClipboard,
 } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const [doctorName, setDoctorName] = useState("");
@@ -74,12 +76,31 @@ const Register = () => {
     try {
       const result2 = await api.register(registerRequest);
       if (result2) {
-        alert("Registration successful!");
-        navigate("/login");
+        toast.success("Registration successful!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        // Wait for the toast to close before navigating
+        toast.onChange(({ status }) => {
+          if (status === "removed") {
+            navigate("/login");
+          }
+        });
       }
     } catch (error) {
       console.error("Registration failed:", error.response?.data || error.message);
-      alert("Registration failed. Please try again.");
+      toast.error("Registration failed. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
@@ -268,7 +289,9 @@ const Register = () => {
                 </button>
                 <div className="flexCenter gap-2 rounded-xl border-2 border-gray-100">
                   <FcGoogle />
-                  <button className="flex py-3 items-center justify-center gap-2 active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all">
+                  <button
+                      className="flex py-3 items-center justify-center gap-2 active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all"
+                  >
                     Sign in with Google
                   </button>
                 </div>
@@ -286,6 +309,7 @@ const Register = () => {
             </form>
           </div>
         </div>
+        <ToastContainer />
       </motion.div>
   );
 };

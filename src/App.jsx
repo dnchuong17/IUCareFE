@@ -1,8 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import Page1 from "./pages/Page1/Page1.jsx"
-import Page0 from "./pages/Page0/Page0";
-import Foorter from "./components/Footer.jsx"
-import Page1 from "./pages/Page1/Page1.jsx";
 import TableList from "./pages/Patient/TableList.jsx";
 import MedicalRecord from "./pages/Patient/Medical Record/MedicalRecord.jsx";
 import HomePage from "./pages/Home/HomePage.jsx";

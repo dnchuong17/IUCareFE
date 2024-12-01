@@ -83,14 +83,8 @@ const Register = () => {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
+          onClose: () => navigate("/login"),
         });
-        // Wait for the toast to close before navigating
-        toast.onChange(({ status }) => {
-          if (status === "removed") {
-            navigate("/login");
-          }
-        });
-        navigate("/login");
       }
     } catch (error) {
       console.error("Registration failed:", error.response?.data || error.message);
@@ -288,14 +282,11 @@ const Register = () => {
                 >
                   Register
                 </button>
-                <div className="flexCenter gap-2 rounded-xl border-2 border-gray-100">
+                <div className="flex items-center gap-2 border-2 border-gray-100 rounded-xl px-4 py-3">
                   <FcGoogle />
                   <button
-                      className="flex py-3 items-center justify-center gap-2 active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all"
+                      className="flex items-center justify-center gap-2 active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all text-lg"
                   >
-                  <FcGoogle/>
-                  <button
-                      className="flex py-3 items-center justify-center gap-2 active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all">
                     Sign in with Google
                   </button>
                 </div>
@@ -314,7 +305,6 @@ const Register = () => {
           </div>
         </div>
         <ToastContainer />
-        <ToastContainer/>
       </motion.div>
   );
 };

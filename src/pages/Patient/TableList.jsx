@@ -1,9 +1,3 @@
-import React from 'react';
-
-const TableList = () => {
-    return (
-        <div>
-            
 import React, { useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { IoPerson } from "react-icons/io5";
@@ -13,7 +7,6 @@ const TableList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [patientsCount, setPatientsCount] = useState(0);
     const totalPages = 4;
-
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -26,7 +19,7 @@ const TableList = () => {
                 <Sidebar />
             </div>
 
-            {/* Patient */}
+            {/* Patient List Section */}
             <div className="flex-grow flex justify-center items-start py-10">
                 <div className="w-full max-w-7xl bg-white rounded-lg shadow-lg p-10">
                     {/* Quantifiers */}
@@ -48,7 +41,7 @@ const TableList = () => {
                         <div className="p-5 flex justify-between items-center rounded-lg mb-6">
                             <div className="relative w-full">
                                 <FiSearch
-                                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl"/>
+                                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl" />
                                 <input
                                     type="text"
                                     placeholder="Search..."
@@ -56,7 +49,6 @@ const TableList = () => {
                                     aria-label="Search patients"
                                 />
                             </div>
-
                         </div>
 
                         {/* Table list */}
@@ -85,7 +77,7 @@ const TableList = () => {
                             </table>
                         </div>
 
-                        {/* Pageination */}
+                        {/* Pagination */}
                         <div className="flex justify-center items-center p-6 border-t border-gray-200 mt-6">
                             <div className="flex space-x-4">
                                 {Array.from({ length: totalPages }, (_, i) => (

@@ -3,6 +3,7 @@ import { Api } from "../../utils/api.ts";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "../Page1/Sidebar.jsx";
+import { HiOutlinePencilAlt } from "react-icons/hi";
 
 const Profile = () => {
     const [info, setInfo] = useState({
@@ -14,6 +15,7 @@ const Profile = () => {
         department_name: "",
         department_number: "",
     });
+    const [editField, setEditField] = useState(null);
     const api = new Api();
 
     useEffect(() => {
@@ -23,10 +25,6 @@ const Profile = () => {
                 toast.error("Account is missing. Please log in again.", {
                     position: "top-right",
                     autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
                 });
                 return;
             }
@@ -38,10 +36,6 @@ const Profile = () => {
                     toast.error("Doctor ID is missing from server response.", {
                         position: "top-right",
                         autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
                     });
                     return;
                 }
@@ -55,10 +49,6 @@ const Profile = () => {
                 toast.error("Failed to fetch doctor information.", {
                     position: "top-right",
                     autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
                 });
             }
         };
@@ -74,15 +64,17 @@ const Profile = () => {
         }));
     };
 
+    const handleEdit = (field) => {
+        setEditField(field);
+    };
+
     const handleSave = async () => {
-        // To payload with updated information
         const updatedData = {
             password: info.password !== "********" ? info.password : undefined,
             doctor_address: info.doctor_address,
             doctor_phone: info.doctor_phone,
         };
 
-        // Filter out fields that don't need to be updated
         const filteredData = Object.entries(updatedData).reduce((acc, [key, value]) => {
             if (value !== undefined && value !== "") {
                 acc[key] = value;
@@ -90,16 +82,8 @@ const Profile = () => {
             return acc;
         }, {});
 
-        // If there's nothing to update, alert the user
         if (Object.keys(filteredData).length === 0) {
-            toast.info("No changes to save!", {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            });
+            toast.info("No changes to save!", { position: "top-right", autoClose: 3000 });
             return;
         }
 
@@ -107,11 +91,10 @@ const Profile = () => {
             console.log("Payload being sent:", filteredData);
             await api.updateDoctorInfo(info.doctor_id, filteredData);
 
-            // Update state and localStorage upon successful update
             setInfo((prevState) => ({
                 ...prevState,
                 ...filteredData,
-                password: "********", // Reset password
+                password: "********",
             }));
 
             localStorage.setItem("doctorInfo", JSON.stringify({ ...info, ...filteredData }));
@@ -119,20 +102,12 @@ const Profile = () => {
             toast.success("Information updated successfully!", {
                 position: "top-right",
                 autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
             });
         } catch (error) {
             console.error("Error updating information:", error.response?.data || error.message);
             toast.error(`Failed to update information. Error: ${error.response?.data?.message || error.message}`, {
                 position: "top-right",
                 autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
             });
         }
     };
@@ -148,28 +123,39 @@ const Profile = () => {
                 <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-10">
                     <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Doctor Profile</h1>
                     <form className="space-y-6">
-                        {/* Full Name */}
+                        {/* Full Name and Password */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-lg font-semibold text-gray-700">Full Name</label>
-                                <input
-                                    type="text"
-                                    name="doctor_name"
-                                    value={info.doctor_name}
-                                    onChange={handleChange}
-                                    disabled
-                                    className="w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg p-3 mt-2 bg-gray-100 cursor-not-allowed"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        name="doctor_name"
+                                        value={info.doctor_name}
+                                        onChange={handleChange}
+                                        disabled
+                                        className="w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3"
+                                    />
+                                </div>
                             </div>
                             <div>
                                 <label className="block text-lg font-semibold text-gray-700">Password</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    value={info.password}
-                                    onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg p-3 mt-2"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        value={info.password}
+                                        onChange={handleChange}
+                                        disabled={editField !== "password"}
+                                        className={`w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3 ${
+                                            editField !== "password" ? "bg-gray-100 cursor-not-allowed" : ""
+                                        }`}
+                                    />
+                                    <HiOutlinePencilAlt
+                                        className="absolute top-1/2 right-3 transform -translate-y-1/2 text-2xl text-gray-400 cursor-pointer"
+                                        onClick={() => handleEdit("password")}
+                                    />
+                                </div>
                             </div>
                         </div>
 
@@ -177,23 +163,41 @@ const Profile = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-lg font-semibold text-gray-700">Address</label>
-                                <input
-                                    type="text"
-                                    name="doctor_address"
-                                    value={info.doctor_address}
-                                    onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg p-3 mt-2"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        name="doctor_address"
+                                        value={info.doctor_address}
+                                        onChange={handleChange}
+                                        disabled={editField !== "doctor_address"}
+                                        className={`w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3 ${
+                                            editField !== "doctor_address" ? "bg-gray-100 cursor-not-allowed" : ""
+                                        }`}
+                                    />
+                                    <HiOutlinePencilAlt
+                                        className="absolute top-1/2 right-3 transform -translate-y-1/2 text-2xl text-gray-400 cursor-pointer"
+                                        onClick={() => handleEdit("doctor_address")}
+                                    />
+                                </div>
                             </div>
                             <div>
                                 <label className="block text-lg font-semibold text-gray-700">Phone</label>
-                                <input
-                                    type="text"
-                                    name="doctor_phone"
-                                    value={info.doctor_phone}
-                                    onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg p-3 mt-2"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        name="doctor_phone"
+                                        value={info.doctor_phone}
+                                        onChange={handleChange}
+                                        disabled={editField !== "doctor_phone"}
+                                        className={`w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3 ${
+                                            editField !== "doctor_phone" ? "bg-gray-100 cursor-not-allowed" : ""
+                                        }`}
+                                    />
+                                    <HiOutlinePencilAlt
+                                        className="absolute top-1/2 right-3 transform -translate-y-1/2 text-2xl text-gray-400 cursor-pointer"
+                                        onClick={() => handleEdit("doctor_phone")}
+                                    />
+                                </div>
                             </div>
                         </div>
 
@@ -201,11 +205,23 @@ const Profile = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-lg font-semibold text-gray-700">Department Name</label>
-                                <div className="text-lg text-gray-800 mt-2">{info.department_name}</div>
+                                <input
+                                    type="text"
+                                    name="department_name"
+                                    value={info.department_name}
+                                    disabled
+                                    className="w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3"
+                                />
                             </div>
                             <div>
                                 <label className="block text-lg font-semibold text-gray-700">Department Number</label>
-                                <div className="text-lg text-gray-800 mt-2">{info.department_number}</div>
+                                <input
+                                    type="text"
+                                    name="department_number"
+                                    value={info.department_number}
+                                    disabled
+                                    className="w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3"
+                                />
                             </div>
                         </div>
 
@@ -216,7 +232,7 @@ const Profile = () => {
                                 onClick={handleSave}
                                 className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700"
                             >
-                                Save All Changes
+                                Save
                             </button>
                         </div>
                     </form>

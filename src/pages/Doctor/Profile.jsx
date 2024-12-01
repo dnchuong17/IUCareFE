@@ -120,7 +120,7 @@ const Profile = () => {
             <div className="w-1/5 bg-white shadow-lg">
                 <Sidebar />
             </div>
-            {/* Main Content */}
+
             <div className="w-4/5 min-h-screen flex items-center justify-center p-6">
                 <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-10 relative">
                     <div className="flex justify-between items-center mb-8">

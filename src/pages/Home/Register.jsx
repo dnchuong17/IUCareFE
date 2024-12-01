@@ -13,6 +13,8 @@ import {
   FiClipboard,
 } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const [doctorName, setDoctorName] = useState("");
@@ -74,12 +76,26 @@ const Register = () => {
     try {
       const result2 = await api.register(registerRequest);
       if (result2) {
-        alert("Registration successful!");
+        toast.success("Registration successful!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
         navigate("/login");
       }
     } catch (error) {
       console.error("Registration failed:", error.response?.data || error.message);
-      alert("Registration failed. Please try again.");
+      toast.error("Registration failed. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
@@ -110,7 +126,7 @@ const Register = () => {
             <form className="mt-5 space-y-4" onSubmit={onSubmitHandler}>
               <div>
                 <label className="text-lg font-medium flex items-center gap-2">
-                  <FiUser className="text-gray-500" /> Doctor Name
+                  <FiUser className="text-gray-500"/> Doctor Name
                 </label>
                 <input
                     type="text"
@@ -127,7 +143,7 @@ const Register = () => {
 
               <div>
                 <label className="text-lg font-medium flex items-center gap-2">
-                  <FiHome className="text-gray-500" /> Address
+                  <FiHome className="text-gray-500"/> Address
                 </label>
                 <input
                     type="text"
@@ -144,7 +160,7 @@ const Register = () => {
 
               <div>
                 <label className="text-lg font-medium flex items-center gap-2">
-                  <FiPhone className="text-gray-500" /> Phone Number
+                  <FiPhone className="text-gray-500"/> Phone Number
                 </label>
                 <input
                     type="tel"
@@ -161,7 +177,7 @@ const Register = () => {
 
               <div>
                 <label className="text-lg font-medium flex items-center gap-2">
-                  <FiUserCheck className="text-gray-500" /> Account
+                  <FiUserCheck className="text-gray-500"/> Account
                 </label>
                 <input
                     type="email"
@@ -178,7 +194,7 @@ const Register = () => {
 
               <div>
                 <label className="text-lg font-medium flex items-center gap-2">
-                  <FiLock className="text-gray-500" /> Password
+                  <FiLock className="text-gray-500"/> Password
                 </label>
                 <div className="relative flex">
                   <input
@@ -193,7 +209,7 @@ const Register = () => {
                       className="absolute right-3 inset-y-0 flex items-center cursor-pointer"
                       onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                    {showPassword ? <FiEyeOff/> : <FiEye/>}
                   </div>
                 </div>
                 {errorMessages.password && (
@@ -203,7 +219,7 @@ const Register = () => {
 
               <div>
                 <label className="text-lg font-medium flex items-center gap-2">
-                  <FiLock className="text-gray-500" /> Confirm Password
+                  <FiLock className="text-gray-500"/> Confirm Password
                 </label>
                 <div className="relative flex">
                   <input
@@ -218,7 +234,7 @@ const Register = () => {
                       className="absolute right-3 inset-y-0 flex items-center cursor-pointer"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
-                    {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+                    {showConfirmPassword ? <FiEyeOff/> : <FiEye/>}
                   </div>
                 </div>
                 {errorMessages.confirmPassword && (
@@ -228,7 +244,7 @@ const Register = () => {
 
               <div>
                 <label className="text-lg font-medium flex items-center gap-2">
-                  <FiClipboard className="text-gray-500" /> Department ID
+                  <FiClipboard className="text-gray-500"/> Department ID
                 </label>
                 <input
                     type="number"
@@ -267,8 +283,9 @@ const Register = () => {
                   Register
                 </button>
                 <div className="flexCenter gap-2 rounded-xl border-2 border-gray-100">
-                  <FcGoogle />
-                  <button className="flex py-3 items-center justify-center gap-2 active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all">
+                  <FcGoogle/>
+                  <button
+                      className="flex py-3 items-center justify-center gap-2 active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all">
                     Sign in with Google
                   </button>
                 </div>
@@ -286,6 +303,7 @@ const Register = () => {
             </form>
           </div>
         </div>
+        <ToastContainer/>
       </motion.div>
   );
 };

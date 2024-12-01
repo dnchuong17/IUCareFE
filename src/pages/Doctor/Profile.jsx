@@ -138,52 +138,12 @@ const Profile = () => {
     };
 
     return (
-        <div
-            className="min-h-screen flex items-center justify-center p-6">
-            <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-10">
-                <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Doctor Profile</h1>
-                <form className="space-y-6">
-                    {/* Full Name */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-lg font-semibold text-gray-700">Full Name</label>
-                            <input
-                                type="text"
-                                name="doctor_name"
-                                value={info.doctor_name}
-                                onChange={handleChange}
-                                disabled
-                                className="w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg p-3 mt-2 bg-gray-100 cursor-not-allowed"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-lg font-semibold text-gray-700">Password</label>
-                            <input
-                                type="password"
-                                name="password"
-                                value={info.password}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg p-3 mt-2"
-                            />
-                        </div>
-                    </div>
-
-                    {/* Address and Phone */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-lg font-semibold text-gray-700">Address</label>
-                            <input
-                                type="text"
-                                name="doctor_address"
-                                value={info.doctor_address}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg p-3 mt-2"
-                            />
-        <div className="flex">
+        <div className="flex min-h-screen">
             {/* Sidebar */}
             <div className="w-1/5 bg-white shadow-lg">
                 <Sidebar />
             </div>
+            {/* Main Content */}
             <div className="w-4/5 min-h-screen flex items-center justify-center p-6">
                 <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-10">
                     <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Doctor Profile</h1>

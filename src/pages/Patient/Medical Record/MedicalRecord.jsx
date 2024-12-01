@@ -17,6 +17,7 @@ const MedicalRecord = () => {
         sickDetails: "",
         treatmentDetails: "",
         prescriptionDetails: "",
+        suggestionDetails:"",
     });
     const api = new Api();
 
@@ -202,7 +203,7 @@ const MedicalRecord = () => {
                                     onChange={handleSearchChange}
                                     placeholder="Search..."
                                     className="w-full border border-gray-300 rounded-md pl-10 pr-4 py-3 text-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                                    aria-label="Search patients"
+                                    aria-label="Search medicine"
                                 />
                             </div>
                             {isLoading && <p className="text-gray-500 mt-2">Loading...</p>}
@@ -237,6 +238,19 @@ const MedicalRecord = () => {
                                 </li>
                             ))}
                         </ul>
+
+                        {/* Suggestion */}
+                        <div>
+                            <label className="text-blue-700 font-medium text-xl mt-8">Suggestion</label>
+                            <textarea
+                                name="suggestionDetails"
+                                value={formData.suggestionDetails}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter suggestion details"
+                                rows="4"
+                            />
+                        </div>
                     </div>
 
                     {/* Right Section */}

@@ -5,6 +5,14 @@ import Calendar from "./Calendar";
 import Appointment from "./Appointment";
 
 const Page1 = () => {
+  return (
+    <div className="flex">
+      <Sidebar />
+      <Calendar />
+      <Appointment />
+    </div>
+
+  );
     return (
         <div className="flex">
             <Sidebar />

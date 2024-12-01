@@ -1,3 +1,9 @@
+import React from 'react';
+
+const TableList = () => {
+    return (
+        <div>
+            
 import React, { useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { IoPerson } from "react-icons/io5";

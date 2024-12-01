@@ -15,7 +15,7 @@ const Profile = () => {
         department_name: "",
         department_number: "",
     });
-    const [editField, setEditField] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
     const api = new Api();
 
     useEffect(() => {
@@ -64,10 +64,6 @@ const Profile = () => {
         }));
     };
 
-    const handleEdit = (field) => {
-        setEditField(field);
-    };
-
     const handleSave = async () => {
         const updatedData = {
             password: info.password !== "********" ? info.password : undefined,
@@ -110,6 +106,12 @@ const Profile = () => {
                 autoClose: 3000,
             });
         }
+
+        setIsEditing(false);
+    };
+
+    const handleEditToggle = () => {
+        setIsEditing((prev) => !prev);
     };
 
     return (
@@ -120,42 +122,39 @@ const Profile = () => {
             </div>
             {/* Main Content */}
             <div className="w-4/5 min-h-screen flex items-center justify-center p-6">
-                <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-10">
-                    <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Doctor Profile</h1>
+                <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-10 relative">
+                    <div className="flex justify-between items-center mb-8">
+                        <h1 className="text-4xl font-bold text-gray-800">Doctor Profile</h1>
+                        <HiOutlinePencilAlt
+                            className="text-3xl text-gray-500 cursor-pointer hover:text-blue-500"
+                            onClick={handleEditToggle}
+                        />
+                    </div>
                     <form className="space-y-6">
                         {/* Full Name and Password */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-lg font-semibold text-gray-700">Full Name</label>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        name="doctor_name"
-                                        value={info.doctor_name}
-                                        onChange={handleChange}
-                                        disabled
-                                        className="w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3"
-                                    />
-                                </div>
+                                <input
+                                    type="text"
+                                    name="doctor_name"
+                                    value={info.doctor_name}
+                                    disabled
+                                    className="w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3"
+                                />
                             </div>
                             <div>
                                 <label className="block text-lg font-semibold text-gray-700">Password</label>
-                                <div className="relative">
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        value={info.password}
-                                        onChange={handleChange}
-                                        disabled={editField !== "password"}
-                                        className={`w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3 ${
-                                            editField !== "password" ? "bg-gray-100 cursor-not-allowed" : ""
-                                        }`}
-                                    />
-                                    <HiOutlinePencilAlt
-                                        className="absolute top-1/2 right-3 transform -translate-y-1/2 text-2xl text-gray-400 cursor-pointer"
-                                        onClick={() => handleEdit("password")}
-                                    />
-                                </div>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    value={info.password}
+                                    onChange={handleChange}
+                                    disabled={!isEditing}
+                                    className={`w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3 ${
+                                        !isEditing ? "bg-gray-100 cursor-not-allowed" : ""
+                                    }`}
+                                />
                             </div>
                         </div>
 
@@ -163,41 +162,29 @@ const Profile = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-lg font-semibold text-gray-700">Address</label>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        name="doctor_address"
-                                        value={info.doctor_address}
-                                        onChange={handleChange}
-                                        disabled={editField !== "doctor_address"}
-                                        className={`w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3 ${
-                                            editField !== "doctor_address" ? "bg-gray-100 cursor-not-allowed" : ""
-                                        }`}
-                                    />
-                                    <HiOutlinePencilAlt
-                                        className="absolute top-1/2 right-3 transform -translate-y-1/2 text-2xl text-gray-400 cursor-pointer"
-                                        onClick={() => handleEdit("doctor_address")}
-                                    />
-                                </div>
+                                <input
+                                    type="text"
+                                    name="doctor_address"
+                                    value={info.doctor_address}
+                                    onChange={handleChange}
+                                    disabled={!isEditing}
+                                    className={`w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3 ${
+                                        !isEditing ? "bg-gray-100 cursor-not-allowed" : ""
+                                    }`}
+                                />
                             </div>
                             <div>
                                 <label className="block text-lg font-semibold text-gray-700">Phone</label>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        name="doctor_phone"
-                                        value={info.doctor_phone}
-                                        onChange={handleChange}
-                                        disabled={editField !== "doctor_phone"}
-                                        className={`w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3 ${
-                                            editField !== "doctor_phone" ? "bg-gray-100 cursor-not-allowed" : ""
-                                        }`}
-                                    />
-                                    <HiOutlinePencilAlt
-                                        className="absolute top-1/2 right-3 transform -translate-y-1/2 text-2xl text-gray-400 cursor-pointer"
-                                        onClick={() => handleEdit("doctor_phone")}
-                                    />
-                                </div>
+                                <input
+                                    type="text"
+                                    name="doctor_phone"
+                                    value={info.doctor_phone}
+                                    onChange={handleChange}
+                                    disabled={!isEditing}
+                                    className={`w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3 ${
+                                        !isEditing ? "bg-gray-100 cursor-not-allowed" : ""
+                                    }`}
+                                />
                             </div>
                         </div>
 
@@ -225,16 +212,18 @@ const Profile = () => {
                             </div>
                         </div>
 
-                        {/* Save */}
-                        <div className="text-center mt-8">
-                            <button
-                                type="button"
-                                onClick={handleSave}
-                                className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700"
-                            >
-                                Save
-                            </button>
-                        </div>
+                        {/* Save Button */}
+                        {isEditing && (
+                            <div className="text-center mt-8">
+                                <button
+                                    type="button"
+                                    onClick={handleSave}
+                                    className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        )}
                     </form>
                 </div>
             </div>

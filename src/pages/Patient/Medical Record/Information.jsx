@@ -14,6 +14,7 @@ const Information = () => {
         setInfo({
             ...info,
             [name]: value,
+            
         });
     };
 

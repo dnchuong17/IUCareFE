@@ -1,13 +1,22 @@
 import { assets } from "../assets/assets";
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
+import { motion } from 'framer-motion'
+
+
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
 
   return (
 
-      <div className="z-50 top-0">
+      <motion.div
+          initial={{ y: -100 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="z-50 top-0">
+
+
         <div className="flex items-center justify-between py-5 font-medium">
           <div className="container mx-auto flex items-center justify-between gap-2 border w-full px-6 py-2 rounded-full shadow-lg">
             <div className="flex items-center space-x-3">
@@ -93,7 +102,7 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
   );
 };
 

@@ -13,6 +13,14 @@ const Page1 = () => {
     </div>
 
   );
+    return (
+        <div className="flex">
+            <Sidebar />
+            <Calendar />
+            <Appointment />
+        </div>
+
+    );
 };
 
 export default Page1;

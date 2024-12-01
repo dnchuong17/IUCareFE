@@ -11,18 +11,16 @@ const Footer = () => {
   return (
       <div>
         <div className="container mx-auto px-8 md:px-16 lg:px-24 my-16 py-20">
-          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start text-sm mb-12">
+          <div className="flex flex-col mb-12 text-sm lg:flex-row lg:justify-between lg:items-start">
             {/* Logo and Description */}
             <div className="flex flex-col items-center lg:items-start mb-10 lg:mb-0 lg:w-1/3 text-center lg:text-left">
               <img
                   src={assets.logo}
-                  className="mb-5 w-32"
+                  className="mb-5 w-32 ml-20"
                   alt="IU Health Care Logo"
               />
-              <p className="w-full md:w-2/3 text-gray-600">
-                For further troubleshooting or if you wish to automate this
-                process for all downloaded apps, you could consider using{" "}
-              </p>
+              <p className="w-full md:w-2/3 text-gray-600 text-center">
+                Your health is our passion. We provide compassionate, personalized care for your well-being              </p>
             </div>
 
             {/* Links Section */}
@@ -67,7 +65,7 @@ const Footer = () => {
                 </p>
                 <ul className="flex gap-4">
                   <li>
-                    <div className="p-2 rounded-full bg-gray-200 hover:bg-blue-600 transition-all">
+                    <div className="p-2 rounded-full bg-gray-200 hover:bg-blue-300 transition-all">
                       <a
                           href="#"
                           aria-label="Facebook"
@@ -78,7 +76,7 @@ const Footer = () => {
                     </div>
                   </li>
                   <li>
-                    <div className="p-2 rounded-full bg-gray-200 hover:bg-blue-400 transition-all">
+                    <div className="p-2 rounded-full bg-gray-200 hover:bg-blue-300 transition-all">
                       <a
                           href="#"
                           aria-label="Twitter"
@@ -89,7 +87,7 @@ const Footer = () => {
                     </div>
                   </li>
                   <li>
-                    <div className="p-2 rounded-full bg-gray-200 hover:bg-blue-700 transition-all">
+                    <div className="p-2 rounded-full bg-gray-200 hover:bg-blue-300 transition-all">
                       <a
                           href="#"
                           aria-label="LinkedIn"
@@ -100,7 +98,7 @@ const Footer = () => {
                     </div>
                   </li>
                   <li>
-                    <div className="p-2 rounded-full bg-gray-200 hover:bg-pink-500 transition-all">
+                    <div className="p-2 rounded-full bg-gray-200 hover:bg-pink-300 transition-all">
                       <a
                           href="#"
                           aria-label="Instagram"

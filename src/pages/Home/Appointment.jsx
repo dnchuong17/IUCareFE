@@ -1,9 +1,18 @@
 import React from "react";
 import {assets} from "../../assets/assets.js";
+import { motion } from 'framer-motion'
 
 const Appointment = () => {
   return (
-  <div className="text-gray-800 font-sans py-16">
+  <motion.div
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{
+        duration: 0.75,
+        delay: 0.75,
+        ease: [0, 0.71, 0.2, 1.01],
+      }}
+      className="text-gray-800 font-sans py-16">
     <div className="max-w-screen-lg mx-auto text-center px-4">
       <div className="text-5xl font-bold mb-6 font-poppins">
        <h2> OUR APPOINTMENT BOOKING SERVICE </h2>
@@ -26,7 +35,7 @@ const Appointment = () => {
         </button>
       </div>
     </div>
-  </div>
+  </motion.div>
 );
 };
 

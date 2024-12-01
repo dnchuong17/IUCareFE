@@ -1,14 +1,3 @@
-// import { Routes, Route } from "react-router-dom";
-// import About from "./About";
-// import Home from "./Home";
-// import Login from "./Login";
-// import Register from "./Register";
-// import Hero from "../../components/Hero";
-// import Footer from "../../components/Footer";
-// import Navbar from "../../components/Navbar";
-// import Appointment from "../Page0/Appointment.jsx"
-// import Page1 from "../Page1/Page1.jsx"
-
 import Navbar from "../../components/Navbar.jsx";
 import {Route, Routes} from "react-router-dom";
 import Home from "./Home.jsx";
@@ -18,11 +7,11 @@ import Register from "./Register.jsx";
 import Appointment from "./Appointment.jsx";
 import Footer from "../../components/Footer.jsx";
 
-const Page0 = () => {
+const HomePage = () => {
   return (
       <div>
           <div>
-              <div className="relative overflow-hidden">
+              <div className="relative">
                   <div
                       className="bg-[#4cbcd831] absolute -z-10 top-[-6rem] right-[11rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[10rem]"/>
 
@@ -47,4 +36,4 @@ const Page0 = () => {
   );
 };
 
-export default Page0;
+export default HomePage;

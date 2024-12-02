@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Page1 from "./pages/Page1/Page1.jsx"
+import AppointmentPage from "./pages/Appointment/AppointmentPage.jsx";
 import TableList from "./pages/Patient/TableList.jsx";
 import MedicalRecord from "./pages/Patient/Medical Record/MedicalRecord.jsx";
 import HomePage from "./pages/Home/HomePage.jsx";
@@ -31,7 +31,7 @@ const App = () => {
                                 </div>
                             }
                         />
-                        <Route path="/page1/*" element={<Page1 />} />
+                        <Route path="Appointment/*" element={<AppointmentPage />} />
                         <Route path="/tableList" element={<TableList />} />
                         <Route path="/medicalRecord" element={<MedicalRecord />} />
                         <Route path="/information" element={<Information />} />

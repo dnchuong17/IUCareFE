@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Api } from "../../utils/api.ts";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Sidebar from "../Page1/Sidebar.jsx";
+import Sidebar from "../Appointment/Sidebar.jsx";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 
 const Profile = () => {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { IoPerson } from "react-icons/io5";
-import Sidebar from "../Page1/Sidebar.jsx";
+import Sidebar from "../Appointment/Sidebar.jsx";
 
 const TableList = () => {
     const [currentPage, setCurrentPage] = useState(1);

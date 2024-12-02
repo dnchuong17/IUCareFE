@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Sidebar from "../../Page1/Sidebar.jsx";
+import Sidebar from "../../Appointment/Sidebar.jsx";
 import { FiSearch, FiTrash, FiX } from "react-icons/fi";
 import { Api } from "../../../utils/api.ts";
 import { ToastContainer, toast } from "react-toastify";

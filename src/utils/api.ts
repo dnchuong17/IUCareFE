@@ -93,27 +93,129 @@ export class Api {
   }
 
 
-  async createPatient (informationRequest) {
+  async createPatient(patientData: any) {
     try {
-      const response = await this.axiosObject.post("/patient/create", informationRequest);
+      const response = await this.axiosObject.post(
+        "/patient/create",
+        patientData
+      );
       console.log("Server response:", response.data);
       return response.data;
     } catch (error) {
-      console.error("Create information failed:", error.response?.data || error.message);
+      console.error(
+        "Create patient failed:",
+        error.response?.data || error.message
+      );
       throw error;
     }
   }
 
-  async getPatient(studentId: string) {
+  async getPatientInformation(studentId: string) {
     try {
-      const response = await this.axiosObject.get(`/patient/information`, {
+      const response = await this.axiosObject.get("/patient/information", {
         params: { studentId },
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching patient information:", error.response?.data || error.message);
+      console.error(
+        "Error fetching patient information:",
+        error.response?.data || error.message
+      );
       throw error;
     }
+  }
+
+  async createAppointment(
+    doctorId: string,
+    patientId: string,
+    time: string
+  ): Promise<string> {
+    try {
+      const response = await this.axiosObject.post(
+        "/appointment/create_appointment",
+        {
+          doctorID: doctorId,
+          patientID: patientId,
+          time,
+        }
+      );
+      return response.data.message || "Appointment created successfully";
+    } catch (error) {
+      console.error(
+        "Error creating appointment:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+
+  async checkAppointment(date: string): Promise<Array<any>> {
+    try {
+      const response = await this.axiosObject.get("/appointment/check", {
+        params: { date },
+      });
+      return response.data.appointments || [];
+    } catch (error) {
+      console.error(
+        "Error fetching appointments by date:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+
+  async editAppointmentTime(
+    id: string,
+    doctorId: string,
+    patientId: string,
+    time: string,
+    status: string
+  ): Promise<string> {
+    try {
+      const response = await this.axiosObject.patch(`/appointment/edit/${id}`, {
+        doctorID: doctorId,
+        patientID: patientId,
+        time,
+        status,
+        id,
+      });
+      return response.data.message || "Appointment time updated successfully";
+    } catch (error) {
+      console.error(
+        "Error editing appointment time:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+
+  async updateAppointmentStatus(
+    id: string,
+    doctorId: string,
+    patientId: string,
+    time: string,
+    status: string
+  ): Promise<string> {
+    try {
+      const response = await this.axiosObject.patch(
+        `/appointment/updateStatus/${id}`,
+        {
+          doctorID: doctorId,
+          patientID: patientId,
+          time,
+          status,
+          id,
+        }
+      );
+      return response.data.message || "Appointment status updated successfully";
+    } catch (error) {
+      console.error(
+        "Error updating appointment status:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
   }
 
 

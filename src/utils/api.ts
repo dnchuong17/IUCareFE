@@ -93,32 +93,32 @@ export class Api {
   }
 
 
-  async createPatient(
-    name: string,
-    address: string,
-    major: string,
-    phone: string,
-    studentId: string,
-    allergy: string
-  ): Promise<any> {
-    try {
-      const response = await this.axiosObject.post("/patient/create", {
-        name,
-        address,
-        major,
-        phone,
-        studentId,
-        allergy,
-      });
-      return response.data;
-    } catch (error) {
-      console.error(
-        "Error creating patient:",
-        error.response?.data || error.message
-      );
-      throw error;
-    }
-  }
+  // async createPatient(
+  //   name: string,
+  //   address: string,
+  //   major: string,
+  //   phone: string,
+  //   studentId: string,
+  //   allergy: string
+  // ): Promise<any> {
+  //   try {
+  //     const response = await this.axiosObject.post("/patient/create", {
+  //       name,
+  //       address,
+  //       major,
+  //       phone,
+  //       studentId,
+  //       allergy,
+  //     });
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error(
+  //       "Error creating patient:",
+  //       error.response?.data || error.message
+  //     );
+  //     throw error;
+  //   }
+  // }
 
   async getPatientInformation(studentId: string) {
     try {
@@ -139,15 +139,14 @@ export class Api {
       const response = await this.axiosObject.get(`/patient`, {
         params: { studentId },
       });
-      return response.data;
+      return response.data; // Trả về danh sách bệnh nhân
     } catch (error) {
-      console.error(
-        "Error searching patient:",
-        error.response?.data || error.message
-      );
+      console.error("Error searching for patient:", error.response?.data || error.message);
       throw error;
     }
   }
+
+
 
   async createAppointment(
     doctorId: string,
@@ -240,9 +239,28 @@ export class Api {
       throw error;
     }
   }
+
+  async updateMedicalRecord(doctorId: string, doctorInfor: DoctorInforModel ) {
+    try {
+      const response = await this.axiosObject.patch(`/doctor/change_information/${doctorId}`, doctorInfor);
+      console.log(response.data)
+      return response.data;
+    } catch (error) {
+      console.error("Update failed:", error.response?.data || error.message);
+      throw error;
+    }
   }
 
-
+  async createPatient (informationRequest) {
+    try {
+      const response = await this.axiosObject.post("/patient/create", informationRequest);
+      console.log("Server response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Create information failed:", error.response?.data || error.message);
+      throw error;
+    }
+  }
 
 
 }

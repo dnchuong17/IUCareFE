@@ -93,17 +93,27 @@ export class Api {
   }
 
 
-  async createPatient(patientData: any) {
+  async createPatient(
+    name: string,
+    address: string,
+    major: string,
+    phone: string,
+    studentId: string,
+    allergy: string
+  ): Promise<any> {
     try {
-      const response = await this.axiosObject.post(
-        "/patient/create",
-        patientData
-      );
-      console.log("Server response:", response.data);
+      const response = await this.axiosObject.post("/patient/create", {
+        name,
+        address,
+        major,
+        phone,
+        studentId,
+        allergy,
+      });
       return response.data;
     } catch (error) {
       console.error(
-        "Create patient failed:",
+        "Error creating patient:",
         error.response?.data || error.message
       );
       throw error;
@@ -119,6 +129,20 @@ export class Api {
     } catch (error) {
       console.error(
         "Error fetching patient information:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+  async searchPatient(studentId) {
+    try {
+      const response = await this.axiosObject.get(`/patient`, {
+        params: { studentId },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error searching patient:",
         error.response?.data || error.message
       );
       throw error;

@@ -8,12 +8,13 @@ import AppointmentPage from "./pages/Appointment/AppointmentPage.jsx";
 import DoctorProfile from "./pages/Doctor/Profile.jsx"
 
 import TopLoader from "./components/TopLoader.jsx";
+import Footer from "./components/Footer.jsx";
 
 
 const App = () => {
     return (
         <div>
-            <div className="relative overflow-hidden">
+            <div className="relative">
                 <div
                     className="bg-[#4cbcd831] absolute -z-10 top-[-6rem] right-[11rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[10rem]"
                 />
@@ -39,6 +40,7 @@ const App = () => {
 
                     </Routes>
                 </div>
+                <Footer />
             </div>
         </div>
     );

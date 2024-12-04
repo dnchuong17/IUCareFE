@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Sidebar from "./Sidebar";
+import Sidebar from "../../components/Sidebar.jsx";
 import Calendar from "./Calendar";
 import Appointment from "./Appointment";
 import CreateAppointment from "./CreateAppointment";

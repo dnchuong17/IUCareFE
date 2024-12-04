@@ -8,8 +8,7 @@ import AppointmentPage from "./pages/Appointment/AppointmentPage.jsx";
 import DoctorProfile from "./pages/Doctor/Profile.jsx"
 
 import TopLoader from "./components/TopLoader.jsx";
-import Footer from "./components/Footer.jsx";
-
+import Footer from "./components/Footer.jsx"
 
 const App = () => {
     return (
@@ -32,7 +31,7 @@ const App = () => {
                                 </div>
                             }
                         />
-                        <Route path="Appointment/*" element={<AppointmentPage />} />
+                        <Route path="/appointmentPage" element={<AppointmentPage />} />
                         <Route path="/tableList" element={<TableList />} />
                         <Route path="/medicalRecord" element={<MedicalRecord />} />
                         <Route path="/information" element={<Information />} />

@@ -36,7 +36,7 @@ const Login = () => {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          onClose: () => navigate("/page1"),
+          onClose: () => navigate("/appointmentPage"),
         });
       } else {
         toast.error("Login failed: Account does not exist.", {

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { assets } from "../assets/assets.js";
-import { FaCalendarAlt, FaUserMd, FaUser, FaSignOutAlt, FaUserAstronaut } from "react-icons/fa";
+import { FaCalendarAlt, FaUserMd, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { HiHome } from 'react-icons/hi2';
 import React, { useState } from 'react';
 

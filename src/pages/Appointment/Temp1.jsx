@@ -3,8 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Api } from "../../utils/api";
 
-import debounce from "lodash.debounce";
-
 const CreateAppointment = ({ appointments, setAppointments }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSearchMode, setIsSearchMode] = useState(true);
@@ -62,17 +60,7 @@ const CreateAppointment = ({ appointments, setAppointments }) => {
           results.data.forEach((result, index) => {
             console.log(`Result ${index}:`, result);
           });
-          //        setSearchResults(results.data);
-          const patients = results.data.map((result) => ({
-            studentId: result.studentId,
-            patientName: result.patientName,
-          }));
-          setSearchResults(patients);
-          console.log("Patients:", patients);
-          patients.forEach((patient) => {
-            console.log("Student ID:", patient.studentId);
-            console.log("Patient Name:", patient.patientName);
-          });
+          setSearchResults(results.data);
         } else {
           console.error("Expected an array but got:", results);
           setMessage("Unexpected response format.");
@@ -87,65 +75,6 @@ const CreateAppointment = ({ appointments, setAppointments }) => {
         } else {
           console.error("Error message:", error.message);
         }
-  // Debounced Search Function
-  const debouncedSearch = useCallback(
-    debounce(async (value) => {
-      if (value.length === 0) {
-        setSearchResults([]);
-        setMessage("");
-        return;
-      }
-
-      try {
-        // Search patient by studentId
-        const results = await api.searchPatient(value);
-        if (results && results.length > 0) {
-          setSearchResults(results);
-          setMessage("");
-          setIsSearchMode(true);
-        } else {
-          // No matching Student IDs found, create new patient
-          const newPatientData = { studentId: value };
-          const newPatient = await api.createPatient(newPatientData);
-
-          if (newPatient) {
-            // Get basic information of the new patient
-            const patientInfo = await api.getPatientInformation(newPatient.id);
-            setSearchResults([patientInfo]);
-            setMessage("");
-            setIsSearchMode(true);
-          } else {
-            setSearchResults([]);
-            setMessage("Error creating new patient.");
-          }
-        }
-      } catch (error) {
-        console.error("Error handling patient search:", error);
-        setSearchResults([]);
-        setMessage("Error processing request.");
-      }
-    }, 500),
-    []
-  );
-  const handleSearch = useCallback(
-    debounce(async (term) => {
-      if (term.length === 0) {
-        setSearchResults([]);
-        setMessage("");
-        return;
-      }
-      setIsLoading(true);
-      try {
-        const results = await api.searchPatient(term);
-        if (results.length === 0) {
-          setSearchResults([]);
-          setMessage("No matching Student IDs found.");
-        } else {
-          setSearchResults(results);
-          setMessage("");
-        }
-      } catch (error) {
-        console.error("Error searching for Student IDs:", error);
         setSearchResults([]);
         setMessage("Error searching for Student IDs.");
       } finally {
@@ -206,48 +135,6 @@ const CreateAppointment = ({ appointments, setAppointments }) => {
       }
 
       alert("Error updating information");
-    }, 300),
-    []
-  );
-
-  useEffect(() => {
-    handleSearch(searchTerm);
-  }, [searchTerm, handleSearch]);
-
-  useEffect(() => {
-    handleSearch(searchTerm);
-  }, [searchTerm, handleSearch]);
-  // Handle Search Input Change
-  const handleSearchChange = (e) => {
-    const value = e.target.value.trim();
-    setSearchTerm(value);
-    setMessage("");
-    debouncedSearch(value);
-  };
-
-  // Handle Selecting a Student ID from Dropdown
-  const handleSelectStudentId = async (id) => {
-    setSearchTerm(id);
-    setSearchResults([]);
-    setIsLoading(true);
-    try {
-      const result = await api.getPatientInformation(id);
-      if (result) {
-        setName(result.name);
-        setStudentId(result.studentId);
-        setMajor(result.major);
-        setPhone(result.phone);
-        setAddress(result.address);
-        setAllergy(result.allergy);
-        setIsSearchMode(true); // Stay in Search Mode
-        setMessage("");
-      } else {
-        setMessage("This student ID does not exist.");
-        // Optionally, you can prompt the user to add a new patient here
-      }
-    } catch (error) {
-      console.error("Error fetching patient information:", error);
-      setMessage("Error fetching patient information.");
     } finally {
       setIsLoading(false);
     }
@@ -289,226 +176,8 @@ const CreateAppointment = ({ appointments, setAppointments }) => {
       setIsLoading(false);
     }
   };
-
-  const handleLogin = async (credentials) => {
-    try {
-      const response = await api.login(credentials);
-      const account = response.data.account;
-      localStorage.setItem("account", JSON.stringify(account));
-      // Proceed with login success actions
-    } catch (error) {
-      console.error("Login error:", error);
-      // Handle login error
-    }
-  };
-  const handleCreateAppointment = async (e) => {
-    e.preventDefault();
-
-    if (!date || !time) {
-      setMessage("Please select both date and time.");
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      // Fetch doctorID using getDoctorByAccount API
-      const account = localStorage.getItem("account");
-      const doctorResponse = await api.getDoctorByAccount(account);
-      const doctorId = doctorResponse.doctor_id;
-
-      // Validate doctorId
-      if (!doctorId || typeof doctorId !== "number") {
-        setMessage("Invalid doctor ID.");
-        setIsLoading(false);
-        return;
-      }
-
-      // Validate studentId
-      const patientResponse = await api.getPatient(studentId);
-      const patientId = patientResponse.patientId;
-
-      // Validate patientId
-      if (!patientId) {
-        setMessage("Invalid patient ID.");
-        setIsLoading(false);
-        return;
-      }
-
-      // Log the request payload
-      const payload = {
-        doctorId,
-        patientId, // Ensure patientId is sent as a string
-        time: `${date}T${time}`,
-      };
-      console.log("Request Payload:", payload);
-
-      // Create the appointment
-      const appointmentResponse = await api.createAppointment(
-        doctorId,
-        patientId, // Ensure patientId is sent as a string
-        `${date}T${time}`
-      );
-      // Store appointmentId in localStorage
-      if (appointmentResponse.appointmentId) {
-        localStorage.setItem(
-          "appointmentId",
-          appointmentResponse.appointmentId
-        );
-      }
-
-      if (appointmentResponse) {
-        alert("Appointment successfully created");
-
-        setAppointments([
-          ...appointments,
-          {
-            name,
-            studentId,
-            date,
-            time,
-            doctorId,
-            patientId,
-            status: "APPROVED",
-            appointmentId: appointmentResponse.appointmentId,
-          },
-        ]);
-        resetForm();
-      } else {
-        setMessage("Failed to create appointment.");
-      }
-    } catch (error) {
-      console.error("Error details:", error.response?.data || error.message);
-      setMessage("An error occurred while creating the appointment.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Reset Form Function
-  const resetForm = () => {
-    setIsSearchMode(true);
-    setSearchTerm("");
-    setSearchResults([]);
-    setMessage("");
-    setName("");
-    setStudentId("");
-    setMajor("");
-    setPhone("");
-    setAddress("");
-    setAllergy("");
-    setDate("");
-    setTime("");
-    setIsLoading(false);
-  };
-
-  // Toggle Modal Visibility
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
-    resetForm();
-  };
-
-  return (
-    <>
-      {/* Button to Open Modal */}
-      <div className="fixed top-60 right-2 w-1/6 h-10 flex items-center justify-center">
-        <button
-          className="h-8 w-80 mr-10 bottom-20 bg-blue-400 text-white rounded-full flex items-center justify-center hover:bg-orange-800 transition-colors duration-300"
-          onClick={toggleModal}
-        >
-          <FontAwesomeIcon icon={faPlus} className="mr-2" />
-          Create Appointment
-        </button>
-      </div>
-
-      {/* Modal */}
-      {isModalVisible && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-30">
-          <div className="bg-white rounded-lg shadow-xl p-7 w-full max-w-lg mx-4 md:mx-0 md:w-1/2">
-            {/* Modal Header */}
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-semibold text-center text-gray-600 w-full">
-                Booking Appointment
-              </h2>
-              <button
-                className="text-gray-700 hover:text-gray-900"
-                onClick={toggleModal}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            {/* Mode Toggle Buttons */}
-            <div className="flex justify-center mb-4">
-              <button
-                className={`px-4 py-2 rounded-l-full ${
-                  isSearchMode
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-200 text-gray-700"
-                }`}
-                onClick={() => setIsSearchMode(true)}
-              >
-                Search Mode
-              </button>
-              <button
-                className={`px-4 py-2 rounded-r-full ${
-                  !isSearchMode
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-200 text-gray-700"
-                }`}
-                onClick={() => setIsSearchMode(false)}
-              >
-                Form Mode
-              </button>
-            </div>
 
   // Handle Adding a New Patient
-  const handleAddPatient = async (e) => {
-    e.preventDefault();
-
-    // Validate required fields
-    if (!name || !studentId || !phone || !address) {
-      setMessage("Please fill in all required fields.");
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const patientResponse = await api.createPatient(
-        name,
-        address,
-        major,
-        phone,
-        studentId,
-        allergy
-      );
-
-      if (patientResponse && patientResponse.studentId) {
-        alert("Update successful");
-        resetForm();
-        setIsSearchMode(true);
-      } else {
-        setMessage("Failed to add patient.");
-      }
-    } catch (error) {
-      console.error("Error adding patient:", error);
-      setMessage("Error adding patient.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   // Handle Creating an Appointment
   const handleCreateAppointment = async (e) => {
@@ -548,14 +217,12 @@ const CreateAppointment = ({ appointments, setAppointments }) => {
         await handleAddPatient(e);
         patientIdToUse = studentId; // Update with new studentId
       }
-
-      // Retrieve doctorId from localStorage or context
-      const doctorId = localStorage.getItem("doctorId"); // Adjust as needed
-      if (!doctorId) {
+      if (!doctorResponse || !doctorResponse.doctorId) {
         setMessage("Doctor ID not found. Please log in again.");
         setIsLoading(false);
         return;
       }
+      const doctorId = doctorResponse.doctorId;
 
       // Create the appointment
       const appointmentResponse = await api.createAppointment(
@@ -702,48 +369,27 @@ const CreateAppointment = ({ appointments, setAppointments }) => {
                     {Array.isArray(searchResults) &&
                       searchResults.length > 0 && (
                         <div className="absolute bg-white border border-gray-200 rounded-lg w-full mt-1 max-h-60 overflow-auto z-10">
-                          {searchResults.map((patient, index) => (
+                          {searchResults.map((result, index) => (
                             <div
                               key={index}
                               className="p-2 hover:bg-gray-100 cursor-pointer"
                               onClick={() => {
-                                setStudentId(patient.studentId);
-                                setName(patient.patientName);
-                                setMajor(patient.major);
-                                setPhone(patient.phone);
-                                setAddress(patient.address);
-                                setAllergy(patient.allergy);
+                                setStudentId(result.studentId);
+                                setName(result.fullName); // Updated property here
+                                setMajor(result.major);
+                                setPhone(result.phone);
+                                setAddress(result.address);
+                                setAllergy(result.allergy);
                                 setSearchResults([]);
                               }}
                             >
-                              {patient.studentId ? patient.studentId : "No ID"}{" "}
-                              -{" "}
-                              {patient.patientName
-                                ? patient.patientName
-                                : "No Name"}{" "}
+                              {result.studentId ? result.studentId : "No ID"} -{" "}
+                              {result.fullName ? result.fullName : "No Name"}{" "}
+                              {/* Updated property here */}
                             </div>
                           ))}
                         </div>
                       )}
-                      onChange={handleSearchChange}
-                      className="w-full p-3 pl-10 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    />
-                    {searchResults.length > 0 && (
-                      <div className="absolute bg-white border border-gray-200 rounded-lg w-full mt-1 max-h-60 overflow-auto z-10">
-                        {searchResults.map((result) => (
-                          <div
-                            key={result.studentId}
-                            className="p-2 hover:bg-gray-100 cursor-pointer"
-                            onClick={() =>
-                              handleSelectStudentId(result.studentId)
-                            }
-                          >
-                            {result.studentId} - {result.name}
-                          </div>
-                        ))}
-                      </div>
-                    )}
                   </div>
                 </div>
 
@@ -762,7 +408,6 @@ const CreateAppointment = ({ appointments, setAppointments }) => {
 
                 {/* Display Selected Student Info and Appointment Details */}
                 {studentId && (
-                {studentId && name && (
                   <>
                     {/* Full Name */}
                     <div className="p-0.5 rounded-lg text-gray-700">
@@ -795,18 +440,13 @@ const CreateAppointment = ({ appointments, setAppointments }) => {
                       <label className="block mb-2 font-medium text-blue-800">
                         Allergy
                       </label>
-
-                      <textarea
-                        name="allergy"
+                      <input
+                        type="text"
                         value={allergy}
-                        className="w-full p-3 border border-blue-200 rounded-lg bg-white-100"
-                        onChange={(e) => setAllergy(e.target.value)}
-                        placeholder="Enter allergies"
-                        rows="3"
-                        cols="50"
-                      ></textarea>
+                        className="w-full p-3 border border-gray-200 rounded-lg bg-white-100"
+                      />
                     </div>
-                    <div className="flex space-x-10">
+                    <div className="flex space-x-4">
                       {/* Select Date */}
                       <div className="p-0.5 rounded-lg text-gray-700">
                         <label className="block mb-2 font-medium text-blue-800">
@@ -817,20 +457,20 @@ const CreateAppointment = ({ appointments, setAppointments }) => {
                           value={date}
                           onChange={(e) => setDate(e.target.value)}
                           required
-                          className="w-full p-3 px-8 py-1 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border rounded"
                         />
                       </div>
 
                       {/* Select Time */}
                       <div className="p-0.5 rounded-lg text-gray-700">
-                        <label className="block mb-2 right-4 font-medium text-blue-800">
+                        <label className="block mb-2 font-medium text-blue-800">
                           Select Time
                         </label>
                         <select
                           value={time}
                           onChange={(e) => setTime(e.target.value)}
                           required
-                          className="w-full p-2 px-10 py-1.5 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full p-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                           <option value="" disabled>
                             Select Time
@@ -848,54 +488,6 @@ const CreateAppointment = ({ appointments, setAppointments }) => {
                           )}
                         </select>
                       </div>
-                      <input
-                        type="text"
-                        value={allergy}
-                        readOnly
-                        className="w-full p-3 border border-gray-200 rounded-lg bg-gray-100"
-                      />
-                    </div>
-
-                    {/* Select Date */}
-                    <div className="p-0.5 rounded-lg text-gray-700">
-                      <label className="block mb-2 font-medium text-blue-800">
-                        Select Date
-                      </label>
-                      <input
-                        type="date"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                        required
-                        className="w-full px-3 py-2 border rounded"
-                      />
-                    </div>
-
-                    {/* Select Time */}
-                    <div className="p-0.5 rounded-lg text-gray-700">
-                      <label className="block mb-2 font-medium text-blue-800">
-                        Select Time
-                      </label>
-                      <select
-                        value={time}
-                        onChange={(e) => setTime(e.target.value)}
-                        required
-                        className="w-full p-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="" disabled>
-                          Select Time
-                        </option>
-                        {availableTimes.length > 0 ? (
-                          availableTimes.map((t, index) => (
-                            <option key={index} value={t}>
-                              {t}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="" disabled>
-                            No available times
-                          </option>
-                        )}
-                      </select>
                     </div>
 
                     {/* Submit Button */}
@@ -977,36 +569,6 @@ const CreateAppointment = ({ appointments, setAppointments }) => {
                     />
                   </div>
                 </div>
-                </div>
-
-                {/* Major */}
-                <div className="p-0.5 rounded-lg text-gray-700">
-                  <label className="block mb-2 font-medium text-blue-800">
-                    Major
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter major"
-                    value={major}
-                    onChange={(e) => setMajor(e.target.value)}
-                    className="w-full p-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                {/* Phone */}
-                <div className="p-0.5 rounded-lg text-gray-700">
-                  <label className="block mb-2 font-medium text-blue-800">
-                    Phone
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter phone number"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full p-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
                 {/* Address */}
                 <div className="p-0.5 rounded-lg text-gray-700">
                   <label className="block mb-2 font-medium text-blue-800">

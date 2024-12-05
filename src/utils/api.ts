@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { LoginRequest } from "./request/loginRequest";
 import { RegisterRequest } from "./request/registerRequest";
-import { DoctorInforModel } from "../model/doctorInfor.model"
+import { DoctorInforModel } from "../model/doctorInfor.model";
 
 export class Api {
   private axiosObject: AxiosInstance;
@@ -37,16 +37,20 @@ export class Api {
 
   async register(registerRequest) {
     try {
-      const result2 = await this.axiosObject.post("/auth/doctorRegister", registerRequest);
+      const result2 = await this.axiosObject.post(
+        "/auth/doctorRegister",
+        registerRequest
+      );
       console.log("Server response:", result2.data);
       return result2.data;
     } catch (error) {
-      console.error("Registration failed:", error.response?.data || error.message);
+      console.error(
+        "Registration failed:",
+        error.response?.data || error.message
+      );
       throw error; // Re-throw error for higher-level handling
     }
   }
-
-
 
   async searchMedicine(medicine_name: string): Promise<string[]> {
     try {
@@ -55,7 +59,10 @@ export class Api {
       });
       return response.data; // Trả về danh sách tên thuốc
     } catch (error) {
-      console.error("Error fetching medicines:", error.response?.data || error.message);
+      console.error(
+        "Error fetching medicines:",
+        error.response?.data || error.message
+      );
       throw error;
     }
   }
@@ -66,7 +73,10 @@ export class Api {
       console.log("response", response);
       return response.data;
     } catch (error) {
-      console.error("Error fetching doctor by account:", error.response?.data || error.message);
+      console.error(
+        "Error fetching doctor by account:",
+        error.response?.data || error.message
+      );
       throw error;
     }
   }
@@ -76,21 +86,65 @@ export class Api {
       const response = await this.axiosObject.get(`/doctor/${doctor_id}`);
       return response.data;
     } catch (error) {
-      console.error("Error fetching doctor by ID:", error.response?.data || error.message);
+      console.error(
+        "Error fetching doctor by ID:",
+        error.response?.data || error.message
+      );
       throw error;
     }
   }
 
-  async updateDoctorInfo(doctorId: string, doctorInfor: DoctorInforModel ) {
+  async updateDoctorInfo(doctorId: string, doctorInfor: DoctorInforModel) {
     try {
-      const response = await this.axiosObject.patch(`/doctor/change_information/${doctorId}`, doctorInfor);
-     console.log(response.data)
+      const response = await this.axiosObject.patch(
+        `/doctor/change_information/${doctorId}`,
+        doctorInfor
+      );
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error("Update failed:", error.response?.data || error.message);
       throw error;
     }
   }
+  /*
+  async createPatient(informationRequest) {
+    try {
+      const response = await this.axiosObject.post(
+        "/patient/create",
+        informationRequest
+      );
+      console.log("Server response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Create information failed:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+    */
+  async createPatient(
+    name: string,
+    address: string,
+    major: string,
+    phone: string,
+    studentId: string,
+    allergy: string
+  ): Promise<any> {
+    try {
+      const response = await this.axiosObject.post("/patient/create", {
+        name,
+        address,
+        major,
+        phone,
+        studentId,
+        allergy,
+      });
+      return response.data;
+    } catch (error) {
+      console.error(
 
 
   async createPatient(
@@ -142,6 +196,7 @@ export class Api {
       return response.data;
     } catch (error) {
       console.error(
+        "Error fetching patient information:",
         "Error searching patient:",
         error.response?.data || error.message
       );
@@ -171,6 +226,104 @@ export class Api {
       );
       throw error;
     }
+  }
+
+  async checkAppointment(date: string): Promise<Array<any>> {
+    try {
+      const response = await this.axiosObject.get("/appointment/check", {
+        params: { date },
+      });
+      return response.data.appointments || [];
+    } catch (error) {
+      console.error(
+        "Error fetching appointments by date:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+
+  async searchPatient(studentId) {
+    try {
+      console.log(`Frontend input: ${studentId}`);
+      const response = await this.axiosObject.get("/patient", {
+        params: { studentId },
+      });
+      console.log(`API response: ${JSON.stringify(response.data)}`);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error searching patient:",
+  async editAppointmentTime(
+    id: string,
+    doctorId: string,
+    patientId: string,
+    time: string,
+    status: string
+  ): Promise<string> {
+    try {
+      const response = await this.axiosObject.patch(`/appointment/edit/${id}`, {
+        doctorID: doctorId,
+        patientID: patientId,
+        time,
+        status,
+        id,
+      });
+      return response.data.message || "Appointment time updated successfully";
+    } catch (error) {
+      console.error(
+        "Error editing appointment time:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+
+  async createAppointment(
+    doctorId: string,
+    patientId: string,
+    time: string
+  ): Promise<string> {
+    try {
+      const response = await this.axiosObject.post(
+        "/appointment/create_appointment",
+        {
+          doctorId,
+          patientId,
+          time,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error creating appointment:",
+  async updateAppointmentStatus(
+    id: string,
+    doctorId: string,
+    patientId: string,
+    time: string,
+    status: string
+  ): Promise<string> {
+    try {
+      const response = await this.axiosObject.patch(
+        `/appointment/updateStatus/${id}`,
+        {
+          doctorID: doctorId,
+          patientID: patientId,
+          time,
+          status,
+          id,
+        }
+      );
+      return response.data.message || "Appointment status updated successfully";
+    } catch (error) {
+      console.error(
+        "Error updating appointment status:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
   }
 
   async checkAppointment(date: string): Promise<Array<any>> {
@@ -224,11 +377,10 @@ export class Api {
       const response = await this.axiosObject.patch(
         `/appointment/updateStatus/${id}`,
         {
-          doctorID: doctorId,
-          patientID: patientId,
+          doctorId,
+          patientId,
           time,
           status,
-          id,
         }
       );
       return response.data.message || "Appointment status updated successfully";
@@ -240,6 +392,4 @@ export class Api {
       throw error;
     }
   }
-  }
-
-
+}

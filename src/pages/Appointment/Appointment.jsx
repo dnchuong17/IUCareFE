@@ -1,16 +1,37 @@
-
-// Import necessary dependencies
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaClock } from "react-icons/fa";
 import SearchForm from "./SearchForm";
-import { Api } from "../../utils/api.ts"
+import { Api } from "../../utils/api.ts";
 
-const Appointment = () => {
+const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
     const [appointments, setAppointments] = useState([]);
-    const api = new Api(); // State to store appointments
-    const [showSearchPopup, setShowSearchPopup] = useState(false); // State to toggle SearchForm popup
+    const [showSearchPopup, setShowSearchPopup] = useState(false);
+    const api = new Api();
 
-    // Function to handle adding a new appointment to the list
+    useEffect(() => {
+        if (selectedDate) {
+            fetchAppointmentsByDate(selectedDate);
+        }
+    }, [selectedDate]);
+
+    const fetchAppointmentsByDate = async (date) => {
+        try {
+            // Chỉ lấy phần ngày từ `selectedDate`
+            const formattedDate = new Date(date).toISOString().split('T')[0];
+
+            // Gọi API để lấy tất cả các cuộc hẹn của ngày
+            const response = await api.getAppointment(formattedDate);
+            setAppointments(response); // Cập nhật danh sách cuộc hẹn
+
+            // Cập nhật danh sách ngày có cuộc hẹn nếu có cuộc hẹn nào trong ngày
+            if (response.length > 0) {
+                onDaysWithAppointmentsChange((prevDays) => [...new Set([...prevDays, formattedDate])]);
+            }
+        } catch (error) {
+            console.error("Error fetching appointments:", error);
+        }
+    };
+
     const handleAppointmentCreated = (newAppointment) => {
         setAppointments((prevAppointments) => [...prevAppointments, newAppointment]);
     };
@@ -21,7 +42,6 @@ const Appointment = () => {
             style={{ height: "500px", overflowY: "scroll" }}
         >
             <div className="mt-4 ml-3">
-                {/* Button to toggle SearchForm */}
                 <div className="mb-4">
                     <button
                         className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
@@ -31,14 +51,12 @@ const Appointment = () => {
                     </button>
                 </div>
 
-                {/* SearchForm Popup */}
                 <SearchForm
                     isOpen={showSearchPopup}
                     onClose={() => setShowSearchPopup(false)}
                     onAppointmentCreated={handleAppointmentCreated}
                 />
 
-                {/* Appointments */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {appointments.length > 0 ? (
                         appointments.map((appointment, index) => (

@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 
-const Calendar = () => {
+const Calendar = ({ onDateSelected, daysWithAppointments }) => {
     const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
 
     const getNext30Days = () => {
@@ -13,8 +13,10 @@ const Calendar = () => {
             dates.push({
                 day: date.format("ddd"), // e.g., 'Tue'
                 date: date.date(),
+                fullDate: new Date (date.format("YYYY-MM-DD")), // Full date for selection
             });
         }
+        console.log(dates);
         return dates;
     };
 
@@ -35,10 +37,14 @@ const Calendar = () => {
                         {monthDates.map((dateObj, index) => (
                             <button
                                 key={index}
+                                onClick={() => onDateSelected(dateObj.fullDate)}
                                 className="flex flex-col mt-5 items-center p-8 w-32 h-32 bg-gray-800 bg-opacity-50 text-white p-5 rounded-lg shadow-md hover:bg-blue-100 hover:bg-opacity-50 transition-colors duration-300"
                             >
                                 <div className="text-lg">{dateObj.day}</div>
                                 <div className="text-2xl">{dateObj.date}</div>
+                                {daysWithAppointments.includes(dateObj.fullDate) && (
+                                    <div className="w-3 h-3 rounded-full bg-green-500 mt-2"></div>
+                                )}
                             </button>
                         ))}
                     </div>

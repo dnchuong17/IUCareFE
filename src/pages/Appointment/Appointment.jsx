@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaClock } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Api } from "../../utils/api";
+import PropTypes from "prop-types";
 
 const Appointment = ({ appointments, selectedDate }) => {
   const filteredAppointments = appointments.filter(
@@ -206,5 +207,17 @@ const Appointment = ({ appointments, selectedDate }) => {
     </div>
   );
 };
-
+Appointment.propTypes = {
+  appointments: PropTypes.arrayOf(
+    PropTypes.shape({
+      appointmentId: PropTypes.string.isRequired,
+      date: PropTypes.string.isRequired,
+      time: PropTypes.string,
+      status: PropTypes.string,
+      doctorId: PropTypes.string,
+      patientId: PropTypes.string,
+    })
+  ).isRequired,
+  selectedDate: PropTypes.string.isRequired,
+};
 export default Appointment;

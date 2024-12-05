@@ -255,6 +255,7 @@ const CreateAppointment = ({ appointments, setAppointments }) => {
 
       if (appointmentResponse) {
         alert("Appointment successfully created");
+        toggleModal();
 
         setAppointments([
           ...appointments,

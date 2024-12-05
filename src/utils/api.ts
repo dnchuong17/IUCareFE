@@ -142,16 +142,36 @@ export class Api {
     }
   }
 
-  async getAppointment (date: Date) {
+
+  async getAppointment(date: Date) {
     try {
       const response = await this.axiosObject.get(`/appointment/check`, {
         params: { date },
       });
+      console.log(response.data)
       return response.data;
     } catch (error) {
       console.error("Error fetching appointment:", error.response?.data || error.message);
       throw error;
     }
-}
+  }
+
+  async getPatientById(patientId: string) {
+    try {
+      console.log(`Fetching patient information for patientId: ${patientId}`);
+      // Using the query parameter to get patient information
+      const response = await this.axiosObject.get(`/patient`, {
+        params: { patientId },
+      });
+      console.log(`API response: ${JSON.stringify(response.data)}`);
+      return response.data; // Return patient information including full name and student ID
+    } catch (error) {
+      console.error("Error fetching patient by ID:", error.response?.data || error.message);
+      throw error; // Throw error to handle it in the component
+    }
+  }
+
+
+
 
 }

@@ -5,30 +5,76 @@ import { Api } from "../../utils/api.ts";
 
 const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
     const [appointments, setAppointments] = useState([]);
+    const [daysWithAppointments, setDaysWithAppointments] = useState([]);
     const [showSearchPopup, setShowSearchPopup] = useState(false);
     const api = new Api();
 
     useEffect(() => {
+        fetchAllAppointments();
+    }, []);
+
+    useEffect(() => {
         if (selectedDate) {
-            fetchAppointmentsByDate(selectedDate);
+            fetchAppointmentsForDay(selectedDate);
         }
     }, [selectedDate]);
 
-    const fetchAppointmentsByDate = async (date) => {
+    const fetchAllAppointments = async () => {
         try {
-            // Chỉ lấy phần ngày từ `selectedDate`
-            const formattedDate = new Date(date).toISOString().split('T')[0];
+            const response = await api.getAllAppointments();
+            const appointmentsArray = response.appointments || response || [];
+            setAppointments(appointmentsArray);
 
-            // Gọi API để lấy tất cả các cuộc hẹn của ngày
-            const response = await api.getAppointment(formattedDate);
-            setAppointments(response); // Cập nhật danh sách cuộc hẹn
+            const days = appointmentsArray.map(appointment => new Date(appointment.appointment_time).toISOString().split('T')[0]);
+            setDaysWithAppointments(days);
+            onDaysWithAppointmentsChange(days);
+        } catch (error) {
+            console.error("Error fetching all appointments:", error);
+        }
+    };
 
-            // Cập nhật danh sách ngày có cuộc hẹn nếu có cuộc hẹn nào trong ngày
-            if (response.length > 0) {
-                onDaysWithAppointmentsChange((prevDays) => [...new Set([...prevDays, formattedDate])]);
+    const fetchAppointmentsForDay = async (date) => {
+        console.log("Fetching appointments for date:", date);
+        try {
+            const response = await api.getAppointment(date);
+            const appointmentsArray = response || [];
+
+            if (Array.isArray(appointmentsArray)) {
+                const filteredAppointments = appointmentsArray.filter(appointment => {
+                    const appointmentDate = new Date(appointment.appointment_time).toISOString().split('T')[0];
+                    return appointmentDate === date;
+                });
+
+                // Fetch patient information for each appointment
+                const appointmentsWithPatientInfo = await Promise.all(
+                    filteredAppointments.map(async (appointment) => {
+                        try {
+                            // Fetch full name and student ID using patientId
+                            const patientInfo = await api.getPatientById(appointment.patientId);
+                            return {
+                                ...appointment,
+                                patientName: patientInfo.fullName,
+                                studentId: patientInfo.studentId,
+                            };
+                        } catch (error) {
+                            console.error(`Error fetching patient info for appointment ID ${appointment.appointment_id}:`, error);
+                            return {
+                                ...appointment,
+                                patientName: "Unknown",
+                                studentId: "Unknown",
+                            };
+                        }
+                    })
+                );
+
+                setAppointments(appointmentsWithPatientInfo);
+            } else {
+                console.error("Unexpected response format, appointments is not an array:", appointmentsArray);
+                setAppointments([]);
             }
         } catch (error) {
-            console.error("Error fetching appointments:", error);
+            console.error("Error fetching appointments for day:", error);
+            setAppointments([]);
         }
     };
 
@@ -77,10 +123,10 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                                 <div className="flex justify-between items-center text-gray-700">
                                     <div>
                                         <p className="font-light">
-                                            <FaClock className="inline-block mr-1 text-black-100" /> {appointment.time}
+                                            <FaClock className="inline-block mr-1 text-black-100" /> {appointment.appointment_time}
                                         </p>
                                         <p className="font-light mx-5">
-                                            {new Date(appointment.time).toLocaleDateString("en-US", {
+                                            {new Date(appointment.appointment_time).toLocaleDateString("en-US", {
                                                 weekday: "short",
                                                 day: "numeric",
                                                 month: "short",

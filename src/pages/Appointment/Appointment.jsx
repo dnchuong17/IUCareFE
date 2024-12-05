@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaClock } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Api } from "../../utils/api";
+import PropTypes from "prop-types";
 
-const Appointment = ({ appointments, selectedDate }) => {
-  const filteredAppointments = appointments.filter(
-    (appointment) => appointment.date === selectedDate
-  );
+const Appointment = ({ appointments }) => {
+  // const filteredAppointments = appointments.filter(
+  //   (appointment) => appointment.date === selectedDate
+  // );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const api = new Api();
@@ -33,19 +34,21 @@ const Appointment = ({ appointments, selectedDate }) => {
         ...selectedAppointment,
         status: "CANCELLED",
       });
-      setAppointments((prevAppointments) =>
-        prevAppointments.map((appointment) =>
-          appointment.appointmentId === appointmentId
-            ? { ...appointment, status: "CANCELLED" }
-            : appointment
-        )
-      );
+      // setAppointments((prevAppointments) =>
+      //   prevAppointments.map((appointment) =>
+      //     appointment.appointmentId === appointmentId
+      //       ? { ...appointment, status: "CANCELLED" }
+      //       : appointment
+      //   )
+      // );
+      selectedAppointment.status = "CANCELLED";
       setIsModalOpen(false); // Close the modal after updating the status
     } catch (error) {
       console.error("Error updating appointment status:", error);
     }
   };
-  const handleRescheduleAppointment = async () => {
+
+  const handleRescheduleAppointment = async (newTime) => {
     if (!selectedAppointment || !newTime) return;
 
     try {
@@ -64,19 +67,6 @@ const Appointment = ({ appointments, selectedDate }) => {
     } catch (error) {
       console.error("Error editing appointment time:", error);
     }
-  };
-
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedAppointment(null);
-  };
-
-  const handleReschedule = () => {
-    // Implement reschedule logic here
   };
 
   return (
@@ -205,34 +195,6 @@ const Appointment = ({ appointments, selectedDate }) => {
                           Cancel
                         </button>
                       </div>
-                  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg w-80">
-                      <h2 className="text-xl font-bold mb-4">
-                        Appointment Details
-                      </h2>
-                      <p>
-                        <strong>Name:</strong> {appointment.name}
-                      </p>
-                      <p>
-                        <strong>Student ID:</strong> {appointment.studentId}
-                      </p>
-                      <p>
-                        <strong>Date:</strong>{" "}
-                        {new Date(appointment.date).toLocaleDateString()}
-                      </p>
-                      <p>
-                        <strong>Time:</strong> {appointment.time}
-                      </p>
-                      <button
-                        className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
-                        onClick={toggleModal}
-                      >
-                        Close
-                      </button>
-                      <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
-                        {" "}
-                        Reschedule
-                      </button>
                     </div>
                   </div>
                 )}
@@ -245,4 +207,17 @@ const Appointment = ({ appointments, selectedDate }) => {
   );
 };
 
+Appointment.propTypes = {
+  appointments: PropTypes.arrayOf(
+    PropTypes.shape({
+      appointmentId: PropTypes.string.isRequired,
+      date: PropTypes.string.isRequired,
+      time: PropTypes.string,
+      status: PropTypes.string,
+      doctorId: PropTypes.string,
+      patientId: PropTypes.string,
+    })
+  ).isRequired,
+  selectedDate: PropTypes.string,
+};
 export default Appointment;

@@ -198,7 +198,7 @@ export class Api {
           time,
         }
       );
-      return response.data.message || "Appointment created successfully";
+      return response.data;
     } catch (error) {
       console.error(
         "Error creating appointment:",
@@ -259,11 +259,10 @@ export class Api {
       const response = await this.axiosObject.patch(
         `/appointment/updateStatus/${id}`,
         {
-          doctorID: doctorId,
-          patientID: patientId,
+          doctorId,
+          patientId,
           time,
           status,
-          id,
         }
       );
       return response.data.message || "Appointment status updated successfully";

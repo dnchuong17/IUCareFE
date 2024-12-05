@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaClock } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { Api } from "../../utils/api";
 
 const Appointment = ({ appointments, selectedDate }) => {
   const filteredAppointments = appointments.filter(
@@ -8,16 +9,62 @@ const Appointment = ({ appointments, selectedDate }) => {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const api = new Api();
 
-  const toggleModal = () => {
+  const toggleModal = (appointment) => {
+    setSelectedAppointment(appointment);
     setIsModalOpen(!isModalOpen);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedAppointment(null);
-  };
+  const handleCancelAppointment = async () => {
+    const appointmentId = localStorage.getItem("appointmentId");
 
+    if (!appointmentId) {
+      console.error("No appointmentId found in localStorage");
+      return;
+    }
+
+    try {
+      await api.updateAppointmentStatus(
+        selectedAppointment.appointmentId,
+        "CANCELLED"
+      );
+      setSelectedAppointment({
+        ...selectedAppointment,
+        status: "CANCELLED",
+      });
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment.appointmentId === appointmentId
+            ? { ...appointment, status: "CANCELLED" }
+            : appointment
+        )
+      );
+      setIsModalOpen(false); // Close the modal after updating the status
+    } catch (error) {
+      console.error("Error updating appointment status:", error);
+    }
+  };
+  const handleRescheduleAppointment = async () => {
+    if (!selectedAppointment || !newTime) return;
+
+    try {
+      await api.editAppointmentTime(
+        selectedAppointment.id,
+        selectedAppointment.doctorId,
+        selectedAppointment.patientId,
+        newTime,
+        selectedAppointment.status
+      );
+      setSelectedAppointment({
+        ...selectedAppointment,
+        time: newTime,
+      });
+      setIsModalOpen(false); // Close the modal after updating the time
+    } catch (error) {
+      console.error("Error editing appointment time:", error);
+    }
+  };
   const handleReschedule = () => {
     // Implement reschedule logic here
   };
@@ -97,34 +144,57 @@ const Appointment = ({ appointments, selectedDate }) => {
                   View details
                 </button>
                 {isModalOpen && (
-                  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg w-80">
-                      <h2 className="text-xl font-bold mb-4">
+                  <div
+                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                    aria-modal="true"
+                    role="dialog"
+                    aria-labelledby="modal-title"
+                  >
+                    <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl max-w-md w-full mx-4">
+                      <h2
+                        id="modal-title"
+                        className="text-3xl font-semibold mb-6 text-gray-800 dark:text-gray-100 text-center"
+                      >
                         Appointment Details
                       </h2>
-                      <p>
-                        <strong>Name:</strong> {appointment.name}
-                      </p>
-                      <p>
-                        <strong>Student ID:</strong> {appointment.studentId}
-                      </p>
-                      <p>
-                        <strong>Date:</strong>{" "}
-                        {new Date(appointment.date).toLocaleDateString()}
-                      </p>
-                      <p>
-                        <strong>Time:</strong> {appointment.time}
-                      </p>
-                      <button
-                        className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
-                        onClick={toggleModal}
-                      >
-                        Close
-                      </button>
-                      <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
-                        {" "}
-                        Reschedule
-                      </button>
+                      <div className="space-y-4">
+                        <p className="text-gray-700 dark:text-gray-300">
+                          <span className="font-medium">Name:</span>{" "}
+                          {appointment.name}
+                        </p>
+                        <p className="text-gray-700 dark:text-gray-300">
+                          <span className="font-medium">Student ID:</span>{" "}
+                          {appointment.studentId}
+                        </p>
+                        <p className="text-gray-700 dark:text-gray-300">
+                          <span className="font-medium">Date:</span>{" "}
+                          {new Date(appointment.date).toLocaleDateString()}
+                        </p>
+                        <p className="text-gray-700 dark:text-gray-300">
+                          <span className="font-medium">Time:</span>{" "}
+                          {appointment.time}
+                        </p>
+                      </div>
+                      <div className="mt-8 flex justify-end space-x-3">
+                        <button
+                          className="px-5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+                          onClick={toggleModal}
+                        >
+                          Close
+                        </button>
+                        <button
+                          className="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                          onClick={handleRescheduleAppointment}
+                        >
+                          Reschedule
+                        </button>
+                        <button
+                          onClick={handleCancelAppointment}
+                          className="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                        >
+                          Cancel
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}

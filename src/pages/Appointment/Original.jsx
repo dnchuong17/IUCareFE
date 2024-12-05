@@ -60,17 +60,7 @@ const CreateAppointment = ({ appointments, setAppointments }) => {
           results.data.forEach((result, index) => {
             console.log(`Result ${index}:`, result);
           });
-          //        setSearchResults(results.data);
-          const patients = results.data.map((result) => ({
-            studentId: result.studentId,
-            patientName: result.patientName,
-          }));
-          setSearchResults(patients);
-          console.log("Patients:", patients);
-          patients.forEach((patient) => {
-            console.log("Student ID:", patient.studentId);
-            console.log("Patient Name:", patient.patientName);
-          });
+          setSearchResults(results.data);
         } else {
           console.error("Expected an array but got:", results);
           setMessage("Unexpected response format.");
@@ -245,17 +235,9 @@ const CreateAppointment = ({ appointments, setAppointments }) => {
         patientId, // Ensure patientId is sent as a string
         `${date}T${time}`
       );
-      // Store appointmentId in localStorage
-      if (appointmentResponse.appointmentId) {
-        localStorage.setItem(
-          "appointmentId",
-          appointmentResponse.appointmentId
-        );
-      }
 
       if (appointmentResponse) {
         alert("Appointment successfully created");
-
         setAppointments([
           ...appointments,
           {
@@ -402,25 +384,23 @@ const CreateAppointment = ({ appointments, setAppointments }) => {
                     {Array.isArray(searchResults) &&
                       searchResults.length > 0 && (
                         <div className="absolute bg-white border border-gray-200 rounded-lg w-full mt-1 max-h-60 overflow-auto z-10">
-                          {searchResults.map((patient, index) => (
+                          {searchResults.map((result, index) => (
                             <div
                               key={index}
                               className="p-2 hover:bg-gray-100 cursor-pointer"
                               onClick={() => {
-                                setStudentId(patient.studentId);
-                                setName(patient.patientName);
-                                setMajor(patient.major);
-                                setPhone(patient.phone);
-                                setAddress(patient.address);
-                                setAllergy(patient.allergy);
+                                setStudentId(result.studentId);
+                                setName(result.name); // Updated property here
+                                setMajor(result.major);
+                                setPhone(result.phone);
+                                setAddress(result.address);
+                                setAllergy(result.allergy);
                                 setSearchResults([]);
                               }}
                             >
-                              {patient.studentId ? patient.studentId : "No ID"}{" "}
-                              -{" "}
-                              {patient.patientName
-                                ? patient.patientName
-                                : "No Name"}{" "}
+                              {result.studentId ? result.studentId : "No ID"} -{" "}
+                              {result.fullName ? result.name : "No Name"}{" "}
+                              {/* Updated property here */}
                             </div>
                           ))}
                         </div>

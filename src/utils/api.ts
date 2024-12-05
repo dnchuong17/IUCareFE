@@ -90,12 +90,12 @@ export class Api {
   }
 
   async createPatient(
-      name: string,
-      address: string,
-      major: string,
-      phone: string,
-      studentId: string,
-      allergy: string
+    name: string,
+    address: string,
+    major: string,
+    phone: string,
+    studentId: string,
+    allergy: string
   ): Promise<any> {
     try {
       const response = await this.axiosObject.post("/patient/create", {
@@ -108,7 +108,10 @@ export class Api {
       });
       return response.data;
     } catch (error) {
-      console.error("Error creating patient:", error.response?.data || error.message);
+      console.error(
+        "Error creating patient:",
+        error.response?.data || error.message
+      );
       throw error;
     }
   }
@@ -125,28 +128,43 @@ export class Api {
     }
   }
 
-  async searchPatient(studentId: string) {
+ async searchPatient(studentId) {
     try {
+      console.log(`Frontend input: ${studentId}`);
       const response = await this.axiosObject.get("/patient", {
         params: { studentId },
       });
+      console.log(`API response: ${JSON.stringify(response.data)}`);
       return response.data;
     } catch (error) {
-      console.error("Error searching patient:", error.response?.data || error.message);
+      console.error(
+        "Error searching patient:",
+        error.response?.data || error.message
+      );
       throw error;
     }
   }
 
-  async createAppointment(doctorId: string, patientId: string, time: string): Promise<string> {
+  async createAppointment(
+    doctorId: string,
+    patientId: string,
+    time: string
+  ): Promise<string> {
     try {
-      const response = await this.axiosObject.post("/appointment/create_appointment", {
-        doctorID: doctorId,
-        patientID: patientId,
-        time,
-      });
-      return response.data.message || "Appointment created successfully";
+      const response = await this.axiosObject.post(
+        "/appointment/create_appointment",
+        {
+          doctorId,
+          patientId,
+          time,
+        }
+      );
+      return response.data;
     } catch (error) {
-      console.error("Error creating appointment:", error.response?.data || error.message);
+      console.error(
+        "Error creating appointment:",
+        error.response?.data || error.message
+      );
       throw error;
     }
   }

@@ -116,14 +116,17 @@ export class Api {
     }
   }
 
-  async getPatientInformation(studentId: string) {
+  async getPatient(studentId: string) {
     try {
-      const response = await this.axiosObject.get("/patient/information", {
+      const response = await this.axiosObject.get(`/patient/information`, {
         params: { studentId },
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching patient information:", error.response?.data || error.message);
+      console.error(
+        "Error fetching patient information:",
+        error.response?.data || error.message
+      );
       throw error;
     }
   }

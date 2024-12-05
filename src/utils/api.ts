@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import { LoginRequest } from "./request/loginRequest";
 import { RegisterRequest } from "./request/registerRequest";
 import { DoctorInforModel } from "../model/doctorInfor.model";
+import {AppointmentRequest} from "./request/appointmentRequest";
 
 export class Api {
   private axiosObject: AxiosInstance;
@@ -21,7 +22,7 @@ export class Api {
   }
 
   async login(loginRequest: LoginRequest) {
-    const { account, password } = loginRequest;
+    const {account, password} = loginRequest;
     try {
       const result = await this.axiosObject.post("/auth/doctorLogin", {
         account,
@@ -50,7 +51,7 @@ export class Api {
   async searchMedicine(medicine_name: string): Promise<string[]> {
     try {
       const response = await this.axiosObject.get("/medicine", {
-        params: { medicine_name },
+        params: {medicine_name},
       });
       return response.data;
     } catch (error) {
@@ -89,142 +90,67 @@ export class Api {
     }
   }
 
-  async createPatient(
-    name: string,
-    address: string,
-    major: string,
-    phone: string,
-    studentId: string,
-    allergy: string
-  ): Promise<any> {
+  async createPatient(informationRequest) {
     try {
-      const response = await this.axiosObject.post("/patient/create", {
-        name,
-        address,
-        major,
-        phone,
-        studentId,
-        allergy,
-      });
+      const response = await this.axiosObject.post("/patient/create", informationRequest);
+      console.log("Server response:", response.data);
       return response.data;
     } catch (error) {
-      console.error(
-        "Error creating patient:",
-        error.response?.data || error.message
-      );
+      console.error("Create information failed:", error.response?.data || error.message);
       throw error;
     }
   }
 
-  async getPatient(studentId: string) {
-    try {
-      const response = await this.axiosObject.get(`/patient/information`, {
-        params: { studentId },
-      });
-      return response.data;
-    } catch (error) {
-      console.error(
-        "Error fetching patient information:",
-        error.response?.data || error.message
-      );
-      throw error;
-    }
-  }
-
- async searchPatient(studentId) {
+  async searchPatient(studentId: string) {
     try {
       console.log(`Frontend input: ${studentId}`);
       const response = await this.axiosObject.get("/patient", {
-        params: { studentId },
+        params: {studentId},
       });
       console.log(`API response: ${JSON.stringify(response.data)}`);
-      return response.data;
+      return response.data; // Return response data from API
     } catch (error) {
-      console.error(
-        "Error searching patient:",
-        error.response?.data || error.message
-      );
-      throw error;
+      console.error("Error searching for patient:", error.response?.data || error.message);
+      throw error; // Throw error to handle it in the component
     }
   }
 
-  async createAppointment(
-    doctorId: string,
-    patientId: string,
-    time: string
-  ): Promise<string> {
+  // Method to get patient information by studentId
+  async getPatientInformation(studentId: string) {
+    try {
+      const response = await this.axiosObject.get(`/patient/information`, {
+        params: {studentId},
+      });
+      return response.data; // Return patient information
+    } catch (error) {
+      console.error("Error fetching patient information:", error.response?.data || error.message);
+      throw error; // Throw error to handle it in the component
+    }
+  }
+
+  async createAppointment(appointmentRequest: AppointmentRequest): Promise<any> {
     try {
       const response = await this.axiosObject.post(
-        "/appointment/create_appointment",
-        {
-          doctorId,
-          patientId,
-          time,
-        }
+          "/appointment/create_appointment",
+          appointmentRequest
       );
+      console.log("Create appointment successfully:", response.data);
       return response.data;
     } catch (error) {
-      console.error(
-        "Error creating appointment:",
-        error.response?.data || error.message
-      );
+      console.error("Error creating appointment:", error.response?.data || error.message);
       throw error;
     }
   }
 
-  async checkAppointment(date: string): Promise<Array<any>> {
-    try {
-      const response = await this.axiosObject.get("/appointment/check", {
-        params: { date },
-      });
-      return response.data.appointments || [];
-    } catch (error) {
-      console.error("Error fetching appointments by date:", error.response?.data || error.message);
-      throw error;
-    }
-  }
-
-  async editAppointmentTime(
-      id: string,
-      doctorId: string,
-      patientId: string,
-      time: string,
-      status: string
-  ): Promise<string> {
-    try {
-      const response = await this.axiosObject.patch(`/appointment/edit/${id}`, {
-        doctorID: doctorId,
-        patientID: patientId,
-        time,
-        status,
-      });
-      return response.data.message || "Appointment time updated successfully";
-    } catch (error) {
-      console.error("Error editing appointment time:", error.response?.data || error.message);
-      throw error;
-    }
-  }
-
-  async updateAppointmentStatus(
-      id: string,
-      doctorId: string,
-      patientId: string,
-      time: string,
-      status: string
-  ): Promise<string> {
-    try {
-      const response = await this.axiosObject.patch(`/appointment/updateStatus/${id}`, {
-        doctorID: doctorId,
-        patientID: patientId,
-        time,
-        status,
-      });
-      return response.data.message || "Appointment status updated successfully";
-    } catch (error) {
-      console.error("Error updating appointment status:", error.response?.data || error.message);
-      throw error;
-    }
-  }
+//   async getAppointment (time: string) {
+//     try {
+//       const response = await this.axiosObject.get(`/patient/information`, {
+//         params: { time },
+//       });
+//       return response.data; // Return patient information
+//     } catch (error) {
+//       console.error("Error fetching patient information:", error.response?.data || error.message);
+//       throw error; // Throw error to handle it in the component
+//     }
+// }
 }
-
-

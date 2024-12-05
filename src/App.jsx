@@ -2,9 +2,8 @@ import { Routes, Route } from "react-router-dom";
 import TableList from "./pages/Patient/TableList.jsx";
 import MedicalRecord from "./pages/Patient/Medical Record/MedicalRecord.jsx";
 import HomePage from "./pages/Home/HomePage.jsx";
-import Information from "./pages/Patient/Medical Record/Information.jsx"
-import AppointmentPage from "./pages/Appointment/AppointmentPage.jsx";
-
+import InformationForm from "./pages/Appointment/InformationForm.jsx"
+import AppointmentPage from "./pages/Appointment/AppointmentPage.jsx"
 import DoctorProfile from "./pages/Doctor/Profile.jsx"
 
 import TopLoader from "./components/TopLoader.jsx";
@@ -35,7 +34,7 @@ const App = () => {
                         <Route path="/appointmentPage" element={<AppointmentPage />} />
                         <Route path="/tableList" element={<TableList />} />
                         <Route path="/medicalRecord" element={<MedicalRecord />} />
-                        <Route path="/information" element={<Information />} />
+                        <Route path="/information" element={<InformationForm />} />
                         <Route path="/doctorProfile" element={<DoctorProfile />} />
 
                     </Routes>

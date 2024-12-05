@@ -35,7 +35,7 @@ const Login = () => {
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
-          draggable: true,          onClose: () => navigate("/appointment"),
+          draggable: true,
           onClose: () => navigate("/appointmentPage"),
         });
       } else {

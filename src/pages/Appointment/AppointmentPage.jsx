@@ -2,32 +2,32 @@ import React, { useState } from "react";
 import Sidebar from "../../components/Sidebar.jsx";
 import Calendar from "./Calendar";
 import Appointment from "./Appointment";
-import CreateAppointment from "./CreateAppointment";
 
 const AppointmentPage = () => {
-  const [appointments, setAppointments] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
-  return (
-    <div
-      style={{
-        backgroundColor: "#F3F8FF",
-        minHeight: "100vh",
-        padding: "1rem",
-      }}
-    >
-      <div className="flex">
-        <Sidebar />
-        <Calendar setSelectedDate={setSelectedDate} />
-        <div className="flex flex-row">
-          <CreateAppointment
-            appointments={appointments}
-            setAppointments={setAppointments}
-          />
+
+    return (
+        <div className="flex h-screen">
+            {/* Sidebar */}
+            <Sidebar />
+
+            {/* Main Content */}
+            <div className="flex-1 flex flex-col p-4">
+                <h1 className="text-3xl font-semibold mb-4">Appointments</h1>
+
+                <div className="flex gap-4">
+                    {/* Calendar */}
+                    <div className="w-1/2">
+                        <Calendar />
+                    </div>
+
+                    {/* Appointment List */}
+                    <div className="w-1/2">
+                        <Appointment />
+                    </div>
+                </div>
+            </div>
         </div>
-        <Appointment appointments={appointments} />
-      </div>
-    </div>
-  );
+    );
 };
 
 export default AppointmentPage;

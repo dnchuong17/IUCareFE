@@ -5,7 +5,6 @@ import About from "./About.jsx";
 import Login from "./Login.jsx";
 import Register from "./Register.jsx";
 import Appointment from "./Appointment.jsx";
-import Footer from "../../components/Footer.jsx";
 import TopLoader from "../../components/TopLoader.jsx";
 
 const HomePage = () => {

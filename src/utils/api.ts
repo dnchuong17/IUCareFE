@@ -145,6 +145,28 @@ export class Api {
       return response.data;
     } catch (error) {
       console.error(
+
+
+  async createPatient(
+    name: string,
+    address: string,
+    major: string,
+    phone: string,
+    studentId: string,
+    allergy: string
+  ): Promise<any> {
+    try {
+      const response = await this.axiosObject.post("/patient/create", {
+        name,
+        address,
+        major,
+        phone,
+        studentId,
+        allergy,
+      });
+      return response.data;
+    } catch (error) {
+      console.error(
         "Error creating patient:",
         error.response?.data || error.message
       );
@@ -152,15 +174,69 @@ export class Api {
     }
   }
 
-  async getPatient(studentId: string) {
+  async getPatientInformation(studentId: string) {
     try {
-      const response = await this.axiosObject.get(`/patient/information`, {
+      const response = await this.axiosObject.get("/patient/information", {
         params: { studentId },
       });
       return response.data;
     } catch (error) {
       console.error(
         "Error fetching patient information:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+  async searchPatient(studentId) {
+    try {
+      const response = await this.axiosObject.get(`/patient`, {
+        params: { studentId },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error fetching patient information:",
+        "Error searching patient:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+
+  async createAppointment(
+    doctorId: string,
+    patientId: string,
+    time: string
+  ): Promise<string> {
+    try {
+      const response = await this.axiosObject.post(
+        "/appointment/create_appointment",
+        {
+          doctorID: doctorId,
+          patientID: patientId,
+          time,
+        }
+      );
+      return response.data.message || "Appointment created successfully";
+    } catch (error) {
+      console.error(
+        "Error creating appointment:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+
+  async checkAppointment(date: string): Promise<Array<any>> {
+    try {
+      const response = await this.axiosObject.get("/appointment/check", {
+        params: { date },
+      });
+      return response.data.appointments || [];
+    } catch (error) {
+      console.error(
+        "Error fetching appointments by date:",
         error.response?.data || error.message
       );
       throw error;
@@ -178,6 +254,25 @@ export class Api {
     } catch (error) {
       console.error(
         "Error searching patient:",
+  async editAppointmentTime(
+    id: string,
+    doctorId: string,
+    patientId: string,
+    time: string,
+    status: string
+  ): Promise<string> {
+    try {
+      const response = await this.axiosObject.patch(`/appointment/edit/${id}`, {
+        doctorID: doctorId,
+        patientID: patientId,
+        time,
+        status,
+        id,
+      });
+      return response.data.message || "Appointment time updated successfully";
+    } catch (error) {
+      console.error(
+        "Error editing appointment time:",
         error.response?.data || error.message
       );
       throw error;
@@ -202,10 +297,33 @@ export class Api {
     } catch (error) {
       console.error(
         "Error creating appointment:",
+  async updateAppointmentStatus(
+    id: string,
+    doctorId: string,
+    patientId: string,
+    time: string,
+    status: string
+  ): Promise<string> {
+    try {
+      const response = await this.axiosObject.patch(
+        `/appointment/updateStatus/${id}`,
+        {
+          doctorID: doctorId,
+          patientID: patientId,
+          time,
+          status,
+          id,
+        }
+      );
+      return response.data.message || "Appointment status updated successfully";
+    } catch (error) {
+      console.error(
+        "Error updating appointment status:",
         error.response?.data || error.message
       );
       throw error;
     }
+  }
   }
 
   async checkAppointment(date: string): Promise<Array<any>> {

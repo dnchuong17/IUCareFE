@@ -4,6 +4,7 @@ import { Api } from "../../utils/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "../Appointment/Sidebar";
+import Sidebar from "../../components/Sidebar.jsx";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 
 const Profile = () => {

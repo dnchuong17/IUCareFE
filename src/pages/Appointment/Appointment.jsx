@@ -1,5 +1,4 @@
 
-// Import necessary dependencies
 import React, { useState } from "react";
 import { FaClock } from "react-icons/fa";
 import SearchForm from "./SearchForm";
@@ -7,10 +6,9 @@ import { Api } from "../../utils/api.ts"
 
 const Appointment = () => {
     const [appointments, setAppointments] = useState([]);
-    const api = new Api(); // State to store appointments
-    const [showSearchPopup, setShowSearchPopup] = useState(false); // State to toggle SearchForm popup
+    const api = new Api();
+    const [showSearchPopup, setShowSearchPopup] = useState(false);
 
-    // Function to handle adding a new appointment to the list
     const handleAppointmentCreated = (newAppointment) => {
         setAppointments((prevAppointments) => [...prevAppointments, newAppointment]);
     };
@@ -31,7 +29,7 @@ const Appointment = () => {
                     </button>
                 </div>
 
-                {/* SearchForm Popup */}
+                {/* Search */}
                 <SearchForm
                     isOpen={showSearchPopup}
                     onClose={() => setShowSearchPopup(false)}

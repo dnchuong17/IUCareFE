@@ -10,7 +10,7 @@ const AppointmentPage = () => {
             {/* Sidebar */}
             <Sidebar />
 
-            {/* Main Content */}
+            {/* Main  */}
             <div className="flex-1 flex flex-col p-4">
                 <h1 className="text-3xl font-semibold mb-4">Appointments</h1>
 

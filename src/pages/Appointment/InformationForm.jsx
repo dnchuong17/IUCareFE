@@ -6,7 +6,7 @@ import {toast} from "react-toastify"; // Import X icon from react-icons
 import "react-toastify/dist/ReactToastify.css";
 
 const InformationForm = ({ isOpen, onClose }) => {
-    if (!isOpen) return null; // Don't render if not open
+    if (!isOpen) return null;
 
     const api = new Api();
     const navigate = useNavigate();

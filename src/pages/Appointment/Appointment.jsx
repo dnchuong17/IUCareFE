@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react"; // Removed unused React import
 import { useNavigate } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa";
+import PropTypes from 'prop-types';
 import SearchForm from "./SearchForm";
 import { Api } from "../../utils/api.ts";
 
 const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
     const [appointments, setAppointments] = useState([]);
-    const [daysWithAppointments, setDaysWithAppointments] = useState([]);
     const [showSearchPopup, setShowSearchPopup] = useState(false);
     const [editingAppointment, setEditingAppointment] = useState(null);
     const [newDateTime, setNewDateTime] = useState("");
@@ -32,7 +32,6 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             const days = appointmentsArray.map(appointment =>
                 new Date(appointment.appointment_time).toISOString().split("T")[0]
             );
-            setDaysWithAppointments(days);
             onDaysWithAppointmentsChange(days);
         } catch (error) {
             console.error("Error fetching all appointments:", error);
@@ -212,6 +211,11 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             )}
         </div>
     );
+};
+
+Appointment.propTypes = {
+    selectedDate: PropTypes.string,
+    onDaysWithAppointmentsChange: PropTypes.func.isRequired,
 };
 
 export default Appointment;

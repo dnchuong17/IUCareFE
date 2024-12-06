@@ -7,12 +7,12 @@ const AppointmentPage = () => {
     const [selectedDate, setSelectedDate] = useState("");
     const [daysWithAppointments, setDaysWithAppointments] = useState([]);
 
-    //  khi người dùng chọn một ngày trên Calendar
+    //  when user chooses 1 day on calendar
     const handleDateSelected = (date) => {
         setSelectedDate(date);
     };
 
-    // cập nhật danh sách các ngày có cuộc hẹn từ Appointment
+    // update date that have appointment
     const handleDaysWithAppointmentsChange = (days) => {
         setDaysWithAppointments(days);
     };

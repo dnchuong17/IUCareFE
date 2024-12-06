@@ -137,13 +137,22 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
                         <h2 className="text-lg font-semibold mb-4">Search Patient</h2>
 
                         {/* Search */}
-                        <input
-                            type="text"
-                            placeholder="Enter student ID..."
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
+                        {/* Search */}
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="text"
+                                placeholder="Enter student ID..."
+                                value={searchTerm}
+                                onChange={handleSearchChange}
+                                className="flex-grow px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <button
+                                onClick={() => setIsInfoFormOpen(true)}
+                                className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition"
+                            >
+                                +
+                            </button>
+                        </div>
 
                         {isLoading && <p className="text-blue-500 mt-2">Loading...</p>}
 

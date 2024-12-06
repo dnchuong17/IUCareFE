@@ -22,7 +22,10 @@ const MedicalRecord = () => {
   });
   const [patientInfo, setPatientInfo] = useState({
     allergy: "",
-    latestRecord: "",
+    patient_name: "",
+    student_id: "",
+    patient_phone: "",
+    patient_address: "",
   });
   const api = new Api();
 
@@ -44,11 +47,18 @@ const MedicalRecord = () => {
             doctor_name: doctorDetails?.doctor_name || "Unknown Doctor",
           }));
 
-          // Fetch patient information
-          // const patientDetails = await api.getPatientById(appointment.patientId);
-          // setPatientInfo({ allergy: patientDetails?.allergy || "No allergy information", latestRecord: patientDetails?.latestRecord || "No latest record" });
+          // Fetch patient information using studentId
+          const patientDetails = await api.getPatientInformation(appointment.studentId);
+          setPatientInfo({
+            allergy: patientDetails?.allergy || "No allergy information",
+            // latestRecord: patientDetails?.latestRecord || "No latest record",
+            patient_name: patientDetails?.patient_name || "N/A",
+            student_id: patientDetails?.student_id || "N/A",
+            patient_phone: patientDetails?.patient_phone || "N/A",
+            patient_address: patientDetails?.patient_address || "N/A",
+          });
         } catch (error) {
-          console.error("Error fetching doctor details:", error);
+          console.error("Error fetching details:", error);
         }
       }
     };
@@ -103,10 +113,22 @@ const MedicalRecord = () => {
 
     if (treatment.trim() && diagnosis.trim() && suggest.trim()) {
       try {
-        toast.success("Medical Record created successfully!", {
-          position: "top-right",
-          autoClose: 3000,
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "Do you want to save this Medical Record?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, save it!",
         });
+
+        if (result.isConfirmed) {
+          toast.success("Medical Record created successfully!", {
+            position: "top-right",
+            autoClose: 3000,
+          });
+        }
       } catch (error) {
         toast.error("Failed to create Medical Record. Please try again.", {
           position: "top-right",
@@ -259,22 +281,30 @@ const MedicalRecord = () => {
                 {/* Patient Information, Allergy, Latest Record Buttons */}
                 <div className="flex flex-col space-y-4">
                   {/* Patient Information */}
+                  {/* Patient Information */}
                   <button
                       className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
-                      onClick={() => toggleSection('patientInfo')}
+                      onClick={() => toggleSection("patientInfo")}
                   >
                     Patient Information
                   </button>
-                  {activeSection === 'patientInfo' && (
+                  {activeSection === "patientInfo" && (
                       <div className="mt-2 p-4 bg-gray-50 rounded-lg shadow-inner">
                         <p className="text-gray-700">
-                          <strong>Allergy:</strong> {patientInfo.allergy}
+                          <strong>Full Name:</strong> {patientInfo.patient_name}
                         </p>
-                        <p className="mt-2 text-gray-700">
-                          <strong>Latest Record:</strong> {patientInfo.latestRecord}
+                        <p className="text-gray-700">
+                          <strong>Student ID:</strong> {patientInfo.student_id}
+                        </p>
+                        <p className="text-gray-700">
+                          <strong>Phone:</strong> {patientInfo.patient_phone}
+                        </p>
+                        <p className="text-gray-700">
+                          <strong>Address:</strong> {patientInfo.patient_address}
                         </p>
                       </div>
                   )}
+
 
                   {/* Allergy */}
                   <button

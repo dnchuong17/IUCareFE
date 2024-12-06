@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Api } from "../../../utils/api";
 import { useNavigate } from "react-router-dom";
-import { FiX } from "react-icons/fi";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

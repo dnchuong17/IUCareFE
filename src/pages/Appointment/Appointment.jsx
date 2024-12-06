@@ -46,14 +46,19 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                     return appointmentDate === date;
                 });
 
-                // Map data directly from API response
-                const appointmentsWithPatientInfo = filteredAppointments.map(appointment => ({
-                    ...appointment,
-                    patientName: appointment.patient_name || "N/A",
-                    studentId: appointment.student_id || "N/A",
-                }));
+                // Map data with separated date and time
+                const appointmentsWithDetails = filteredAppointments.map(appointment => {
+                    const dateTime = new Date(appointment.appointment_time);
+                    return {
+                        ...appointment,
+                        patientName: appointment.patient_name || "N/A",
+                        studentId: appointment.student_id || "N/A",
+                        date: dateTime.toLocaleDateString("en-US"), // Extract date
+                        time: dateTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }), // Extract time
+                    };
+                });
 
-                setAppointments(appointmentsWithPatientInfo);
+                setAppointments(appointmentsWithDetails);
             } else {
                 console.error("Unexpected response format: appointments is not an array.", appointmentsArray);
                 setAppointments([]);
@@ -106,19 +111,13 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                                     <p className="text-gray-700">{appointment.studentId}</p>
                                 </div>
                                 <hr className="my-5 border-gray-300 border-dashed" />
-                                <div className="flex justify-between items-center text-gray-700">
-                                    <div>
-                                        <p className="font-light">
-                                            <FaClock className="inline-block mr-1 text-black-100" /> {appointment.appointment_time}
-                                        </p>
-                                        <p className="font-light mx-5">
-                                            {new Date(appointment.appointment_time).toLocaleDateString("en-US", {
-                                                weekday: "short",
-                                                day: "numeric",
-                                                month: "short",
-                                            })}
-                                        </p>
-                                    </div>
+                                <div className="flex flex-col text-gray-700">
+                                    <p className="font-light">
+                                        <strong>Date</strong>: {appointment.date}
+                                    </p>
+                                    <p className="font-light">
+                                        <strong>Time</strong>: {appointment.time}
+                                    </p>
                                 </div>
                             </div>
                         ))

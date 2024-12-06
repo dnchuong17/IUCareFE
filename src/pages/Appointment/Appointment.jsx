@@ -79,8 +79,6 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
         }
 
         try {
-            console.log("Updating appointment with ID:", editingAppointment.appointment_id);
-
             const appointmentRequest = {
                 doctorId: editingAppointment.doctorId,
                 patientId: editingAppointment.patientId,
@@ -127,7 +125,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                     className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition mb-4"
                     onClick={() => setShowSearchPopup(true)}
                 >
-                     Search
+                    Search
                 </button>
 
                 <SearchForm isOpen={showSearchPopup} onClose={() => setShowSearchPopup(false)} />

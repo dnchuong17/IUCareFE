@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
+import PropTypes from "prop-types";
+import { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Api } from "../../utils/api.ts";
 import { useNavigate } from "react-router-dom";
@@ -6,8 +8,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const InformationForm = ({ isOpen, onClose }) => {
-    if (!isOpen) return null;
-
     const api = new Api();
     const navigate = useNavigate();
 
@@ -21,6 +21,8 @@ const InformationForm = ({ isOpen, onClose }) => {
     });
 
     const [loading, setLoading] = useState(false);
+
+    if (!isOpen) return null;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -54,7 +56,7 @@ const InformationForm = ({ isOpen, onClose }) => {
         setLoading(true);
 
         try {
-            console.log("Submitting info:", info); // Log the info before making the request
+            console.log("Submitting info:", info);
             const response = await api.createPatient(info);
 
             if (response) {
@@ -235,6 +237,12 @@ const InformationForm = ({ isOpen, onClose }) => {
             <ToastContainer />
         </>
     );
+};
+
+// Add prop-types for validation
+InformationForm.propTypes = {
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
 };
 
 export default InformationForm;

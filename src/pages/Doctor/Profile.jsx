@@ -46,10 +46,7 @@ const Profile = () => {
         setInfo(infoWithId);
         localStorage.setItem("doctorInfo", JSON.stringify(infoWithId));
       } catch (error) {
-        console.error(
-          "Error fetching doctor information:",
-          error.response?.data || error.message
-        );
+        console.error("Error fetching doctor information:", error.response?.data || error.message);
         toast.error("Failed to fetch doctor information.", {
           position: "top-right",
           autoClose: 3000,
@@ -58,7 +55,7 @@ const Profile = () => {
     };
 
     fetchDoctorInfo();
-  }, [api]);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -94,6 +91,7 @@ const Profile = () => {
     }
 
     try {
+      console.log("Payload being sent:", filteredData);
       await api.updateDoctorInfo(info.doctor_id, filteredData);
 
       setInfo((prevState) => ({

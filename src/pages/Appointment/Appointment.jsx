@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { FaEllipsisV } from "react-icons/fa";
-
-import React, { useState } from "react";
-import { FaClock } from "react-icons/fa";
 import SearchForm from "./SearchForm";
 import { Api } from "../../utils/api.ts";
 
@@ -54,8 +51,8 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                     const dateTime = new Date(appointment.appointment_time);
                     return {
                         ...appointment,
-                        patientName: appointment.patient_name || "N/A",
-                        studentId: appointment.student_id || "N/A",
+                        patientName: appointment.patientName || "N/A",
+                        studentId: appointment.studentId || "N/A",
                         date: dateTime.toLocaleDateString("en-US"),
                         time: dateTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
                     };
@@ -120,11 +117,6 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             console.error("Error updating appointment:", error.response?.data || error.message);
             alert("Failed to update appointment. Please try again.");
         }
-    const api = new Api();
-    const [showSearchPopup, setShowSearchPopup] = useState(false);
-
-    const handleAppointmentCreated = (newAppointment) => {
-        setAppointments((prevAppointments) => [...prevAppointments, newAppointment]);
     };
 
     return (
@@ -134,22 +126,6 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
         >
             <div className="mt-4 ml-3">
                 <SearchForm isOpen={showSearchPopup} onClose={() => setShowSearchPopup(false)} />
-                {/* Button to toggle SearchForm */}
-                <div className="mb-4">
-                    <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                        onClick={() => setShowSearchPopup(true)}
-                    >
-                        Search Patient
-                    </button>
-                </div>
-
-                {/* Search */}
-                <SearchForm
-                    isOpen={showSearchPopup}
-                    onClose={() => setShowSearchPopup(false)}
-                    onAppointmentCreated={handleAppointmentCreated}
-                />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {appointments.length > 0 ? (

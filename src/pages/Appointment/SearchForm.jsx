@@ -1,4 +1,3 @@
-// Import necessary dependencies
 import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import InformationForm from "./InformationForm";
@@ -51,7 +50,6 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
         fetchDoctorInfo();
     }, [api]);
 
-    // Handle search input change
     const handleSearchChange = async (e) => {
         const searchTerm = e.target.value.trim();
         setSearchTerm(searchTerm);
@@ -83,7 +81,6 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
         }
     };
 
-    // Handle selecting a patient from the search results
     const handleSelectPatient = (id, name, patientId) => {
         setSelectedPatient({ studentId: id, patientName: name, patientId });
         setSearchTerm(id);
@@ -91,7 +88,6 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
         setMessage("");
     };
 
-    // Handle creating an appointment
     const handleCreateAppointment = async () => {
         if (!selectedPatient || !appointmentDateTime) {
             setMessage("Please fill in all fields before creating an appointment.");
@@ -131,7 +127,6 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
             {isOpen && !isInfoFormOpen && (
                 <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
-                        {/* Close Button */}
                         <button
                             onClick={onClose}
                             className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
@@ -139,10 +134,9 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
                             <FaTimes className="text-xl" />
                         </button>
 
-                        {/* Title */}
                         <h2 className="text-lg font-semibold mb-4">Search Patient</h2>
 
-                        {/* Search Input */}
+                        {/* Search */}
                         <input
                             type="text"
                             placeholder="Enter student ID..."
@@ -151,13 +145,11 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
 
-                        {/* Loading Indicator */}
                         {isLoading && <p className="text-blue-500 mt-2">Loading...</p>}
 
-                        {/* Error/Success Message */}
                         {message && <p className="text-red-500 mt-2">{message}</p>}
 
-                        {/* Search Results */}
+                        {/* Results */}
                         {searchResults.length > 0 && (
                             <ul className="mt-2 border rounded-md shadow-md max-h-48 overflow-y-auto">
                                 {searchResults.map((patient) => (
@@ -209,7 +201,7 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
                 </div>
             )}
 
-            {/* Information Form Popup */}
+            {/* Information Popup */}
             <InformationForm
                 isOpen={isInfoFormOpen}
                 onClose={() => setIsInfoFormOpen(false)}

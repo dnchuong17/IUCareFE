@@ -141,9 +141,9 @@
       }
     }
 
-    async updateAppointmentTime(appointmentId: number, appointmentRequest: AppointmentRequest): Promise<any> {
+    async updateAppointmentTime(appointment_id: number, appointmentRequest: AppointmentRequest): Promise<any> {
       try {
-        const response = await this.axiosObject.patch(`/appointment/edit/${appointmentId}`, appointmentRequest);
+        const response = await this.axiosObject.patch(`/appointment/edit/${appointment_id}`, appointmentRequest);
         return response.data;
       } catch (error) {
         console.error("Error updating appointment:", error.response?.data || error.message);
@@ -188,6 +188,29 @@
         throw error;
       }
     }
+
+
+    async updateStatusAppointment(appointment_id: number, newStatus: string): Promise<any> {
+      try {
+        // Kiểm tra trạng thái có hợp lệ không
+        const validStatuses = ["APPROVED", "DONE", "CANCELLED"];
+        if (!validStatuses.includes(newStatus)) {
+          throw new Error("Invalid status. Allowed values are: APPROVED, DONE, CANCELLED");
+        }
+
+        // Gửi yêu cầu đến API backend
+        const response = await this.axiosObject.patch(`/appointment/updateStatus/${appointment_id}`, {
+          status: newStatus,
+        });
+
+        console.log("Status updated successfully:", response.data);
+        return response.data;
+      } catch (error) {
+        console.error("Error updating status:", error.response?.data || error.message);
+        throw error;
+      }
+    }
+
 
 
   }

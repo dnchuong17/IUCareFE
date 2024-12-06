@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa";
+import { AiOutlineClose } from "react-icons/ai"; // Icon X
 import SearchForm from "./SearchForm";
 import { Api } from "../../utils/api.ts";
 
@@ -10,6 +11,8 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
     const [showSearchPopup, setShowSearchPopup] = useState(false);
     const [editingAppointment, setEditingAppointment] = useState(null);
     const [newDateTime, setNewDateTime] = useState("");
+    const [showEditMenu, setShowEditMenu] = useState(null);
+    const [newStatus, setNewStatus] = useState("");
     const api = new Api();
     const navigate = useNavigate();
 
@@ -25,12 +28,12 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
 
     const fetchAllAppointments = async () => {
         try {
-            const response = await api.getAllAppointments();
-            const appointmentsArray = response.appointments || [];
+            const response = await api.getAppointment();
+            const appointmentsArray = response.appointment || [];
             setAppointments(appointmentsArray);
 
             const days = appointmentsArray.map(appointment =>
-                new Date(appointment.appointment_time).toISOString().split("T")[0]
+                new Date(appointment.date).toISOString().split("T")[0]
             );
             setDaysWithAppointments(days);
             onDaysWithAppointmentsChange(days);
@@ -53,6 +56,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                         studentId: appointment.student_id || "N/A",
                         date: dateTime.toLocaleDateString("en-US"),
                         time: dateTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+                        status: appointment.status || "Pending"
                     };
                 });
 
@@ -68,8 +72,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
     };
 
     const handleEditClick = (appointment) => {
-        setEditingAppointment(appointment);
-        setNewDateTime("");
+        setShowEditMenu(appointment);
     };
 
     const handleSaveDateTime = async () => {
@@ -103,10 +106,36 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             );
 
             setEditingAppointment(null);
+            setShowEditMenu(null);
             alert("Appointment time updated successfully.");
         } catch (error) {
             console.error("Error updating appointment:", error.response?.data || error.message);
             alert("Failed to update appointment. Please try again.");
+        }
+    };
+
+    const handleStatusUpdate = async (appointment, newStatus) => {
+        if (!['APPROVED', 'CANCELLED', 'DONE'].includes(newStatus)) {
+            alert("Invalid status. Please select a valid status.");
+            return;
+        }
+
+        try {
+            await api.updateStatusAppointment(appointment.appointment_id, newStatus);
+
+            setAppointments((prevAppointments) =>
+                prevAppointments.map((appt) =>
+                    appt.appointment_id === appointment.appointment_id
+                        ? { ...appt, status: newStatus }
+                        : appt
+                )
+            );
+
+            setShowEditMenu(null);
+            alert(`Appointment status updated to ${newStatus} successfully.`);
+        } catch (error) {
+            console.error("Error updating appointment status:", error.response?.data || error.message);
+            alert("Failed to update appointment status. Please try again.");
         }
     };
 
@@ -120,7 +149,6 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             style={{ height: "500px", overflowY: "scroll" }}
         >
             <div className="mt-4 ml-3">
-                {/* Open SearchForm */}
                 <button
                     className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition mb-4"
                     onClick={() => setShowSearchPopup(true)}
@@ -146,6 +174,12 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                                     </p>
                                     <p className="text-gray-700">{appointment.studentId}</p>
                                 </div>
+                                <div className="flex justify-between text-gray-700">
+                                    <p className="font-light text-gray-400">
+                                        <strong>Status</strong>
+                                    </p>
+                                    <p className="text-gray-700">{appointment.status}</p>
+                                </div>
                                 <hr className="my-5 border-gray-300 border-dashed" />
                                 <div className="flex justify-between items-center text-gray-700">
                                     <div>
@@ -167,6 +201,49 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                                             className="text-gray-500 cursor-pointer"
                                             onClick={() => handleEditClick(appointment)}
                                         />
+                                        {showEditMenu === appointment && (
+                                            <div className="absolute top-0 right-0 mt-8 bg-white border rounded shadow-lg w-48">
+                                                <div className="flex justify-between items-center px-4 py-2">
+                                                    <span className="text-gray-700 font-medium">Edit Menu</span>
+                                                    <button
+                                                        className="text-red-500 hover:text-red-600"
+                                                        onClick={() => setShowEditMenu(null)}
+                                                    >
+                                                        <AiOutlineClose />
+                                                    </button>
+                                                </div>
+                                                <button
+                                                    className="w-full text-left px-4 py-2 hover:bg-gray-200"
+                                                    onClick={() => {
+                                                        setEditingAppointment(appointment);
+                                                        setNewDateTime("");
+                                                    }}
+                                                >
+                                                    Update Time
+                                                </button>
+                                                <div className="w-full text-left px-4 py-2 hover:bg-gray-200">
+                                                    <label htmlFor="status" className="block text-sm font-medium text-gray-700">
+                                                        Update Status
+                                                    </label>
+                                                    <select
+                                                        id="status"
+                                                        className="mt-1 block w-full p-2 border rounded"
+                                                        value={newStatus}
+                                                        onChange={(e) => setNewStatus(e.target.value)}
+                                                    >
+                                                        <option value="APPROVED">Approved</option>
+                                                        <option value="DONE">Done</option>
+                                                        <option value="CANCELLED">Cancelled</option>
+                                                    </select>
+                                                    <button
+                                                        className="bg-blue-500 text-white mt-2 px-4 py-1 rounded-md hover:bg-blue-600 transition"
+                                                        onClick={() => handleStatusUpdate(appointment, newStatus)}
+                                                    >
+                                                        Save Status
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -180,7 +257,15 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             {editingAppointment && (
                 <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-30">
                     <div className="bg-white p-6 rounded-lg shadow-lg">
-                        <h3 className="text-xl font-bold mb-4">Edit Appointment</h3>
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-xl font-bold">Edit Appointment</h3>
+                            <button
+                                className="text-red-500 hover:text-red-600"
+                                onClick={() => setEditingAppointment(null)}
+                            >
+                                <AiOutlineClose />
+                            </button>
+                        </div>
                         <div className="mb-4">
                             <label htmlFor="datetime" className="block text-sm font-medium text-gray-700">
                                 New Date and Time:
@@ -196,7 +281,10 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                         <div className="flex justify-end space-x-2">
                             <button
                                 className="bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400 transition"
-                                onClick={() => setEditingAppointment(null)}
+                                onClick={() => {
+                                    setEditingAppointment(null);
+                                    setShowEditMenu(null);
+                                }}
                             >
                                 Cancel
                             </button>

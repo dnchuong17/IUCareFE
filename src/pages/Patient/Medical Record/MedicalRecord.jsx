@@ -12,7 +12,7 @@ const MedicalRecord = () => {
   const [medicationList, setMedicationList] = useState([]);
   const [filteredMedications, setFilteredMedications] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [activeSection, setActiveSection] = useState(null);
+  const [activeSections, setActiveSections] = useState([]);
   const [formData, setFormData] = useState({
     treatment: "",
     diagnosis: "",
@@ -99,7 +99,9 @@ const MedicalRecord = () => {
   };
 
   const toggleSection = (section) => {
-    setActiveSection((prev) => (prev === section ? null : section));
+    setActiveSections((prev) =>
+        prev.includes(section) ? prev.filter((s) => s !== section) : [...prev, section]
+    );
   };
 
   const handleChange = (e) => {
@@ -281,14 +283,13 @@ const MedicalRecord = () => {
                 {/* Patient Information, Allergy, Latest Record Buttons */}
                 <div className="flex flex-col space-y-4">
                   {/* Patient Information */}
-                  {/* Patient Information */}
                   <button
                       className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
                       onClick={() => toggleSection("patientInfo")}
                   >
                     Patient Information
                   </button>
-                  {activeSection === "patientInfo" && (
+                  {activeSections.includes("patientInfo") && (
                       <div className="mt-2 p-4 bg-gray-50 rounded-lg shadow-inner">
                         <p className="text-gray-700">
                           <strong>Full Name:</strong> {patientInfo.patient_name}
@@ -305,34 +306,29 @@ const MedicalRecord = () => {
                       </div>
                   )}
 
-
                   {/* Allergy */}
                   <button
                       className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
-                      onClick={() => toggleSection('allergy')}
+                      onClick={() => toggleSection("allergy")}
                   >
                     Allergy
                   </button>
-                  {activeSection === 'allergy' && (
+                  {activeSections.includes("allergy") && (
                       <div className="mt-2 p-4 bg-gray-50 rounded-lg shadow-inner">
-                        <p className="text-gray-700">
-                          {patientInfo.allergy}
-                        </p>
+                        <p className="text-gray-700">{patientInfo.allergy}</p>
                       </div>
                   )}
 
                   {/* Latest Record */}
                   <button
                       className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
-                      onClick={() => toggleSection('latestRecord')}
+                      onClick={() => toggleSection("latestRecord")}
                   >
                     Latest Record
                   </button>
-                  {activeSection === 'latestRecord' && (
+                  {activeSections.includes("latestRecord") && (
                       <div className="mt-2 p-4 bg-gray-50 rounded-lg shadow-inner">
-                        <p className="text-gray-700">
-                          {patientInfo.latestRecord}
-                        </p>
+                        <p className="text-gray-700">{patientInfo.latestRecord}</p>
                       </div>
                   )}
                 </div>

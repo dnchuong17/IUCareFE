@@ -3,6 +3,7 @@ import { LoginRequest } from "./request/loginRequest";
 import { RegisterRequest } from "./request/registerRequest";
 import { DoctorInforModel } from "../model/doctorInfor.model";
 import {AppointmentRequest} from "./request/appointmentRequest";
+import {MedicalRequest} from "./request/medicalRequest";
 
 export class Api {
   private axiosObject: AxiosInstance;
@@ -21,13 +22,11 @@ export class Api {
     return this.axiosObject;
   }
 
+  // Authentication Methods
   async login(loginRequest: LoginRequest) {
     const {account, password} = loginRequest;
     try {
-      const result = await this.axiosObject.post("/auth/doctorLogin", {
-        account,
-        password,
-      });
+      const result = await this.axiosObject.post("/auth/doctorLogin", { account, password });
       localStorage.setItem("accessToken", result.data.access_token);
       localStorage.setItem("refreshToken", result.data.refresh_token);
       return result.data;
@@ -108,22 +107,23 @@ export class Api {
         params: {studentId},
       });
       console.log(`API response: ${JSON.stringify(response.data)}`);
-      return response.data;
+      return response.data; // Return response data from API
     } catch (error) {
       console.error("Error searching for patient:", error.response?.data || error.message);
-      throw error;
+      throw error; // Throw error to handle it in the component
     }
   }
 
+  // Method to get patient information by studentId
   async getPatientInformation(studentId: string) {
     try {
       const response = await this.axiosObject.get(`/patient/information`, {
         params: {studentId},
       });
-      return response.data;
+      return response.data; // Return patient information
     } catch (error) {
       console.error("Error fetching patient information:", error.response?.data || error.message);
-      throw error;
+      throw error; // Throw error to handle it in the component
     }
   }
 
@@ -152,9 +152,6 @@ export class Api {
   }
 
 
-
-
-
   async getAppointment(date: Date) {
     try {
       const response = await this.axiosObject.get(`/appointment/check`, {
@@ -164,6 +161,17 @@ export class Api {
       return response.data;
     } catch (error) {
       console.error("Error fetching appointment:", error.response?.data || error.message);
+      throw error;
+    }
+  }
+
+  async createMedicalRecord (medicalRequest: MedicalRequest) {
+    try {
+      const response = await this.axiosObject.post("/medical_record/create", medicalRequest);
+      console.log("Medical record created successfully:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating medical record:", error.response?.data || error.message);
       throw error;
     }
   }

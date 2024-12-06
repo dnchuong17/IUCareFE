@@ -122,12 +122,12 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             style={{ height: "500px", overflowY: "scroll" }}
         >
             <div className="mt-4 ml-3">
-                {/* Nút để mở SearchForm */}
+                {/* Open SearchForm */}
                 <button
                     className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition mb-4"
                     onClick={() => setShowSearchPopup(true)}
                 >
-                    Open Search
+                     Search
                 </button>
 
                 <SearchForm isOpen={showSearchPopup} onClose={() => setShowSearchPopup(false)} />

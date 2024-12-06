@@ -5,16 +5,16 @@ import { Api } from "../../utils/api.ts";
 import { toast } from "react-toastify";
 
 const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
-    const [doctorId, setDoctorId] = useState(null); // Store the logged-in doctor's ID
+    const [doctorId, setDoctorId] = useState(null);
     const [isInfoFormOpen, setIsInfoFormOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState(""); // Search input
+    const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState([]); // List of search results
-    const [selectedPatient, setSelectedPatient] = useState(null); // Selected patient
-    const [appointmentDateTime, setAppointmentDateTime] = useState(""); // Appointment date and time
-    const [message, setMessage] = useState(""); // Error or success message
-    const [isLoading, setIsLoading] = useState(false); // Loading state
+    const [selectedPatient, setSelectedPatient] = useState(null);
+    const [appointmentDateTime, setAppointmentDateTime] = useState("");
+    const [message, setMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
-    const api = new Api(); // API instance
+    const api = new Api();
 
     useEffect(() => {
         // Fetch doctor ID after login success

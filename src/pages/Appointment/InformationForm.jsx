@@ -6,7 +6,6 @@ import { Api } from "../../utils/api.ts";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 const InformationForm = ({ isOpen, onClose }) => {
     const api = new Api();
     const navigate = useNavigate();
@@ -67,7 +66,7 @@ const InformationForm = ({ isOpen, onClose }) => {
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
-                    onClose: () => navigate("/page1"),
+                    onClose: () => navigate("/appointmentPage"),
                 });
             } else {
                 toast.error(

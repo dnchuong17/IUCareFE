@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { FaEllipsisV } from "react-icons/fa";
 import SearchForm from "./SearchForm";
 import { Api } from "../../utils/api.ts";
@@ -10,6 +11,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
     const [editingAppointment, setEditingAppointment] = useState(null); // Appointment being edited
     const [newDateTime, setNewDateTime] = useState(""); // New datetime input
     const api = new Api();
+    const navigate = useNavigate(); // Initialize useNavigate
 
     // Fetch all appointments when component mounts
     useEffect(() => {
@@ -51,8 +53,8 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                     const dateTime = new Date(appointment.appointment_time);
                     return {
                         ...appointment,
-                        patientName: appointment.patientName || "N/A",
-                        studentId: appointment.studentId || "N/A",
+                        patientName: appointment.patient_name || "N/A",
+                        studentId: appointment.student_id || "N/A",
                         date: dateTime.toLocaleDateString("en-US"),
                         time: dateTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
                     };
@@ -119,6 +121,11 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
         }
     };
 
+    // Handle the "Examine" button click
+    const handleExamine = (appointment) => {
+        navigate("/medicalRecord", { state: { appointment } }); // Pass appointment data to the medical record page
+    };
+
     return (
         <div
             className="fixed top-72 right-11 h-1/2 w-4/6 bg-white md:w-3/4 md:h-3/5 z-20 p-4 rounded-lg shadow-lg"
@@ -153,10 +160,19 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                                             <strong>Time</strong>: {appointment.time}
                                         </p>
                                     </div>
-                                    <FaEllipsisV
-                                        className="text-gray-500 cursor-pointer absolute bottom-2 right-2"
-                                        onClick={() => handleEditClick(appointment)}
-                                    />
+                                    <div className="flex items-center space-x-2">
+                                        {/* Examine button */}
+                                        <button
+                                            className="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600 transition"
+                                            onClick={() => handleExamine(appointment)}
+                                        >
+                                            Examine
+                                        </button>
+                                        <FaEllipsisV
+                                            className="text-gray-500 cursor-pointer"
+                                            onClick={() => handleEditClick(appointment)}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         ))

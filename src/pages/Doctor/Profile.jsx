@@ -1,4 +1,3 @@
-// src/components/Profile.jsx
 import { useState, useEffect } from "react";
 import { Api } from "../../utils/api";
 import { ToastContainer, toast } from "react-toastify";

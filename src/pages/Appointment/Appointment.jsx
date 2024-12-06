@@ -19,13 +19,14 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
         }
     }, [selectedDate]);
 
+    // Fetch all appointments to determine days with appointments
     const fetchAllAppointments = async () => {
         try {
             const response = await api.getAllAppointments();
             const appointmentsArray = response.appointments || response || [];
             setAppointments(appointmentsArray);
 
-            const days = appointmentsArray.map(appointment => new Date(appointment.appointment_time).toISOString().split('T')[0]);
+            const days = appointmentsArray.map(appointment => new Date(appointment.appointment_time).toISOString().split("T")[0]);
             setDaysWithAppointments(days);
             onDaysWithAppointmentsChange(days);
         } catch (error) {
@@ -33,43 +34,28 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
         }
     };
 
+    // Fetch appointments for a specific date
     const fetchAppointmentsForDay = async (date) => {
-        console.log("Fetching appointments for date:", date);
         try {
             const response = await api.getAppointment(date);
             const appointmentsArray = response || [];
 
             if (Array.isArray(appointmentsArray)) {
                 const filteredAppointments = appointmentsArray.filter(appointment => {
-                    const appointmentDate = new Date(appointment.appointment_time).toISOString().split('T')[0];
+                    const appointmentDate = new Date(appointment.appointment_time).toISOString().split("T")[0];
                     return appointmentDate === date;
                 });
 
-                // Fetch patient information for each appointment
-                const appointmentsWithPatientInfo = await Promise.all(
-                    filteredAppointments.map(async (appointment) => {
-                        try {
-                            // Fetch full name and student ID using patientId
-                            const patientInfo = await api.getPatientById(appointment.patientId);
-                            return {
-                                ...appointment,
-                                patientName: patientInfo.fullName,
-                                studentId: patientInfo.studentId,
-                            };
-                        } catch (error) {
-                            console.error(`Error fetching patient info for appointment ID ${appointment.appointment_id}:`, error);
-                            return {
-                                ...appointment,
-                                patientName: "Unknown",
-                                studentId: "Unknown",
-                            };
-                        }
-                    })
-                );
+                // Map data directly from API response
+                const appointmentsWithPatientInfo = filteredAppointments.map(appointment => ({
+                    ...appointment,
+                    patientName: appointment.patient_name || "N/A",
+                    studentId: appointment.student_id || "N/A",
+                }));
 
                 setAppointments(appointmentsWithPatientInfo);
             } else {
-                console.error("Unexpected response format, appointments is not an array:", appointmentsArray);
+                console.error("Unexpected response format: appointments is not an array.", appointmentsArray);
                 setAppointments([]);
             }
         } catch (error) {

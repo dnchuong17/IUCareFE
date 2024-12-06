@@ -87,8 +87,8 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
 
             // Create request object for the API
             const appointmentRequest = {
-                doctorId: editingAppointment.doctorId,
-                patientId: editingAppointment.patientId,
+                doctorId: editingAppointment.doctor_id,
+                patientId: editingAppointment.patient_id,
                 time: newDateTime,
             };
 

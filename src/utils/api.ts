@@ -141,15 +141,32 @@ export class Api {
     }
   }
 
-//   async getAppointment (time: string) {
-//     try {
-//       const response = await this.axiosObject.get(`/patient/information`, {
-//         params: { time },
-//       });
-//       return response.data; // Return patient information
-//     } catch (error) {
-//       console.error("Error fetching patient information:", error.response?.data || error.message);
-//       throw error; // Throw error to handle it in the component
-//     }
-// }
+  async updateAppointmentTime(appointmentId: number, appointmentRequest: AppointmentRequest): Promise<any> {
+    try {
+      const response = await this.axiosObject.patch(`/appointment/edit/${appointmentId}`, appointmentRequest);
+      return response.data;
+    } catch (error) {
+      console.error("Error updating appointment:", error.response?.data || error.message);
+      throw error;
+    }
+  }
+
+
+
+
+
+  async getAppointment(date: Date) {
+    try {
+      const response = await this.axiosObject.get(`/appointment/check`, {
+        params: { date },
+      });
+      console.log(response.data)
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching appointment:", error.response?.data || error.message);
+      throw error;
+    }
+  }
+
+
 }

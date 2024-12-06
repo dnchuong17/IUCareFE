@@ -176,5 +176,18 @@
       }
     }
 
+    async getInsurance (studentId: string) {
+      try {
+        const response = await this.axiosObject.get("insurance/:studentId", {
+          params: {studentId},
+        })
+        console.log(response.data)
+        return response.data;
+      } catch (error) {
+        console.log("Error fetching insurance: ", error.response?.data || error.message);
+        throw error;
+      }
+    }
+
 
   }

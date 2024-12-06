@@ -26,6 +26,9 @@ const MedicalRecord = () => {
     student_id: "",
     patient_phone: "",
     patient_address: "",
+    insurance_number: "",
+    insurance_name: "",
+    registered_hospital: "",
   });
   const api = new Api();
 
@@ -51,11 +54,13 @@ const MedicalRecord = () => {
           const patientDetails = await api.getPatientInformation(appointment.studentId);
           setPatientInfo({
             allergy: patientDetails?.allergy || "No allergy information",
-            // latestRecord: patientDetails?.latestRecord || "No latest record",
             patient_name: patientDetails?.patient_name || "N/A",
             student_id: patientDetails?.student_id || "N/A",
             patient_phone: patientDetails?.patient_phone || "N/A",
             patient_address: patientDetails?.patient_address || "N/A",
+            insurance_number: patientDetails?.insurance_number || "N/A",
+            insurance_name: patientDetails?.insurance_name || "N/A",
+            registered_hospital: patientDetails?.registered_hospital || "N/A",
           });
         } catch (error) {
           console.error("Error fetching details:", error);
@@ -316,6 +321,27 @@ const MedicalRecord = () => {
                   {activeSections.includes("allergy") && (
                       <div className="mt-2 p-4 bg-gray-50 rounded-lg shadow-inner">
                         <p className="text-gray-700">{patientInfo.allergy}</p>
+                      </div>
+                  )}
+
+                  {/* Insurance */}
+                  <button
+                      className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
+                      onClick={() => toggleSection("insurance")}
+                  >
+                    Insurance
+                  </button>
+                  {activeSections.includes("insurance") && (
+                      <div className="mt-2 p-4 bg-gray-50 rounded-lg shadow-inner">
+                        <p className="text-gray-700">
+                          <strong>Insurance Name:</strong> {patientInfo.insurance_name}
+                        </p>
+                        <p className="text-gray-700">
+                          <strong>Insurance Number:</strong> {patientInfo.insurance_number}
+                        </p>
+                        <p className="text-gray-700">
+                          <strong>Registered Hospital:</strong> {patientInfo.registered_hospital}
+                        </p>
                       </div>
                   )}
 

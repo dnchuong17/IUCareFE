@@ -4,15 +4,15 @@ import Calendar from "./Calendar";
 import Appointment from "./Appointment";
 
 const AppointmentPage = () => {
-    const [selectedDate, setSelectedDate] = useState(""); // Trạng thái lưu ngày được chọn
-    const [daysWithAppointments, setDaysWithAppointments] = useState([]); // Trạng thái lưu các ngày có cuộc hẹn
+    const [selectedDate, setSelectedDate] = useState("");
+    const [daysWithAppointments, setDaysWithAppointments] = useState([]);
 
-    // Hàm để xử lý khi người dùng chọn một ngày trên Calendar
+    //  khi người dùng chọn một ngày trên Calendar
     const handleDateSelected = (date) => {
         setSelectedDate(date);
     };
 
-    // Hàm để cập nhật danh sách các ngày có cuộc hẹn từ Appointment
+    // cập nhật danh sách các ngày có cuộc hẹn từ Appointment
     const handleDaysWithAppointmentsChange = (days) => {
         setDaysWithAppointments(days);
     };

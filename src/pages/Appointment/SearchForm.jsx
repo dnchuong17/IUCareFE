@@ -1,23 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import PropTypes from "prop-types";
 import { FaTimes } from "react-icons/fa";
 import InformationForm from "./InformationForm";
 import { Api } from "../../utils/api.ts";
 import { toast } from "react-toastify";
 
 const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
-    const [doctorId, setDoctorId] = useState(null); // Store the logged-in doctor's ID
+    const [doctorId, setDoctorId] = useState(null);
     const [isInfoFormOpen, setIsInfoFormOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState(""); // Search input
-    const [searchResults, setSearchResults] = useState([]); // List of search results
-    const [selectedPatient, setSelectedPatient] = useState(null); // Selected patient
-    const [appointmentDateTime, setAppointmentDateTime] = useState(""); // Appointment date and time
-    const [message, setMessage] = useState(""); // Error or success message
-    const [isLoading, setIsLoading] = useState(false); // Loading state
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
+    const [selectedPatient, setSelectedPatient] = useState(null);
+    const [appointmentDateTime, setAppointmentDateTime] = useState("");
+    const [message, setMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
-    const api = new Api(); // API instance
+    // Use useMemo to avoid recreating the api instance on every render
+    const api = useMemo(() => new Api(), []);
 
     useEffect(() => {
-        // Fetch doctor ID after login success
         const fetchDoctorInfo = async () => {
             const account = localStorage.getItem("account");
             if (!account) {
@@ -62,7 +63,7 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
                     const patients = results.data.map((result) => ({
                         studentId: result.studentId,
                         patientName: result.patientName,
-                        patientId: result.patientId, // Add patientId from search results
+                        patientId: result.patientId,
                     }));
                     setSearchResults(patients);
                 } else {
@@ -106,7 +107,7 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
             setMessage("Appointment created successfully.");
             setSelectedPatient(null);
             setAppointmentDateTime("");
-            onAppointmentCreated({
+            onAppointmentCreated?.({
                 patientName: selectedPatient.patientName,
                 studentId: selectedPatient.studentId,
                 time: appointmentDateTime,
@@ -137,13 +138,21 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
                         <h2 className="text-lg font-semibold mb-4">Search Patient</h2>
 
                         {/* Search */}
-                        <input
-                            type="text"
-                            placeholder="Enter student ID..."
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="text"
+                                placeholder="Enter student ID..."
+                                value={searchTerm}
+                                onChange={handleSearchChange}
+                                className="flex-grow px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <button
+                                onClick={() => setIsInfoFormOpen(true)}
+                                className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition"
+                            >
+                                +
+                            </button>
+                        </div>
 
                         {isLoading && <p className="text-blue-500 mt-2">Loading...</p>}
 
@@ -208,6 +217,13 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
             />
         </>
     );
+};
+
+// Add prop-types for validation
+SearchForm.propTypes = {
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onAppointmentCreated: PropTypes.func,
 };
 
 export default SearchForm;

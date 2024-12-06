@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa";
 import SearchForm from "./SearchForm";
 import { Api } from "../../utils/api.ts";
@@ -8,24 +8,21 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
     const [appointments, setAppointments] = useState([]);
     const [daysWithAppointments, setDaysWithAppointments] = useState([]);
     const [showSearchPopup, setShowSearchPopup] = useState(false);
-    const [editingAppointment, setEditingAppointment] = useState(null); // Appointment being edited
-    const [newDateTime, setNewDateTime] = useState(""); // New datetime input
+    const [editingAppointment, setEditingAppointment] = useState(null);
+    const [newDateTime, setNewDateTime] = useState("");
     const api = new Api();
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
 
-    // Fetch all appointments when component mounts
     useEffect(() => {
         fetchAllAppointments();
     }, []);
 
-    // Fetch appointments for a specific day when the selectedDate changes
     useEffect(() => {
         if (selectedDate) {
             fetchAppointmentsForDay(selectedDate);
         }
     }, [selectedDate]);
 
-    // Fetch all appointments and update state
     const fetchAllAppointments = async () => {
         try {
             const response = await api.getAllAppointments();
@@ -42,7 +39,6 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
         }
     };
 
-    // Fetch appointments for a specific day
     const fetchAppointmentsForDay = async (date) => {
         try {
             const response = await api.getAppointment(date);
@@ -71,13 +67,11 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
         }
     };
 
-    // Open the edit popup for a specific appointment
     const handleEditClick = (appointment) => {
         setEditingAppointment(appointment);
-        setNewDateTime(""); // Reset the input
+        setNewDateTime("");
     };
 
-    // Save the new date and time for the appointment
     const handleSaveDateTime = async () => {
         if (!newDateTime) {
             alert("Please provide a new date and time.");
@@ -85,19 +79,14 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
         }
 
         try {
-            console.log("Updating appointment with ID:", editingAppointment.appointment_id);
-
-            // Create request object for the API
             const appointmentRequest = {
                 doctorId: editingAppointment.doctorId,
                 patientId: editingAppointment.patientId,
                 time: newDateTime,
             };
 
-            // Call API to update appointment
             await api.updateAppointmentTime(editingAppointment.appointment_id, appointmentRequest);
 
-            // Update frontend state
             setAppointments((prevAppointments) =>
                 prevAppointments.map((appointment) =>
                     appointment.appointment_id === editingAppointment.appointment_id
@@ -113,7 +102,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                 )
             );
 
-            setEditingAppointment(null); // Close the edit popup
+            setEditingAppointment(null);
             alert("Appointment time updated successfully.");
         } catch (error) {
             console.error("Error updating appointment:", error.response?.data || error.message);
@@ -121,9 +110,8 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
         }
     };
 
-    // Handle the "Examine" button click
     const handleExamine = (appointment) => {
-        navigate("/medicalRecord", { state: { appointment } }); // Pass appointment data to the medical record page
+        navigate("/medicalRecord", { state: { appointment } });
     };
 
     return (
@@ -132,6 +120,14 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             style={{ height: "500px", overflowY: "scroll" }}
         >
             <div className="mt-4 ml-3">
+                {/* Open SearchForm */}
+                <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition mb-4"
+                    onClick={() => setShowSearchPopup(true)}
+                >
+                    Search
+                </button>
+
                 <SearchForm isOpen={showSearchPopup} onClose={() => setShowSearchPopup(false)} />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -161,7 +157,6 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                                         </p>
                                     </div>
                                     <div className="flex items-center space-x-2">
-                                        {/* Examine button */}
                                         <button
                                             className="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600 transition"
                                             onClick={() => handleExamine(appointment)}

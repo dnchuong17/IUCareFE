@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+// src/components/Profile.jsx
+import { useState, useEffect } from "react";
 import { Api } from "../../utils/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -141,13 +142,13 @@ const Profile = () => {
       </div>
 
       {/* Profile Content */}
-      <div className="w-4/5 min-h-screen flex items-center justify-center p-6">
-        <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-10 relative">
+      <div className="w-4/5 min-h-screen flex items-center justify-center  p-6">
+        <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-10 border-l-4 border-blue-500 relative">
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-800">Doctor Profile</h1>
+            <h1 className="text-4xl font-bold text-blue-600">Doctor Profile</h1>
             <HiOutlinePencilAlt
-              className="text-3xl text-gray-500 cursor-pointer hover:text-blue-500"
+              className="text-3xl text-blue-500 cursor-pointer hover:text-blue-600"
               onClick={handleEditToggle}
             />
           </div>
@@ -155,9 +156,9 @@ const Profile = () => {
           {/* Profile Form */}
           <form className="space-y-6">
             {/* Full Name and Password */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-lg font-semibold text-gray-700">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div className="space-y-3">
+                <label className="block text-md font-medium text-blue-600">
                   Full Name
                 </label>
                 <input
@@ -165,11 +166,11 @@ const Profile = () => {
                   name="doctor_name"
                   value={info.doctor_name}
                   disabled
-                  className="w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3"
+                  className="w-full h-12 border text-gray-700 border-blue-200 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-md pl-3"
                 />
               </div>
-              <div>
-                <label className="block text-lg font-semibold text-gray-700">
+              <div className="space-y-3">
+                <label className="block text-md font-medium text-blue-600">
                   Password
                 </label>
                 <input
@@ -178,7 +179,7 @@ const Profile = () => {
                   value={info.password}
                   onChange={handleChange}
                   disabled={!isEditing}
-                  className={`w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3 ${
+                  className={`w-full h-12 border text-gray-700 border-blue-200 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-md pl-3 ${
                     !isEditing ? "bg-gray-100 cursor-not-allowed" : ""
                   }`}
                 />
@@ -186,9 +187,9 @@ const Profile = () => {
             </div>
 
             {/* Address and Phone */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-lg font-semibold text-gray-700">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div className="space-y-3">
+                <label className="block text-md font-medium text-blue-600">
                   Address
                 </label>
                 <input
@@ -197,13 +198,13 @@ const Profile = () => {
                   value={info.doctor_address}
                   onChange={handleChange}
                   disabled={!isEditing}
-                  className={`w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3 ${
+                  className={`w-full h-12 border text-gray-700 border-blue-200 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-md pl-3 ${
                     !isEditing ? "bg-gray-100 cursor-not-allowed" : ""
                   }`}
                 />
               </div>
-              <div>
-                <label className="block text-lg font-semibold text-gray-700">
+              <div className="space-y-3">
+                <label className="block text-md font-medium text-blue-600">
                   Phone
                 </label>
                 <input
@@ -212,7 +213,7 @@ const Profile = () => {
                   value={info.doctor_phone}
                   onChange={handleChange}
                   disabled={!isEditing}
-                  className={`w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3 ${
+                  className={`w-full h-12 border text-gray-700 border-blue-200 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-md pl-3 ${
                     !isEditing ? "bg-gray-100 cursor-not-allowed" : ""
                   }`}
                 />
@@ -220,9 +221,9 @@ const Profile = () => {
             </div>
 
             {/* Department Name and Department Number */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-lg font-semibold text-gray-700">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div className="space-y-3">
+                <label className="block text-md font-medium text-blue-600">
                   Department Name
                 </label>
                 <input
@@ -230,11 +231,11 @@ const Profile = () => {
                   name="department_name"
                   value={info.department_name}
                   disabled
-                  className="w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3"
+                  className="w-full h-12 border text-gray-700 border-blue-200 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-md pl-3"
                 />
               </div>
-              <div>
-                <label className="block text-lg font-semibold text-gray-700">
+              <div className="space-y-3">
+                <label className="block text-md font-medium text-blue-600">
                   Department Number
                 </label>
                 <input
@@ -242,7 +243,7 @@ const Profile = () => {
                   name="department_number"
                   value={info.department_number}
                   disabled
-                  className="w-full h-12 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg pl-3"
+                  className="w-full h-12 border text-gray-700 border-blue-200 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-md pl-3"
                 />
               </div>
             </div>

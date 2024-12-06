@@ -108,23 +108,22 @@ export class Api {
         params: {studentId},
       });
       console.log(`API response: ${JSON.stringify(response.data)}`);
-      return response.data; // Return response data from API
+      return response.data;
     } catch (error) {
       console.error("Error searching for patient:", error.response?.data || error.message);
-      throw error; // Throw error to handle it in the component
+      throw error;
     }
   }
 
-  // Method to get patient information by studentId
   async getPatientInformation(studentId: string) {
     try {
       const response = await this.axiosObject.get(`/patient/information`, {
         params: {studentId},
       });
-      return response.data; // Return patient information
+      return response.data;
     } catch (error) {
       console.error("Error fetching patient information:", error.response?.data || error.message);
-      throw error; // Throw error to handle it in the component
+      throw error;
     }
   }
 

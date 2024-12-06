@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaClock } from "react-icons/fa";
+import { FaEllipsisV } from "react-icons/fa";
 import SearchForm from "./SearchForm";
 import { Api } from "../../utils/api.ts";
 
@@ -7,26 +7,32 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
     const [appointments, setAppointments] = useState([]);
     const [daysWithAppointments, setDaysWithAppointments] = useState([]);
     const [showSearchPopup, setShowSearchPopup] = useState(false);
+    const [editingAppointment, setEditingAppointment] = useState(null); // Appointment being edited
+    const [newDateTime, setNewDateTime] = useState(""); // New datetime input
     const api = new Api();
 
+    // Fetch all appointments when component mounts
     useEffect(() => {
         fetchAllAppointments();
     }, []);
 
+    // Fetch appointments for a specific day when the selectedDate changes
     useEffect(() => {
         if (selectedDate) {
             fetchAppointmentsForDay(selectedDate);
         }
     }, [selectedDate]);
 
-    // Fetch all appointments to determine days with appointments
+    // Fetch all appointments and update state
     const fetchAllAppointments = async () => {
         try {
             const response = await api.getAllAppointments();
-            const appointmentsArray = response.appointments || response || [];
+            const appointmentsArray = response.appointments || [];
             setAppointments(appointmentsArray);
 
-            const days = appointmentsArray.map(appointment => new Date(appointment.appointment_time).toISOString().split("T")[0]);
+            const days = appointmentsArray.map(appointment =>
+                new Date(appointment.appointment_time).toISOString().split("T")[0]
+            );
             setDaysWithAppointments(days);
             onDaysWithAppointmentsChange(days);
         } catch (error) {
@@ -34,31 +40,25 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
         }
     };
 
-    // Fetch appointments for a specific date
+    // Fetch appointments for a specific day
     const fetchAppointmentsForDay = async (date) => {
         try {
             const response = await api.getAppointment(date);
             const appointmentsArray = response || [];
 
             if (Array.isArray(appointmentsArray)) {
-                const filteredAppointments = appointmentsArray.filter(appointment => {
-                    const appointmentDate = new Date(appointment.appointment_time).toISOString().split("T")[0];
-                    return appointmentDate === date;
-                });
-
-                // Map data with separated date and time
-                const appointmentsWithDetails = filteredAppointments.map(appointment => {
+                const filteredAppointments = appointmentsArray.map(appointment => {
                     const dateTime = new Date(appointment.appointment_time);
                     return {
                         ...appointment,
                         patientName: appointment.patient_name || "N/A",
                         studentId: appointment.student_id || "N/A",
-                        date: dateTime.toLocaleDateString("en-US"), // Extract date
-                        time: dateTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }), // Extract time
+                        date: dateTime.toLocaleDateString("en-US"),
+                        time: dateTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
                     };
                 });
 
-                setAppointments(appointmentsWithDetails);
+                setAppointments(filteredAppointments);
             } else {
                 console.error("Unexpected response format: appointments is not an array.", appointmentsArray);
                 setAppointments([]);
@@ -69,8 +69,54 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
         }
     };
 
-    const handleAppointmentCreated = (newAppointment) => {
-        setAppointments((prevAppointments) => [...prevAppointments, newAppointment]);
+    // Open the edit popup for a specific appointment
+    const handleEditClick = (appointment) => {
+        setEditingAppointment(appointment);
+        setNewDateTime(""); // Reset the input
+    };
+
+    // Save the new date and time for the appointment
+    const handleSaveDateTime = async () => {
+        if (!newDateTime) {
+            alert("Please provide a new date and time.");
+            return;
+        }
+
+        try {
+            console.log("Updating appointment with ID:", editingAppointment.appointment_id);
+
+            // Create request object for the API
+            const appointmentRequest = {
+                doctorId: editingAppointment.doctorId,
+                patientId: editingAppointment.patientId,
+                time: newDateTime,
+            };
+
+            // Call API to update appointment
+            await api.updateAppointmentTime(editingAppointment.appointment_id, appointmentRequest);
+
+            // Update frontend state
+            setAppointments((prevAppointments) =>
+                prevAppointments.map((appointment) =>
+                    appointment.appointment_id === editingAppointment.appointment_id
+                        ? {
+                            ...appointment,
+                            date: new Date(newDateTime).toLocaleDateString("en-US"),
+                            time: new Date(newDateTime).toLocaleTimeString("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                            }),
+                        }
+                        : appointment
+                )
+            );
+
+            setEditingAppointment(null); // Close the edit popup
+            alert("Appointment time updated successfully.");
+        } catch (error) {
+            console.error("Error updating appointment:", error.response?.data || error.message);
+            alert("Failed to update appointment. Please try again.");
+        }
     };
 
     return (
@@ -79,25 +125,12 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             style={{ height: "500px", overflowY: "scroll" }}
         >
             <div className="mt-4 ml-3">
-                <div className="mb-4">
-                    <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                        onClick={() => setShowSearchPopup(true)}
-                    >
-                        Search Patient
-                    </button>
-                </div>
-
-                <SearchForm
-                    isOpen={showSearchPopup}
-                    onClose={() => setShowSearchPopup(false)}
-                    onAppointmentCreated={handleAppointmentCreated}
-                />
+                <SearchForm isOpen={showSearchPopup} onClose={() => setShowSearchPopup(false)} />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {appointments.length > 0 ? (
                         appointments.map((appointment, index) => (
-                            <div key={index} className="border border-gray p-4 rounded-lg">
+                            <div key={index} className="border border-gray p-4 rounded-lg relative">
                                 <div className="flex justify-between text-gray-700">
                                     <p className="font-light text-gray-400">
                                         <strong>Name</strong>
@@ -111,13 +144,19 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                                     <p className="text-gray-700">{appointment.studentId}</p>
                                 </div>
                                 <hr className="my-5 border-gray-300 border-dashed" />
-                                <div className="flex flex-col text-gray-700">
-                                    <p className="font-light">
-                                        <strong>Date</strong>: {appointment.date}
-                                    </p>
-                                    <p className="font-light">
-                                        <strong>Time</strong>: {appointment.time}
-                                    </p>
+                                <div className="flex justify-between items-center text-gray-700">
+                                    <div>
+                                        <p className="font-light">
+                                            <strong>Date</strong>: {appointment.date}
+                                        </p>
+                                        <p className="font-light">
+                                            <strong>Time</strong>: {appointment.time}
+                                        </p>
+                                    </div>
+                                    <FaEllipsisV
+                                        className="text-gray-500 cursor-pointer absolute bottom-2 right-2"
+                                        onClick={() => handleEditClick(appointment)}
+                                    />
                                 </div>
                             </div>
                         ))
@@ -126,6 +165,40 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                     )}
                 </div>
             </div>
+
+            {editingAppointment && (
+                <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-30">
+                    <div className="bg-white p-6 rounded-lg shadow-lg">
+                        <h3 className="text-xl font-bold mb-4">Edit Appointment</h3>
+                        <div className="mb-4">
+                            <label htmlFor="datetime" className="block text-sm font-medium text-gray-700">
+                                New Date and Time:
+                            </label>
+                            <input
+                                type="datetime-local"
+                                id="datetime"
+                                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                value={newDateTime}
+                                onChange={(e) => setNewDateTime(e.target.value)}
+                            />
+                        </div>
+                        <div className="flex justify-end space-x-2">
+                            <button
+                                className="bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400 transition"
+                                onClick={() => setEditingAppointment(null)}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                                onClick={handleSaveDateTime}
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

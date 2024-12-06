@@ -142,6 +142,19 @@ export class Api {
     }
   }
 
+  async updateAppointmentTime(appointmentId: number, appointmentRequest: AppointmentRequest): Promise<any> {
+    try {
+      const response = await this.axiosObject.patch(`/appointment/edit/${appointmentId}`, appointmentRequest);
+      return response.data;
+    } catch (error) {
+      console.error("Error updating appointment:", error.response?.data || error.message);
+      throw error;
+    }
+  }
+
+
+
+
 
   async getAppointment(date: Date) {
     try {
@@ -155,10 +168,6 @@ export class Api {
       throw error;
     }
   }
-
-
-
-
 
 
 }

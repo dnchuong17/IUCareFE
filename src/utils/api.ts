@@ -3,9 +3,9 @@ import { LoginRequest } from "./request/loginRequest";
 import { RegisterRequest } from "./request/registerRequest";
 import { DoctorInforModel } from "../model/doctorInfor.model";
 import {AppointmentRequest} from "./request/appointmentRequest";
-import {MedicalRequest} from "./request/medicalRequest";
+// import {MedicalRequest} from "./request/medicalRequest";
 import {RecordRequest} from "./request/recordRequest";
-import {DetailedMedicalRequest} from "./request/detailedMedicalRequest";
+// import {DetailedMedicalRequest} from "./request/detailedMedicalRequest";
 
 export class Api {
   private axiosObject: AxiosInstance;
@@ -302,7 +302,6 @@ export class Api {
   }
 
 
-
   async getDetailByRecordId (recordId: number) {
     try {
       const response = await  this.axiosObject.get(`/medical_record/get/detail/${recordId}`);
@@ -313,5 +312,7 @@ export class Api {
       throw error;
     }
   }
+
+
 
 }

@@ -4,7 +4,7 @@ import Sidebar from "../../../components/Sidebar.jsx";
 import { FiSearch, FiTrash } from "react-icons/fi";
 import { Api } from "../../../utils/api.ts";
 import { ToastContainer, toast } from "react-toastify";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import "react-toastify/dist/ReactToastify.css";
 
 const MedicalRecord = () => {

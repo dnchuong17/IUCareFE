@@ -44,6 +44,9 @@ const TableList = () => {
       });
 
       setPatientRecords(formattedRecords);
+
+      // Update patient count
+      setPatientsCount(formattedRecords.length);
     } catch (error) {
       console.error("Error fetching patient records:", error.message);
       toast.error("Failed to fetch patient records.");
@@ -51,6 +54,7 @@ const TableList = () => {
       setLoading(false);
     }
   };
+
 
 
   // Fetch patient suggestions based on query
@@ -185,7 +189,7 @@ const TableList = () => {
                   <th className="px-6 py-4 text-gray-700 font-semibold">Time</th>
                   <th className="px-6 py-4 text-gray-700 font-semibold">Diagnosis</th>
                   <th className="px-6 py-4 text-gray-700 font-semibold">Treatment</th>
-                  <th className="px-6 py-4 text-gray-700 font-semibold">Appointment ID</th>
+                  <th className="px-6 py-4 text-gray-700 font-semibold">View Detail</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -203,7 +207,7 @@ const TableList = () => {
                           <td className="px-6 py-4">{records.time}</td>
                           <td className="px-6 py-4">{records.diagnosis}</td>
                           <td className="px-6 py-4">{records.treatment}</td>
-                          <td className="px-6 py-4">{records.appointmentId}</td>
+                          {/*<td className="px-6 py-4">{records.appointmentId}</td>*/}
                         </tr>
                     ))
                 ) : (

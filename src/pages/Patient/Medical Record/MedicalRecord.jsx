@@ -39,49 +39,64 @@ const MedicalRecord = () => {
 
   useEffect(() => {
     const loadAppointmentAndRecordDetails = async () => {
-      const appointment = location.state?.appointment;
-
-      if (!appointment) {
+      if (!location.state || !location.state.appointment) {
         toast.error("No appointment information provided.");
         return;
       }
 
+      const { appointment } = location.state;
+      console.log("Loading details for appointment:", appointment); // Debugging log
+
       try {
-        // Lấy thông tin bác sĩ, bệnh nhân và hồ sơ bệnh án
         const [doctorDetails, patientDetails, record] = await Promise.all([
-          api.getDoctorById(appointment.doctorId),
-          api.getPatientInformation(appointment.studentId),
-          api.getRecordByAppointmentId(appointment.appointment_id),
+          api.getDoctorById(appointment.doctorId).catch((err) => {
+            console.error("Error fetching doctor details:", err);
+            toast.error("Failed to fetch doctor details.");
+            return {};
+          }),
+          api.getPatientInformation(appointment.studentId).catch((err) => {
+            console.error("Error fetching patient details:", err);
+            toast.error("Failed to fetch patient details.");
+            return {};
+          }),
+          api.getRecordByAppointmentId(appointment.appointment_id).catch((err) => {
+            console.error("Error fetching record details:", err);
+            toast.error("Failed to fetch medical record details.");
+            return {};
+          }),
         ]);
 
-        // Cập nhật state cho form và thông tin bệnh nhân
-        setFormData({
+        let fullRecordDetails = {};
+        if (record?.medical_record_id) {
+          try {
+            fullRecordDetails = await api.getPatientRecordDetail(record.medical_record_id);
+            console.log("Full record details:", fullRecordDetails);
+          } catch (err) {
+            console.error("Error fetching detailed medical record:", err);
+            toast.error("Failed to fetch detailed medical record.");
+          }
+        }
+
+        // Update formData with all fetched details
+        setFormData((prev) => ({
+          ...prev,
+          medical_record_id: record?.medical_record_id || "N/A", // Ensure ID is set
           patient_name: appointment.patient_name || "Unknown Patient",
           doctor_name: doctorDetails?.doctor_name || "Unknown Doctor",
-          treatment: record?.treatment || "",
-          diagnosis: record?.diagnosis || "",
-          suggest: record?.suggest || "",
-          name_medicine: record?.name_medicine || "",
-        });
-
-        setPatientInfo({
-          allergy: patientDetails?.allergy || "No allergy information",
-          patient_name: patientDetails?.patient_name || "N/A",
-          student_id: patientDetails?.student_id || "N/A",
-          patient_phone: patientDetails?.patient_phone || "N/A",
-          patient_address: patientDetails?.patient_address || "N/A",
-          insurance_number: patientDetails?.insurance_number || "N/A",
-          insurance_name: patientDetails?.insurance_name || "N/A",
-          registered_hospital: patientDetails?.registered_hospital || "N/A",
-        });
+          treatment: fullRecordDetails?.treatment || record?.treatment || "",
+          diagnosis: fullRecordDetails?.diagnosis || record?.diagnosis || "",
+          suggest: fullRecordDetails?.suggest || record?.suggest || "",
+          name_medicine: fullRecordDetails?.name_medicine || record?.name_medicine || "",
+        }));
       } catch (error) {
-        console.error("Error fetching details:", error);
-        toast.error("Failed to load appointment and record details.");
+        console.error("Unexpected error loading appointment and record details:", error);
+        toast.error("An unexpected error occurred. Please try again.");
       }
     };
 
     loadAppointmentAndRecordDetails();
   }, [location.state]);
+
 
 
 

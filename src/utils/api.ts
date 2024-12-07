@@ -266,6 +266,7 @@ export class Api {
     }
   }
 
+
   async getRecordByPatientId(patientId: number) {
     try {
       const response = await this.axiosObject.get(`/medical_record/records/${patientId}`);

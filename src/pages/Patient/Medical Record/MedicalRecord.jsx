@@ -417,5 +417,4 @@ const MedicalRecord = () => {
       </div>
   );
 };
-
 export default MedicalRecord;

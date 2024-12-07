@@ -4,6 +4,7 @@
   import { DoctorInforModel } from "../model/doctorInfor.model";
   import {AppointmentRequest} from "./request/appointmentRequest";
   import {MedicalRequest} from "./request/medicalRequest";
+  import {RecordRequest} from "./request/recordRequest";
 
   export class Api {
     private axiosObject: AxiosInstance;
@@ -47,17 +48,22 @@
       }
     }
 
-    async searchMedicine(medicine_name: string): Promise<string[]> {
+    async searchMedicine(medicine_name: string): Promise<{ id: number; name: string }[]> {
       try {
         const response = await this.axiosObject.get("/medicine", {
-          params: {medicine_name},
+          params: { medicine_name },
         });
-        return response.data;
+        console.log("API Response:", response.data); // Log response
+        return response.data.map((item) => ({
+          id: item.id, // Ensure correct property names
+          name: item.name,
+        }));
       } catch (error) {
         console.error("Error fetching medicines:", error.response?.data || error.message);
         throw error;
       }
     }
+
 
     async getDoctorByAccount(account: string) {
       try {
@@ -69,7 +75,7 @@
       }
     }
 
-    async getDoctorById(doctor_id: string) {
+    async getDoctorById(doctor_id: number) {
       try {
         const response = await this.axiosObject.get(`/doctor/${doctor_id}`);
         return response.data;
@@ -79,7 +85,7 @@
       }
     }
 
-    async updateDoctorInfo(doctorId: string, doctorInfor: DoctorInforModel) {
+    async updateDoctorInfo(doctorId: number, doctorInfor: DoctorInforModel) {
       try {
         const response = await this.axiosObject.patch(`/doctor/change_information/${doctorId}`, doctorInfor);
         return response.data;
@@ -165,16 +171,6 @@
       }
     }
 
-    async createMedicalRecord (medicalRequest: MedicalRequest) {
-      try {
-        const response = await this.axiosObject.post("/medical_record/create", medicalRequest);
-        console.log("Medical record created successfully:", response.data);
-        return response.data;
-      } catch (error) {
-        console.error("Error creating medical record:", error.response?.data || error.message);
-        throw error;
-      }
-    }
 
     async getInsurance (studentId: string) {
       try {
@@ -198,7 +194,6 @@
           throw new Error("Invalid status. Allowed values are: APPROVED, DONE, CANCELLED");
         }
 
-        // Gửi yêu cầu đến API backend
         const response = await this.axiosObject.patch(`/appointment/updateStatus/${appointment_id}`, {
           status: newStatus,
         });
@@ -211,6 +206,29 @@
       }
     }
 
+    async getRecordByAppointmentId (recordId: number) {
+      console.log(recordId);
+      try {
+        const response = await  this.axiosObject.get(`/medical_record/get/${recordId}`)
+        console.log(response.data);
+        return (response.data);
+      } catch (error) {
+        console.error("Error getting medical record: ", error.response?.data || error.message);
+      }
+    }
+
+    async createMedicalRecord(recordId: number, recordRequest: RecordRequest) {
+      console.log(recordId);
+      console.log(recordRequest);
+      try {
+        const response = await this.axiosObject.patch(`/medical_record/create/${recordId}`, recordRequest);
+        console.log("Medical record created successfully:", response.data);
+        return response.data;
+      } catch (error) {
+        console.error("Error creating medical record:", error.response?.data || error.message);
+        throw error;
+      }
+    }
 
 
   }

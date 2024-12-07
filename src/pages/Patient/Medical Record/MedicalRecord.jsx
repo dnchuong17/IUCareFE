@@ -4,6 +4,7 @@ import Sidebar from "../../../components/Sidebar.jsx";
 import { FiSearch, FiTrash } from "react-icons/fi";
 import { Api } from "../../../utils/api.ts";
 import { ToastContainer, toast } from "react-toastify";
+import Swal from "sweetalert2";
 import "react-toastify/dist/ReactToastify.css";
 
 const MedicalRecord = () => {
@@ -19,6 +20,7 @@ const MedicalRecord = () => {
     suggest: "",
     patient_name: "",
     doctor_name: "",
+    medical_record_id: "",
   });
   const [patientInfo, setPatientInfo] = useState({
     allergy: "",
@@ -30,6 +32,7 @@ const MedicalRecord = () => {
     insurance_name: "",
     registered_hospital: "",
   });
+
   const api = new Api();
 
   // Load patient and doctor information when navigating to this page
@@ -62,8 +65,16 @@ const MedicalRecord = () => {
             insurance_name: patientDetails?.insurance_name || "N/A",
             registered_hospital: patientDetails?.registered_hospital || "N/A",
           });
+
+          // Fetch the recordId using the appointmentId
+          const record = await api.getRecordByAppointmentId(appointment.appointment_id);
+          setFormData((prev) => ({
+            ...prev,
+            medical_record_id: record?.medical_record_id,
+          }));
         } catch (error) {
           console.error("Error fetching details:", error);
+          toast.error("Failed to load appointment details.");
         }
       }
     };
@@ -71,6 +82,7 @@ const MedicalRecord = () => {
     loadAppointmentDetails();
   }, [location.state]);
 
+// Search Medicines
   const handleSearchChange = async (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -78,45 +90,54 @@ const MedicalRecord = () => {
     if (query.trim()) {
       setIsLoading(true);
       try {
-        const medicines = await api.searchMedicine(query); // Call API to find medicine names
-        setFilteredMedications(medicines); // Set medicine suggestions
+        const medicines = await api.searchMedicine(query); // Backend response
+        console.log("Fetched Medicines:", medicines); // Log response to debug
+        setFilteredMedications(medicines.length > 0 ? medicines : []); // Update state
       } catch (error) {
         console.error("Error fetching medicines:", error);
-        setFilteredMedications([]);
+        toast.error("Failed to fetch medicines.");
+        setFilteredMedications([]); // Clear suggestions on error
       } finally {
         setIsLoading(false);
       }
     } else {
-      setFilteredMedications([]);
+      setFilteredMedications([]); // Clear suggestions if query is empty
     }
   };
 
-  const handleSelectMedication = (name) => {
-    if (!medicationList.includes(name)) {
-      setMedicationList((prev) => [...prev, name]); // Add medicine to the list
+
+// Add Medicine to List
+  const handleSelectMedication = (medicine) => {
+    if (!medicationList.some((med) => med.id === medicine.id)) {
+      setMedicationList((prev) => [...prev, medicine]);
     }
     setSearchQuery(""); // Clear search
     setFilteredMedications([]); // Clear suggestions
   };
 
-  const handleDeleteMedication = (name) => {
-    setMedicationList((prev) => prev.filter((med) => med !== name)); // Remove medicine
+// Remove Medicine from List
+  const handleDeleteMedication = (medicineId) => {
+    setMedicationList((prev) => prev.filter((med) => med.id !== medicineId));
   };
 
-  const toggleSection = (section) => {
-    setActiveSections((prev) =>
-        prev.includes(section) ? prev.filter((s) => s !== section) : [...prev, section]
-    );
-  };
-
+// Handle Form Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+// Submit Form
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { treatment, diagnosis, suggest } = formData;
+    const { treatment, diagnosis, suggest, medical_record_id } = formData;
+
+    if (!medical_record_id) {
+      toast.error("Record ID not found. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
 
     if (treatment.trim() && diagnosis.trim() && suggest.trim()) {
       try {
@@ -131,13 +152,26 @@ const MedicalRecord = () => {
         });
 
         if (result.isConfirmed) {
-          toast.success("Medical Record created successfully!", {
+          const medicalRequest = {
+            treatment,
+            diagnosis,
+            suggest,
+            medicines: medicationList.map((med) => med.id), // Send array of medicine IDs
+          };
+
+          console.log("Updating Medical Record:", medical_record_id, medicalRequest);
+
+          // Send PATCH request to update medical record
+          await api.createMedicalRecord(medical_record_id, medicalRequest);
+
+          toast.success("Medical Record updated successfully!", {
             position: "top-right",
             autoClose: 3000,
           });
         }
       } catch (error) {
-        toast.error("Failed to create Medical Record. Please try again.", {
+        console.error("Error updating medical record:", error);
+        toast.error("Failed to update Medical Record. Please try again.", {
           position: "top-right",
           autoClose: 3000,
         });
@@ -226,7 +260,7 @@ const MedicalRecord = () => {
                 <div>
                   <label className="text-blue-700 font-medium text-xl">Prescription</label>
                   <div className="relative w-full">
-                    <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl" />
+                    <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl"/>
                     <input
                         type="text"
                         value={searchQuery}
@@ -237,37 +271,42 @@ const MedicalRecord = () => {
                     {isLoading && <p className="text-gray-500 mt-2">Loading...</p>}
                     {!isLoading && filteredMedications.length > 0 && (
                         <ul className="absolute z-10 bg-white border border-gray-300 rounded-md w-full mt-2 shadow-lg">
-                          {filteredMedications.map((name, index) => (
-                              <li
-                                  key={index}
-                                  className="p-2 hover:bg-blue-100 cursor-pointer"
-                                  onClick={() => handleSelectMedication(name)}
-                              >
-                                {name}
-                              </li>
-                          ))}
+                          {filteredMedications.map((medicine) => {
+                            console.log("Rendering Medicine:", medicine); // Log each medicine
+                            return (
+                                <li
+                                    key={medicine.id}
+                                    className="p-2 hover:bg-blue-100 cursor-pointer"
+                                    onClick={() => handleSelectMedication(medicine)}
+                                >
+                                  {medicine.name}
+                                </li>
+                            );
+                          })}
                         </ul>
                     )}
+
                   </div>
                 </div>
 
                 {/* Medication List */}
                 <ul className="mt-4 space-y-2">
-                  {medicationList.map((name, index) => (
+                  {medicationList.map((medicine) => (
                       <li
-                          key={index}
+                          key={medicine.id} // Use id as the unique key
                           className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow overflow-auto"
                       >
                         <div>
-                          <strong>{name}</strong>
+                          <strong>{medicine.name}</strong> {/* Display the name */}
                         </div>
                         <FiTrash
                             className="text-red-500 text-xl cursor-pointer hover:text-red-700"
-                            onClick={() => handleDeleteMedication(name)}
+                            onClick={() => handleDeleteMedication(medicine.id)} // Delete by id
                         />
                       </li>
                   ))}
                 </ul>
+
 
                 {/* Suggestion Box */}
                 <div className="mt-4">
@@ -290,7 +329,7 @@ const MedicalRecord = () => {
                   {/* Patient Information */}
                   <button
                       className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
-                      onClick={() => toggleSection("patientInfo")}
+                      // onClick={() => toggleSection("patientInfo")}
                   >
                     Patient Information
                   </button>

@@ -126,7 +126,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             setAppointments((prevAppointments) =>
                 prevAppointments.map((appt) =>
                     appt.appointment_id === appointment.appointment_id
-                        ? { ...appt, status: newStatus }
+                        ? { ...appt, appointment_status: newStatus }
                         : appt
                 )
             );
@@ -166,7 +166,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                                     <p className="font-light text-gray-400">
                                         <strong>Name</strong>
                                     </p>
-                                    <p className="text-gray-700">{appointment.patientName}</p>
+                                    <p className="text-gray-700">{appointment.patient_name}</p>
                                 </div>
                                 <div className="flex justify-between text-gray-700">
                                     <p className="font-light text-gray-400">
@@ -178,7 +178,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                                     <p className="font-light text-gray-400">
                                         <strong>Status</strong>
                                     </p>
-                                    <p className="text-gray-700">{appointment.status}</p>
+                                    <p className="text-gray-700">{appointment.appointment_status}</p>
                                 </div>
                                 <hr className="my-5 border-gray-300 border-dashed" />
                                 <div className="flex justify-between items-center text-gray-700">

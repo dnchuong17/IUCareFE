@@ -206,29 +206,63 @@
       }
     }
 
-    async getRecordByAppointmentId (recordId: number) {
-      console.log(recordId);
-      try {
-        const response = await  this.axiosObject.get(`/medical_record/get/${recordId}`)
-        console.log(response.data);
-        return (response.data);
-      } catch (error) {
-        console.error("Error getting medical record: ", error.response?.data || error.message);
-      }
-    }
 
-    async createMedicalRecord(recordId: number, recordRequest: RecordRequest) {
-      console.log(recordId);
-      console.log(recordRequest);
+    async getRecordByAppointmentId(appointment_id: number) {
       try {
-        const response = await this.axiosObject.patch(`/medical_record/create/${recordId}`, recordRequest);
-        console.log("Medical record created successfully:", response.data);
+        const response = await this.axiosObject.get(`/medical_record/get/${appointment_id}`);
+        console.log("Fetched Updated Record:", response.data);
         return response.data;
       } catch (error) {
-        console.error("Error creating medical record:", error.response?.data || error.message);
+        console.error("Error fetching updated medical record:", error.response?.data || error.message);
         throw error;
       }
     }
 
+
+
+    async createMedicalRecord(recordId: number, recordRequest: RecordRequest) {
+      console.log("Creating Medical Record with ID:", recordId);
+      console.log("Payload:", recordRequest);
+
+      try {
+        const response = await this.axiosObject.patch(
+            `/medical_record/create/${recordId}`,
+            recordRequest // Ensure this payload matches backend expectations
+        );
+        console.log("Medical record updated successfully:", response.data);
+        return response.data;
+      } catch (error) {
+        console.error(
+            "Error creating medical record:",
+            error.response?.data || error.message
+        );
+        throw error;
+      }
+    }
+
+
+
+    async addMedicinesToRecord(medical_record_id: number, medicine_ids: number[]) {
+      // Validate medicine_ids is not empty
+      if (!medicine_ids || medicine_ids.length === 0) {
+        throw new Error("No medicines to add.");
+      }
+
+      try {
+        const response = await axios.post("/medicine/add", {
+          medical_record_id,
+          medicine_ids,
+        });
+        console.log("Medicines added to record successfully:", response.data);
+        return response.data;
+      } catch (error) {
+        console.error("Error adding medicines to record:", {
+          medical_record_id,
+          medicine_ids,
+          error: error.response?.data || error.message,
+        });
+        throw error;
+      }
+    }
 
   }

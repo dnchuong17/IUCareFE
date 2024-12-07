@@ -11,6 +11,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
     const [showSearchPopup, setShowSearchPopup] = useState(false);
     const [editingAppointment, setEditingAppointment] = useState(null);
     const [newDateTime, setNewDateTime] = useState("");
+
     const [showEditMenu, setShowEditMenu] = useState(null);
     const [newStatus, setNewStatus] = useState("");
     const api = new Api();
@@ -25,6 +26,18 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             fetchAppointmentsForDay(selectedDate);
         }
     }, [selectedDate]);
+
+    function validateAndFormatDate(dateInput) {
+        const date = new Date(dateInput);
+
+        // Check if the date is valid
+        if (isNaN(date.getTime())) {
+            throw new Error("Invalid date format. Please select a valid date.");
+        }
+
+        // Format the date as 'YYYY-MM-DD'
+        return date.toISOString().split('T')[0];
+    }
 
     const fetchAllAppointments = async () => {
         try {
@@ -44,7 +57,8 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
 
     const fetchAppointmentsForDay = async (date) => {
         try {
-            const response = await api.getAppointment(date);
+            const formattedDate = validateAndFormatDate(date);
+            const response = await api.getAppointment(formattedDate);
             const appointmentsArray = response || [];
 
             if (Array.isArray(appointmentsArray)) {

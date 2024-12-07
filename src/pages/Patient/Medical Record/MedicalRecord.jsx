@@ -21,6 +21,7 @@ const MedicalRecord = () => {
     patient_name: "",
     doctor_name: "",
     medical_record_id: "",
+    medicines: [],
   });
   const [patientInfo, setPatientInfo] = useState({
     allergy: "",
@@ -35,26 +36,24 @@ const MedicalRecord = () => {
 
   const api = new Api();
 
-  // Load patient and doctor information when navigating to this page
   useEffect(() => {
     const loadAppointmentDetails = async () => {
       const appointment = location.state?.appointment;
       if (appointment) {
-        setFormData((prev) => ({
-          ...prev,
-          patient_name: appointment.patient_name || "Unknown Patient",
-        }));
-
         try {
-          // Fetch doctor details
-          const doctorDetails = await api.getDoctorById(appointment.doctorId);
+          const [doctorDetails, patientDetails, record] = await Promise.all([
+            api.getDoctorById(appointment.doctorId),
+            api.getPatientInformation(appointment.studentId),
+            api.getRecordByAppointmentId(appointment.appointment_id),
+          ]);
+
           setFormData((prev) => ({
             ...prev,
+            patient_name: appointment.patient_name || "Unknown Patient",
             doctor_name: doctorDetails?.doctor_name || "Unknown Doctor",
+            medical_record_id: record?.medical_record_id || "",
           }));
 
-          // Fetch patient information using studentId
-          const patientDetails = await api.getPatientInformation(appointment.studentId);
           setPatientInfo({
             allergy: patientDetails?.allergy || "No allergy information",
             patient_name: patientDetails?.patient_name || "N/A",
@@ -65,13 +64,6 @@ const MedicalRecord = () => {
             insurance_name: patientDetails?.insurance_name || "N/A",
             registered_hospital: patientDetails?.registered_hospital || "N/A",
           });
-
-          // Fetch the recordId using the appointmentId
-          const record = await api.getRecordByAppointmentId(appointment.appointment_id);
-          setFormData((prev) => ({
-            ...prev,
-            medical_record_id: record?.medical_record_id,
-          }));
         } catch (error) {
           console.error("Error fetching details:", error);
           toast.error("Failed to load appointment details.");
@@ -82,7 +74,12 @@ const MedicalRecord = () => {
     loadAppointmentDetails();
   }, [location.state]);
 
-// Search Medicines
+  const toggleSection = (section) => {
+    setActiveSections((prev) =>
+        prev.includes(section) ? prev.filter((s) => s !== section) : [...prev, section]
+    );
+  };
+
   const handleSearchChange = async (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -90,121 +87,101 @@ const MedicalRecord = () => {
     if (query.trim()) {
       setIsLoading(true);
       try {
-        const medicines = await api.searchMedicine(query); // Backend response
-        console.log("Fetched Medicines:", medicines); // Log response to debug
-        setFilteredMedications(medicines.length > 0 ? medicines : []); // Update state
+        const medicines = await api.searchMedicine(query); // Search backend API
+        setFilteredMedications(medicines.length > 0 ? medicines : []);
       } catch (error) {
         console.error("Error fetching medicines:", error);
         toast.error("Failed to fetch medicines.");
-        setFilteredMedications([]); // Clear suggestions on error
       } finally {
         setIsLoading(false);
       }
     } else {
-      setFilteredMedications([]); // Clear suggestions if query is empty
+      setFilteredMedications([]);
     }
   };
 
-
-// Add Medicine to List
   const handleSelectMedication = (medicine) => {
     if (!medicationList.some((med) => med.id === medicine.id)) {
-      setMedicationList((prev) => [...prev, medicine]);
+      setMedicationList((prev) => [...prev, { id: medicine.id, name: medicine.name }]);
+      toast.success(`${medicine.name} added to list.`);
     }
-    setSearchQuery(""); // Clear search
-    setFilteredMedications([]); // Clear suggestions
+    setSearchQuery("");
+    setFilteredMedications([]);
   };
 
-// Remove Medicine from List
-  const handleDeleteMedication = (medicineId) => {
-    setMedicationList((prev) => prev.filter((med) => med.id !== medicineId));
+  const handleBatchAddMedicines = async () => {
+    const medicineIds = medicationList.map((med) => med.id);
+
+    if (!medicineIds.length) {
+      toast.error("No medicines selected to add.");
+      return;
+    }
+
+    try {
+      await api.addMedicinesToRecord(formData.medical_record_id, medicineIds);
+      toast.success("Medicines added to medical record successfully.");
+    } catch (error) {
+      console.error("Error adding medicines to record:", error.message);
+      toast.error("Failed to add medicines to medical record.");
+    }
   };
 
-  const toggleSection = (section) => {
-    setActiveSections((prev) =>
-        prev.includes(section) ? prev.filter((s) => s !== section) : [...prev, section]
-    );
+  const handleRemoveMedicine = async (medicineId) => {
+    try {
+      setMedicationList((prev) => prev.filter((med) => med.id !== medicineId));
+      await api.removeMedicineFromRecord(formData.medical_record_id, medicineId);
+      toast.success("Medicine removed from medical record.");
+    } catch (error) {
+      console.error("Error removing medicine from record:", error);
+      toast.error("Failed to remove medicine from medical record.");
+    }
   };
 
-// Handle Form Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-// Submit Form
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { treatment, diagnosis, suggest, medical_record_id } = formData;
 
-    if (!medical_record_id) {
-      toast.error("Record ID not found. Please try again.", {
-        position: "top-right",
-        autoClose: 3000,
-      });
+    if (!medicationList.length) {
+      toast.error("No medicines selected to save.");
       return;
     }
 
-    if (treatment.trim() && diagnosis.trim() && suggest.trim()) {
-      try {
-        const result = await Swal.fire({
-          title: "Are you sure?",
-          text: "Do you want to save this Medical Record?",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, save it!",
-        });
+    try {
+      const medicineIds = medicationList.map((medicine) => medicine.id);
+      const recordRequest = {
+        treatment: formData.treatment,
+        diagnosis: formData.diagnosis,
+        suggest: formData.suggest,
+        medicines: medicationList.map((med) => med.id), // Array of IDs
+      };
 
-        if (result.isConfirmed) {
-          const medicalRequest = {
-            treatment,
-            diagnosis,
-            suggest,
-            medicines: medicationList.map((med) => med.id), // Send array of medicine IDs
-          };
+      console.log("Submitting medical record:", recordRequest);
 
-          console.log("Updating Medical Record:", medical_record_id, medicalRequest);
+      await api.createMedicalRecord(formData.medical_record_id, recordRequest);
 
-          // Send PATCH request to update medical record
-          await api.createMedicalRecord(medical_record_id, medicalRequest);
-
-          toast.success("Medical Record updated successfully!", {
-            position: "top-right",
-            autoClose: 3000,
-          });
-        }
-      } catch (error) {
-        console.error("Error updating medical record:", error);
-        toast.error("Failed to update Medical Record. Please try again.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    } else {
-      toast.error("Please fill all required fields.", {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      toast.success("Medical record updated successfully.");
+    } catch (error) {
+      console.error("Error submitting medical record:", error);
+      toast.error("Failed to save medical record.");
     }
   };
 
+
   return (
       <div className="flex min-h-screen">
-        {/* Sidebar */}
         <div className="w-1/5 bg-white shadow-lg">
-          <Sidebar />
+          <Sidebar/>
         </div>
 
-        {/* Main Content */}
         <div className="flex-grow p-8 space-y-6">
           <form onSubmit={handleSubmit}>
-            {/* Medical Record Form */}
             <div className="bg-gradient-to-b from-blue-500 via-blue-400 to-blue-300 shadow-lg rounded-lg p-6">
               <h1 className="text-3xl font-bold text-white mb-6">Medical Record</h1>
               <div className="flex space-x-4 items-end">
-                {/* Patient Name */}
                 <div className="flex flex-col w-1/2">
                   <label className="text-blue-950 font-medium text-xl">Patient Name</label>
                   <input
@@ -217,7 +194,6 @@ const MedicalRecord = () => {
                   />
                 </div>
 
-                {/* Doctor Name */}
                 <div className="flex flex-col w-1/2">
                   <label className="text-blue-900 font-medium text-xl">Doctor Name</label>
                   <input
@@ -232,11 +208,8 @@ const MedicalRecord = () => {
               </div>
             </div>
 
-            {/* Sections */}
             <div className="grid grid-cols-3 gap-6">
-              {/* Left Section */}
               <div className="col-span-2 bg-white shadow-lg rounded-lg p-6 space-y-4">
-                {/* Diagnosis */}
                 <div>
                   <label className="text-blue-700 font-medium text-xl">Diagnosis</label>
                   <textarea
@@ -249,7 +222,6 @@ const MedicalRecord = () => {
                   />
                 </div>
 
-                {/* Treatment */}
                 <div>
                   <label className="text-blue-700 font-medium text-xl">Treatment</label>
                   <textarea
@@ -262,7 +234,6 @@ const MedicalRecord = () => {
                   />
                 </div>
 
-                {/* Prescription */}
                 <div>
                   <label className="text-blue-700 font-medium text-xl">Prescription</label>
                   <div className="relative w-full">
@@ -277,44 +248,36 @@ const MedicalRecord = () => {
                     {isLoading && <p className="text-gray-500 mt-2">Loading...</p>}
                     {!isLoading && filteredMedications.length > 0 && (
                         <ul className="absolute z-10 bg-white border border-gray-300 rounded-md w-full mt-2 shadow-lg">
-                          {filteredMedications.map((medicine) => {
-                            console.log("Rendering Medicine:", medicine); // Log each medicine
-                            return (
-                                <li
-                                    key={medicine.id}
-                                    className="p-2 hover:bg-blue-100 cursor-pointer"
-                                    onClick={() => handleSelectMedication(medicine)}
-                                >
-                                  {medicine.name}
-                                </li>
-                            );
-                          })}
+                          {filteredMedications.map((medicine) => (
+                              <li
+                                  key={medicine.id}
+                                  className="p-2 hover:bg-blue-100 cursor-pointer"
+                                  onClick={() => handleSelectMedication(medicine)}
+                              >
+                                {medicine.name}
+                              </li>
+                          ))}
                         </ul>
                     )}
-
                   </div>
                 </div>
 
-                {/* Medication List */}
                 <ul className="mt-4 space-y-2">
                   {medicationList.map((medicine) => (
                       <li
-                          key={medicine.id} // Use id as the unique key
-                          className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow overflow-auto"
+                          key={medicine.id}
+                          className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow"
                       >
                         <div>
-                          <strong>{medicine.name}</strong> {/* Display the name */}
+                          <strong>{medicine.name}</strong>
                         </div>
                         <FiTrash
                             className="text-red-500 text-xl cursor-pointer hover:text-red-700"
-                            onClick={() => handleDeleteMedication(medicine.id)} // Delete by id
+                            onClick={() => handleRemoveMedicine(medicine.id)}
                         />
                       </li>
                   ))}
                 </ul>
-
-
-                {/* Suggestion Box */}
                 <div className="mt-4">
                   <label className="text-blue-700 font-medium text-xl">Suggestions</label>
                   <textarea
@@ -328,11 +291,8 @@ const MedicalRecord = () => {
                 </div>
               </div>
 
-              {/* Right Section */}
               <div className="col-span-1 bg-white shadow-lg rounded-lg p-6 space-y-4">
-                {/* Patient Information, Allergy, Latest Record Buttons */}
                 <div className="flex flex-col space-y-4">
-                  {/* Patient Information */}
                   <button
                       className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
                       onClick={() => toggleSection("patientInfo")}
@@ -356,7 +316,6 @@ const MedicalRecord = () => {
                       </div>
                   )}
 
-                  {/* Allergy */}
                   <button
                       className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
                       onClick={() => toggleSection("allergy")}
@@ -369,7 +328,6 @@ const MedicalRecord = () => {
                       </div>
                   )}
 
-                  {/* Insurance */}
                   <button
                       className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
                       onClick={() => toggleSection("insurance")}
@@ -390,7 +348,6 @@ const MedicalRecord = () => {
                       </div>
                   )}
 
-                  {/* Latest Record */}
                   <button
                       className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
                       onClick={() => toggleSection("latestRecord")}
@@ -414,7 +371,8 @@ const MedicalRecord = () => {
             </button>
           </form>
         </div>
-        <ToastContainer />
+
+        <ToastContainer/>
       </div>
   );
 };

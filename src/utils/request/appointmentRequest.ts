@@ -3,3 +3,4 @@ export class AppointmentRequest {
     patientId: number;
     time: Date;
 }
+

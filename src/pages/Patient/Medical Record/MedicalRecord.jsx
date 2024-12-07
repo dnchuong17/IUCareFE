@@ -120,6 +120,12 @@ const MedicalRecord = () => {
     setMedicationList((prev) => prev.filter((med) => med.id !== medicineId));
   };
 
+  const toggleSection = (section) => {
+    setActiveSections((prev) =>
+        prev.includes(section) ? prev.filter((s) => s !== section) : [...prev, section]
+    );
+  };
+
 // Handle Form Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -329,7 +335,7 @@ const MedicalRecord = () => {
                   {/* Patient Information */}
                   <button
                       className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
-                      // onClick={() => toggleSection("patientInfo")}
+                      onClick={() => toggleSection("patientInfo")}
                   >
                     Patient Information
                   </button>

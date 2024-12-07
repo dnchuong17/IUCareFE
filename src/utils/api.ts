@@ -5,6 +5,7 @@ import { DoctorInforModel } from "../model/doctorInfor.model";
 import {AppointmentRequest} from "./request/appointmentRequest";
 import {MedicalRequest} from "./request/medicalRequest";
 import {RecordRequest} from "./request/recordRequest";
+import {DetailedMedicalRequest} from "./request/detailedMedicalRequest";
 
 export class Api {
   private axiosObject: AxiosInstance;
@@ -274,6 +275,31 @@ export class Api {
       throw error;
     }
   }
+
+  async getPatientRecordDetail(medical_record_id: number) {
+    try {
+      const response = await  this.axiosObject.get(`/medical_record/get/detail/${medical_record_id}`);
+      console.log("Detail response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error getting record detail:", error.response?.data || error.message);
+      throw error;
+    }
+  }
+
+  async getPreviousPatientRecord(patientId: number, date: Date) {
+    try {
+      const response = await this.axiosObject.get(`/medical_record/previous_record/${patientId}`, {
+        params: { date },
+      });
+      console.log("Previous record response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error getting previous patient record:", error.response?.data || error.message);
+      throw error;
+    }
+  }
+
 
 
 }

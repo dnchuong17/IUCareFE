@@ -4,7 +4,6 @@ import Sidebar from "../../../components/Sidebar.jsx";
 import { FiSearch, FiTrash } from "react-icons/fi";
 import { Api } from "../../../utils/api.ts";
 import { ToastContainer, toast } from "react-toastify";
-import Swal from "sweetalert2";
 import "react-toastify/dist/ReactToastify.css";
 
 const MedicalRecord = () => {
@@ -36,43 +35,60 @@ const MedicalRecord = () => {
 
   const api = new Api();
 
+  const [medicalRecordId, setMedicalRecordId] = useState("");
+
   useEffect(() => {
-    const loadAppointmentDetails = async () => {
+    const loadAppointmentAndRecordDetails = async () => {
       const appointment = location.state?.appointment;
-      if (appointment) {
-        try {
-          const [doctorDetails, patientDetails, record] = await Promise.all([
-            api.getDoctorById(appointment.doctorId),
-            api.getPatientInformation(appointment.studentId),
-            api.getRecordByAppointmentId(appointment.appointment_id),
-          ]);
 
-          setFormData((prev) => ({
-            ...prev,
-            patient_name: appointment.patient_name || "Unknown Patient",
-            doctor_name: doctorDetails?.doctor_name || "Unknown Doctor",
-            medical_record_id: record?.medical_record_id || "",
-          }));
+      if (!appointment) {
+        toast.error("No appointment information provided.");
+        return;
+      }
 
-          setPatientInfo({
-            allergy: patientDetails?.allergy || "No allergy information",
-            patient_name: patientDetails?.patient_name || "N/A",
-            student_id: patientDetails?.student_id || "N/A",
-            patient_phone: patientDetails?.patient_phone || "N/A",
-            patient_address: patientDetails?.patient_address || "N/A",
-            insurance_number: patientDetails?.insurance_number || "N/A",
-            insurance_name: patientDetails?.insurance_name || "N/A",
-            registered_hospital: patientDetails?.registered_hospital || "N/A",
-          });
-        } catch (error) {
-          console.error("Error fetching details:", error);
-          toast.error("Failed to load appointment details.");
-        }
+      try {
+        // Lấy thông tin bác sĩ, bệnh nhân và hồ sơ bệnh án
+        const [doctorDetails, patientDetails, record] = await Promise.all([
+          api.getDoctorById(appointment.doctorId),
+          api.getPatientInformation(appointment.studentId),
+          api.getRecordByAppointmentId(appointment.appointment_id),
+        ]);
+
+        // Cập nhật state cho form và thông tin bệnh nhân
+        setFormData({
+          patient_name: appointment.patient_name || "Unknown Patient",
+          doctor_name: doctorDetails?.doctor_name || "Unknown Doctor",
+          treatment: record?.treatment || "",
+          diagnosis: record?.diagnosis || "",
+          suggest: record?.suggest || "",
+          name_medicine: record?.name_medicine || "",
+        });
+
+        setPatientInfo({
+          allergy: patientDetails?.allergy || "No allergy information",
+          patient_name: patientDetails?.patient_name || "N/A",
+          student_id: patientDetails?.student_id || "N/A",
+          patient_phone: patientDetails?.patient_phone || "N/A",
+          patient_address: patientDetails?.patient_address || "N/A",
+          insurance_number: patientDetails?.insurance_number || "N/A",
+          insurance_name: patientDetails?.insurance_name || "N/A",
+          registered_hospital: patientDetails?.registered_hospital || "N/A",
+        });
+      } catch (error) {
+        console.error("Error fetching details:", error);
+        toast.error("Failed to load appointment and record details.");
       }
     };
 
-    loadAppointmentDetails();
+    loadAppointmentAndRecordDetails();
   }, [location.state]);
+
+
+
+
+
+
+
 
   const toggleSection = (section) => {
     setActiveSections((prev) =>
@@ -87,7 +103,7 @@ const MedicalRecord = () => {
     if (query.trim()) {
       setIsLoading(true);
       try {
-        const medicines = await api.searchMedicine(query); // Search backend API
+        const medicines = await api.searchMedicine(query);
         setFilteredMedications(medicines.length > 0 ? medicines : []);
       } catch (error) {
         console.error("Error fetching medicines:", error);
@@ -109,37 +125,32 @@ const MedicalRecord = () => {
     setFilteredMedications([]);
   };
 
-  const handleBatchAddMedicines = async () => {
-    const medicineIds = medicationList.map((med) => med.id);
-
-    if (!medicineIds.length) {
-      toast.error("No medicines selected to add.");
-      return;
-    }
-
-    try {
-      await api.addMedicinesToRecord(formData.medical_record_id, medicineIds);
-      toast.success("Medicines added to medical record successfully.");
-    } catch (error) {
-      console.error("Error adding medicines to record:", error.message);
-      toast.error("Failed to add medicines to medical record.");
-    }
-  };
-
-  const handleRemoveMedicine = async (medicineId) => {
-    try {
-      setMedicationList((prev) => prev.filter((med) => med.id !== medicineId));
-      await api.removeMedicineFromRecord(formData.medical_record_id, medicineId);
-      toast.success("Medicine removed from medical record.");
-    } catch (error) {
-      console.error("Error removing medicine from record:", error);
-      toast.error("Failed to remove medicine from medical record.");
-    }
+  const handleRemoveMedicine = (medicineId) => {
+    setMedicationList((prev) => prev.filter((med) => med.id !== medicineId));
+    toast.success("Medicine removed from the list.");
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const mapFormDataToRequest = (formData) => {
+    return {
+      patient_name: formData.patient_name || "N/A",
+      doctor_name: formData.doctor_name || "N/A",
+      treatment: formData.treatment || "",
+      diagnosis: formData.diagnosis || "",
+      suggest: formData.suggest || "",
+      patient_phone: patientInfo.patient_phone || "N/A",
+      student_id: patientInfo.student_id || "N/A",
+      patient_address: patientInfo.patient_address || "N/A",
+      allergy: patientInfo.allergy || "None",
+      insurance_name: patientInfo.insurance_name || "N/A",
+      insurance_number: patientInfo.insurance_number || "N/A",
+      registered_hospital: patientInfo.registered_hospital || "N/A",
+      name_medicine: medicationList.map((med) => med.name).join(", "),
+    };
   };
 
   const handleSubmit = async (e) => {
@@ -151,18 +162,8 @@ const MedicalRecord = () => {
     }
 
     try {
-      const medicineIds = medicationList.map((medicine) => medicine.id);
-      const recordRequest = {
-        treatment: formData.treatment,
-        diagnosis: formData.diagnosis,
-        suggest: formData.suggest,
-        medicines: medicationList.map((med) => med.id), // Array of IDs
-      };
-
-      console.log("Submitting medical record:", recordRequest);
-
+      const recordRequest = mapFormDataToRequest(formData);
       await api.createMedicalRecord(formData.medical_record_id, recordRequest);
-
       toast.success("Medical record updated successfully.");
     } catch (error) {
       console.error("Error submitting medical record:", error);
@@ -170,11 +171,10 @@ const MedicalRecord = () => {
     }
   };
 
-
   return (
       <div className="flex min-h-screen">
         <div className="w-1/5 bg-white shadow-lg">
-          <Sidebar/>
+          <Sidebar />
         </div>
 
         <div className="flex-grow p-8 space-y-6">
@@ -237,7 +237,7 @@ const MedicalRecord = () => {
                 <div>
                   <label className="text-blue-700 font-medium text-xl">Prescription</label>
                   <div className="relative w-full">
-                    <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl"/>
+                    <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl" />
                     <input
                         type="text"
                         value={searchQuery}
@@ -347,18 +347,6 @@ const MedicalRecord = () => {
                         </p>
                       </div>
                   )}
-
-                  <button
-                      className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
-                      onClick={() => toggleSection("latestRecord")}
-                  >
-                    Latest Record
-                  </button>
-                  {activeSections.includes("latestRecord") && (
-                      <div className="mt-2 p-4 bg-gray-50 rounded-lg shadow-inner">
-                        <p className="text-gray-700">{patientInfo.latestRecord}</p>
-                      </div>
-                  )}
                 </div>
               </div>
             </div>
@@ -372,7 +360,7 @@ const MedicalRecord = () => {
           </form>
         </div>
 
-        <ToastContainer/>
+        <ToastContainer />
       </div>
   );
 };

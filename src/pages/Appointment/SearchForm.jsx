@@ -44,8 +44,8 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
         setDoctorId(doctorId);
       } catch (error) {
         console.error(
-          "Error fetching doctor information:",
-          error.response?.data || error.message
+            "Error fetching doctor information:",
+            error.response?.data || error.message
         );
         toast.error("Failed to fetch doctor information.", {
           position: "top-right",
@@ -84,10 +84,10 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
         }
       } catch (error) {
         console.error(
-          "Error searching for patients. Search term:",
-          searchTerm,
-          "Error:",
-          error.response?.data || error.message
+            "Error searching for patients. Search term:",
+            searchTerm,
+            "Error:",
+            error.response?.data || error.message
         );
         setMessage("Error searching for patients. Please try again later.");
       } finally {
@@ -148,155 +148,155 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
   if (!isOpen && !isInfoFormOpen) return null;
 
   return (
-    <>
-      {/* Modal Popup */}
-      {isOpen && !isInfoFormOpen && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg shadow-xl p-7 w-full max-w-lg mx-4 md:mx-0 md:w-1/2">
-            <button
-              onClick={onClose}
-              className="text-gray-700 hover:text-gray-900"
-            >
-              <FaTimes className="text-xl" />
-            </button>
-            <h2 className="text-2xl font-semibold text-center text-gray-600 w-full mb-4">
-              Booking Appointment
-            </h2>
-            <div className="flex justify-center mb-4">
-              <button
-                className={`px-4 py-2 rounded-l-full ${
-                  isSearchMode
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-200 text-gray-700"
-                }`}
-                onClick={() => setIsSearchMode(true)}
-              >
-                Search Mode
-              </button>
-              <button
-                className={`px-4 py-2 rounded-r-full ${
-                  !isSearchMode
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-200 text-gray-700"
-                }`}
-                onClick={() => setIsSearchMode(false)}
-              >
-                Form Mode
-              </button>
-            </div>
-            <hr className="mb-4" />
-
-            <h2 className="tblock mb-2 font-medium text-blue-800">
-              Search Patient
-            </h2>
-
-            {/* Search */}
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                placeholder="Enter student ID..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-                className="w-full p-3 pl-4 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button
-                onClick={() =>
-                  setIsInfoFormOpen(true) && setIsSearchMode(false)
-                }
-                className="bg-blue-500 text-white px-3 py-3 rounded-md hover:bg-blue-600 transition"
-              >
-                Add
-              </button>
-            </div>
-
-            {isLoading && <p className="text-blue-500 mt-2">Loading...</p>}
-
-            {message && <p className="text-red-500 mt-2">{message}</p>}
-
-            {/* Results */}
-            {searchResults.length > 0 && (
-              <ul className="mt-2 border rounded-md shadow-md max-h-48 overflow-y-auto">
-                {searchResults.map((patient) => (
-                  <li
-                    key={patient.studentId}
-                    className="cursor-pointer p-2 hover:bg-gray-100"
-                    onClick={() =>
-                      handleSelectPatient(
-                        patient.studentId,
-                        patient.patientName,
-                        patient.patientId
-                      )
-                    }
-                  >
-                    {patient.patientName} ({patient.studentId})
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            {/* Selected Patient Info */}
-            {selectedPatient && (
-              <div className="grid grid-cols-1 gap-4 mt-4">
-                <div className="p-0.5 rounded-lg text-gray-700">
-                  <label className="block mb-2 font-medium text-blue-800">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    value={selectedPatient.patientName}
-                    readOnly
-                    className="w-full p-3 border border-gray-200 rounded-lg bg-gray-100"
-                  />
-                </div>
-                <div className="p-0.5 rounded-lg text-gray-700">
-                  <label className="block mb-2 font-medium text-blue-800">
-                    Student ID
-                  </label>
-                  <input
-                    type="text"
-                    value={selectedPatient.studentId}
-                    readOnly
-                    className="w-full p-3 border border-gray-200 rounded-lg bg-gray-100"
-                  />
-                </div>
-
-                {/* Appointment Date and Time */}
-                <div className="p-0.5 rounded-lg text-gray-700">
-                  <label
-                    htmlFor="appointmentDateTime"
-                    className="block mb-2 font-medium text-blue-800"
-                  >
-                    Appointment Date and Time:
-                  </label>
-                  <input
-                    type="datetime-local"
-                    id="appointmentDateTime"
-                    value={appointmentDateTime}
-                    onChange={(e) => setAppointmentDateTime(e.target.value)}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+      <>
+        {/* Modal Popup */}
+        {isOpen && !isInfoFormOpen && (
+            <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+              <div className="bg-white rounded-lg shadow-xl p-7 w-full max-w-lg mx-4 md:mx-0 md:w-1/2">
                 <button
-                  onClick={handleCreateAppointment}
-                  className="mt-4 w-1/2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mx-auto block"
+                    onClick={onClose}
+                    className="text-gray-700 hover:text-gray-900"
                 >
-                  Create Appointment
+                  <FaTimes className="text-xl" />
                 </button>
+                <h2 className="text-2xl font-semibold text-center text-gray-600 w-full mb-4">
+                  Booking Appointment
+                </h2>
+                <div className="flex justify-center mb-4">
+                  <button
+                      className={`px-4 py-2 rounded-l-full ${
+                          isSearchMode
+                              ? "bg-blue-600 text-white"
+                              : "bg-gray-200 text-gray-700"
+                      }`}
+                      onClick={() => setIsSearchMode(true)}
+                  >
+                    Search Mode
+                  </button>
+                  <button
+                      className={`px-4 py-2 rounded-r-full ${
+                          !isSearchMode
+                              ? "bg-blue-600 text-white"
+                              : "bg-gray-200 text-gray-700"
+                      }`}
+                      onClick={() => setIsSearchMode(false)}
+                  >
+                    Form Mode
+                  </button>
+                </div>
+                <hr className="mb-4" />
+
+                <h2 className="tblock mb-2 font-medium text-blue-800">
+                  Search Patient
+                </h2>
+
+                {/* Search */}
+                <div className="flex items-center gap-2">
+                  <input
+                      type="text"
+                      placeholder="Enter student ID..."
+                      value={searchTerm}
+                      onChange={handleSearchChange}
+                      className="w-full p-3 pl-4 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                      onClick={() =>
+                          setIsInfoFormOpen(true) && setIsSearchMode(false)
+                      }
+                      className="bg-blue-500 text-white px-3 py-3 rounded-md hover:bg-blue-600 transition"
+                  >
+                    Add
+                  </button>
+                </div>
+
+                {isLoading && <p className="text-blue-500 mt-2">Loading...</p>}
+
+                {message && <p className="text-red-500 mt-2">{message}</p>}
+
+                {/* Results */}
+                {searchResults.length > 0 && (
+                    <ul className="mt-2 border rounded-md shadow-md max-h-48 overflow-y-auto">
+                      {searchResults.map((patient) => (
+                          <li
+                              key={patient.studentId}
+                              className="cursor-pointer p-2 hover:bg-gray-100"
+                              onClick={() =>
+                                  handleSelectPatient(
+                                      patient.studentId,
+                                      patient.patientName,
+                                      patient.patientId
+                                  )
+                              }
+                          >
+                            {patient.patientName} ({patient.studentId})
+                          </li>
+                      ))}
+                    </ul>
+                )}
+
+                {/* Selected Patient Info */}
+                {selectedPatient && (
+                    <div className="grid grid-cols-1 gap-4 mt-4">
+                      <div className="p-0.5 rounded-lg text-gray-700">
+                        <label className="block mb-2 font-medium text-blue-800">
+                          Full Name
+                        </label>
+                        <input
+                            type="text"
+                            value={selectedPatient.patientName}
+                            readOnly
+                            className="w-full p-3 border border-gray-200 rounded-lg bg-gray-100"
+                        />
+                      </div>
+                      <div className="p-0.5 rounded-lg text-gray-700">
+                        <label className="block mb-2 font-medium text-blue-800">
+                          Student ID
+                        </label>
+                        <input
+                            type="text"
+                            value={selectedPatient.studentId}
+                            readOnly
+                            className="w-full p-3 border border-gray-200 rounded-lg bg-gray-100"
+                        />
+                      </div>
+
+                      {/* Appointment Date and Time */}
+                      <div className="p-0.5 rounded-lg text-gray-700">
+                        <label
+                            htmlFor="appointmentDateTime"
+                            className="block mb-2 font-medium text-blue-800"
+                        >
+                          Appointment Date and Time:
+                        </label>
+                        <input
+                            type="datetime-local"
+                            id="appointmentDateTime"
+                            value={appointmentDateTime}
+                            onChange={(e) => setAppointmentDateTime(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <button
+                          onClick={handleCreateAppointment}
+                          className="mt-4 w-1/2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mx-auto block"
+                      >
+                        Create Appointment
+                      </button>
+                    </div>
+                )}
+
+                {/* Create Appointment Button */}
               </div>
-            )}
+            </div>
+        )}
+        <ToastContainer />
 
-            {/* Create Appointment Button */}
-          </div>
-        </div>
-      )}
-      <ToastContainer />
-
-      {/* Information Popup */}
-      <InformationForm
-        isOpen={isInfoFormOpen}
-        onClose={() => setIsInfoFormOpen(false)}
-      />
-    </>
+        {/* Information Popup */}
+        <InformationForm
+            isOpen={isInfoFormOpen}
+            onClose={() => setIsInfoFormOpen(false)}
+        />
+      </>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Sidebar from "../../../components/Sidebar.jsx";
 import { FiSearch, FiTrash } from "react-icons/fi";
@@ -60,27 +60,6 @@ const MedicalRecord = () => {
         let record = {};
 
         try {
-          // Fetch doctor details
-          const doctorDetails = await api.getDoctorById(appointment.doctorId);
-          setFormData((prev) => ({
-            ...prev,
-            doctor_name: doctorDetails?.doctor_name || "Unknown Doctor",
-          }));
-
-          // Fetch patient information using studentId
-          const patientDetails = await api.getPatientInformation(
-            appointment.studentId
-          );
-          setPatientInfo({
-            allergy: patientDetails?.allergy || "No allergy information",
-            patient_name: patientDetails?.patient_name || "N/A",
-            student_id: patientDetails?.student_id || "N/A",
-            patient_phone: patientDetails?.patient_phone || "N/A",
-            patient_address: patientDetails?.patient_address || "N/A",
-            insurance_number: patientDetails?.insurance_number || "N/A",
-            insurance_name: patientDetails?.insurance_name || "N/A",
-            registered_hospital: patientDetails?.registered_hospital || "N/A",
-          });
           doctorDetails = await api.getDoctorById(appointment.doctorId);
         } catch (error) {
           console.error("Error fetching doctor details:", error.message);
@@ -143,21 +122,21 @@ const MedicalRecord = () => {
 
 
 
-  const fetchMedicalRecord = async () => {
-          if (!formData.appointment_id) return;
+    const fetchMedicalRecord = async () => {
+      if (!formData.appointment_id) return;
 
-          // setLoading(true);
-          try {
-            const record = await api.getRecordByAppointmentId(Number(formData.appointment_id));
-            console.log("Fetched Medical Record:", record);
-            // setMedicalRecord(record);
-          } catch (error) {
-            console.error("Error fetching medical record:", error.message);
-            toast.error("Failed to fetch medical record.");
-          } finally {
-            // setLoading(false);
-          }
-        };
+      // setLoading(true);
+      try {
+        const record = await api.getRecordByAppointmentId(Number(formData.appointment_id));
+        console.log("Fetched Medical Record:", record);
+        // setMedicalRecord(record);
+      } catch (error) {
+        console.error("Error fetching medical record:", error.message);
+        toast.error("Failed to fetch medical record.");
+      } finally {
+        // setLoading(false);
+      }
+    };
 
     // Call the main logic
     const initializeData = async () => {
@@ -213,16 +192,6 @@ const MedicalRecord = () => {
     setFilteredMedications([]);
   };
 
-  const handleDeleteMedication = (name) => {
-    setMedicationList((prev) => prev.filter((med) => med !== name)); // Remove medicine
-  };
-
-  const toggleSection = (section) => {
-    setActiveSections((prev) =>
-      prev.includes(section)
-        ? prev.filter((s) => s !== section)
-        : [...prev, section]
-    );
   const handleRemoveMedicine = (medicineId) => {
     setMedicationList((prev) => prev.filter((med) => med.id !== medicineId));
     toast.success("Medicine removed from the list.");
@@ -272,50 +241,8 @@ const MedicalRecord = () => {
 
 
 
+
   return (
-    <div className="flex min-h-screen">
-      {/* Sidebar */}
-      <div className="w-1/5 bg-white shadow-lg">
-        <Sidebar />
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-grow p-8 space-y-6">
-        <form onSubmit={handleSubmit}>
-          {/* Medical Record Form */}
-          <div className="bg-gradient-to-b from-blue-500 via-blue-400 to-blue-300 shadow-lg rounded-lg p-6">
-            <h1 className="text-3xl font-bold text-white mb-6">
-              Medical Record
-            </h1>
-            <div className="flex space-x-4 items-end">
-              {/* Patient Name */}
-              <div className="flex flex-col w-1/2">
-                <label className="text-blue-950 font-medium text-xl">
-                  Patient Name
-                </label>
-                <input
-                  type="text"
-                  name="patient_name"
-                  value={formData.patient_name}
-                  readOnly
-                  className="border border-blue-400 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Patient name will appear here"
-                />
-              </div>
-
-              {/* Doctor Name */}
-              <div className="flex flex-col w-1/2">
-                <label className="text-blue-900 font-medium text-xl">
-                  Doctor Name
-                </label>
-                <input
-                  type="text"
-                  name="doctor_name"
-                  value={formData.doctor_name}
-                  readOnly
-                  className="border border-blue-400 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Doctor name will appear here"
-                />
       <div className="flex min-h-screen ">
         <div className="w-1/5 bg-white shadow-lg">
           <Sidebar/>
@@ -351,55 +278,7 @@ const MedicalRecord = () => {
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Sections */}
-          <div className="grid grid-cols-3 gap-6 mt-3">
-            {/* Left Section */}
-            <div className="col-span-2 bg-white shadow-lg rounded-lg p-6 space-y-4">
-              {/* Diagnosis */}
-              <div>
-                <label className="text-blue-700 font-medium text-xl">
-                  Diagnosis
-                </label>
-                <textarea
-                  name="diagnosis"
-                  value={formData.diagnosis}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter illness details"
-                  rows="4"
-                />
-              </div>
-
-              {/* Treatment */}
-              <div>
-                <label className="text-blue-700 font-medium text-xl">
-                  Treatment
-                </label>
-                <textarea
-                  name="treatment"
-                  value={formData.treatment}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter treatment details"
-                  rows="4"
-                />
-              </div>
-
-              {/* Prescription */}
-              <div>
-                <label className="text-blue-700 font-medium text-xl">
-                  Prescription
-                </label>
-                <div className="relative w-full">
-                  <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    placeholder="Search..."
-                    className="w-full border border-gray-300 rounded-md pl-10 pr-4 py-3 text-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             <div className="grid grid-cols-3 gap-6 mt-8">
               <div className="col-span-2 bg-white shadow-lg rounded-lg p-6 space-y-4">
                 <div>
@@ -424,56 +303,8 @@ const MedicalRecord = () => {
                       placeholder="Enter treatment details"
                       rows="4"
                   />
-                  {isLoading && (
-                    <p className="text-gray-500 mt-2">Loading...</p>
-                  )}
-                  {!isLoading && filteredMedications.length > 0 && (
-                    <ul className="absolute z-10 bg-white border border-gray-300 rounded-md w-full mt-2 shadow-lg">
-                      {filteredMedications.map((name, index) => (
-                        <li
-                          key={index}
-                          className="p-2 hover:bg-blue-100 cursor-pointer"
-                          onClick={() => handleSelectMedication(name)}
-                        >
-                          {name}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
                 </div>
-              </div>
 
-              {/* Medication List */}
-              <ul className="mt-4 space-y-2">
-                {medicationList.map((name, index) => (
-                  <li
-                    key={index}
-                    className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow overflow-auto"
-                  >
-                    <div>
-                      <strong>{name}</strong>
-                    </div>
-                    <FiTrash
-                      className="text-red-500 text-xl cursor-pointer hover:text-red-700"
-                      onClick={() => handleDeleteMedication(name)}
-                    />
-                  </li>
-                ))}
-              </ul>
-
-              {/* Suggestion Box */}
-              <div className="mt-4">
-                <label className="text-blue-700 font-medium text-xl">
-                  Suggestions
-                </label>
-                <textarea
-                  name="suggest"
-                  value={formData.suggest}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md p-2 mt-1 focus:ring-2 focus:ring-blue-500"
-                  placeholder="Add any suggestions here..."
-                  rows="4"
-                />
                 <div>
                   <label className="text-blue-700 font-medium text-xl">Prescription</label>
                   <div className="relative w-full">
@@ -551,85 +382,7 @@ const MedicalRecord = () => {
                 </div>
 
               </div>
-            </div>
 
-            {/* Right Section */}
-            <div className="col-span-1 bg-white shadow-lg rounded-lg p-6 space-y-4">
-              {/* Patient Information, Allergy, Latest Record Buttons */}
-              <div className="flex flex-col space-y-4">
-                {/* Patient Information */}
-                <button
-                  className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
-                  onClick={() => toggleSection("patientInfo")}
-                >
-                  Patient Information
-                </button>
-                {activeSections.includes("patientInfo") && (
-                  <div className="mt-2 p-4 bg-gray-50 rounded-lg shadow-inner">
-                    <p className="text-gray-700">
-                      <strong>Full Name:</strong> {patientInfo.patient_name}
-                    </p>
-                    <p className="text-gray-700">
-                      <strong>Student ID:</strong> {patientInfo.student_id}
-                    </p>
-                    <p className="text-gray-700">
-                      <strong>Phone:</strong> {patientInfo.patient_phone}
-                    </p>
-                    <p className="text-gray-700">
-                      <strong>Address:</strong> {patientInfo.patient_address}
-                    </p>
-                  </div>
-                )}
-
-                {/* Allergy */}
-                <button
-                  className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
-                  onClick={() => toggleSection("allergy")}
-                >
-                  Allergy
-                </button>
-                {activeSections.includes("allergy") && (
-                  <div className="mt-2 p-4 bg-gray-50 rounded-lg shadow-inner">
-                    <p className="text-gray-700">{patientInfo.allergy}</p>
-                  </div>
-                )}
-
-                {/* Insurance */}
-                <button
-                  className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
-                  onClick={() => toggleSection("insurance")}
-                >
-                  Insurance
-                </button>
-                {activeSections.includes("insurance") && (
-                  <div className="mt-2 p-4 bg-gray-50 rounded-lg shadow-inner">
-                    <p className="text-gray-700">
-                      <strong>Insurance Name:</strong>{" "}
-                      {patientInfo.insurance_name}
-                    </p>
-                    <p className="text-gray-700">
-                      <strong>Insurance Number:</strong>{" "}
-                      {patientInfo.insurance_number}
-                    </p>
-                    <p className="text-gray-700">
-                      <strong>Registered Hospital:</strong>{" "}
-                      {patientInfo.registered_hospital}
-                    </p>
-                  </div>
-                )}
-
-                {/* Latest Record */}
-                <button
-                  className="bg-blue-100 text-blue-700 font-medium text-xl rounded-lg p-4 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-200"
-                  onClick={() => toggleSection("latestRecord")}
-                >
-                  Latest Record
-                </button>
-                {activeSections.includes("latestRecord") && (
-                  <div className="mt-2 p-4 bg-gray-50 rounded-lg shadow-inner">
-                    <p className="text-gray-700">{patientInfo.latestRecord}</p>
-                  </div>
-                )}
               <div className="col-span-1 bg-white shadow-lg rounded-lg p-6 space-y-4">
                 <div className="flex flex-col space-y-4">
                   <button
@@ -701,15 +454,7 @@ const MedicalRecord = () => {
                 </div>
               </div>
             </div>
-          </div>
 
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-lg font-semibold mt-4"
-          >
-            Submit
-          </button>
-        </form>
             <button
                 type="submit"
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-lg font-semibold mt-4"
@@ -721,9 +466,6 @@ const MedicalRecord = () => {
 
         <ToastContainer/>
       </div>
-      <ToastContainer />
-    </div>
   );
 };
-
 export default MedicalRecord;

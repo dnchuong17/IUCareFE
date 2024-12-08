@@ -182,9 +182,9 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
   };
 
   return (
-    <div className="p-4 min-h-screen shalow-lg ml-72">
+    <div className="absolute h-screen p-4 max-h-screen w-4/5">
       {/* Left Section */}
-      <div className="  mb-72 bg-white p-4 rounded-lg shadow-lg">
+      <div className="bg-white p-6 rounded-lg shadow-lg">
         <div className="mt-4 ml-3">
           {/* Open SearchForm */}
           <button

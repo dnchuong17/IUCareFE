@@ -25,7 +25,7 @@ const AppointmentPage = () => {
       </div>
 
       {/* Main */}
-      <div className="w-full flex items-center justify-center mr-40 mt-4">
+      <div className="w-full flex items-center justify-center mr-40">
         {/* Content Wrapper */}
         <div className="w-full">
           <Calendar

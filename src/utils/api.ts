@@ -293,9 +293,8 @@ export class Api {
         }
     }
 
-    async updateStatusAppointment(appointment_id: number, newStatus: string): Promise<any> {
+    async updateStatusAppointment(appointment_id: number, newStatus: string, doctorId: number, patientId: number, time: string): Promise<any> {
         try {
-            // Kiểm tra trạng thái có hợp lệ không
             const validStatuses = ["APPROVED", "DONE", "CANCELLED"];
             if (!validStatuses.includes(newStatus)) {
                 throw new Error("Invalid status. Allowed values are: APPROVED, DONE, CANCELLED");
@@ -303,6 +302,9 @@ export class Api {
 
             const response = await this.axiosObject.patch(`/appointment/updateStatus/${appointment_id}`, {
                 status: newStatus,
+                doctorId,
+                patientId,
+                time,
             });
 
             console.log("Status updated successfully:", response.data);
@@ -312,6 +314,7 @@ export class Api {
             throw error;
         }
     }
+
 
 
 }

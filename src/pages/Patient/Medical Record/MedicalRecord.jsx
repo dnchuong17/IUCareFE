@@ -4,7 +4,6 @@ import Sidebar from "../../../components/Sidebar.jsx";
 import { FiSearch, FiTrash } from "react-icons/fi";
 import { Api } from "../../../utils/api.ts";
 import { ToastContainer, toast } from "react-toastify";
-// import Swal from "sweetalert2";
 import "react-toastify/dist/ReactToastify.css";
 
 const MedicalRecord = () => {
@@ -39,6 +38,7 @@ const MedicalRecord = () => {
   });
 
   const api = new Api();
+
 
   useEffect(() => {
     const loadAppointmentDetails = async () => {
@@ -88,6 +88,13 @@ const MedicalRecord = () => {
     loadAppointmentDetails();
   }, [location.state]);
 
+
+
+
+
+
+
+
   const toggleSection = (section) => {
     setActiveSections((prev) =>
         prev.includes(section) ? prev.filter((s) => s !== section) : [...prev, section]
@@ -101,7 +108,7 @@ const MedicalRecord = () => {
     if (query.trim()) {
       setIsLoading(true);
       try {
-        const medicines = await api.searchMedicine(query); // Search backend API
+        const medicines = await api.searchMedicine(query);
         setFilteredMedications(medicines.length > 0 ? medicines : []);
       } catch (error) {
         console.error("Error fetching medicines:", error);
@@ -123,40 +130,14 @@ const MedicalRecord = () => {
     setFilteredMedications([]);
   };
 
-  const handleBatchAddMedicines = async () => {
-    const medicineIds = medicationList.map((med) => med.id);
-
-    if (!medicineIds.length) {
-      toast.error("No medicines selected to add.");
-      return;
-    }
-
-    try {
-      await api.addMedicinesToRecord(formData.medical_record_id, medicineIds);
-      toast.success("Medicines added to medical record successfully.");
-    } catch (error) {
-      console.error("Error adding medicines to record:", error.message);
-      toast.error("Failed to add medicines to medical record.");
-    }
-  };
-
-  const handleRemoveMedicine = async (medicineId) => {
-    try {
-      setMedicationList((prev) => prev.filter((med) => med.id !== medicineId));
-      await api.removeMedicineFromRecord(formData.medical_record_id, medicineId);
-      toast.success("Medicine removed from medical record.");
-    } catch (error) {
-      console.error("Error removing medicine from record:", error);
-      toast.error("Failed to remove medicine from medical record.");
-    }
+  const handleRemoveMedicine = (medicineId) => {
+    setMedicationList((prev) => prev.filter((med) => med.id !== medicineId));
+    toast.success("Medicine removed from the list.");
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
 
@@ -169,18 +150,25 @@ const MedicalRecord = () => {
     }
 
     try {
-      const medicineIds = medicationList.map((medicine) => medicine.id); //conver sang wrray
+      // Fetch medical_record_id using appointment_id
+      const record = await api.getRecordByAppointmentId(formData.appointment_id);
+      const medicalRecordId = record?.medical_record_id;
+
+      if (!medicalRecordId) {
+        toast.error("Medical record ID not found.");
+        return;
+      }
+
+      // Prepare the request payload
       const recordRequest = {
         treatment: formData.treatment,
         diagnosis: formData.diagnosis,
         suggest: formData.suggest,
-        medicines: medicationList.map((med) => med.id), // Array of IDs
+        medicines: medicationList.map((med) => med.id),
       };
-      console.log(medicineIds);
 
-      console.log("Submitting medical record:", recordRequest);
-
-      await api.createMedicalRecord(formData.medical_record_id, recordRequest);
+      // Submit the medical record update
+      await api.createMedicalRecord(medicalRecordId, recordRequest);
 
       toast.success("Medical record updated successfully.");
     } catch (error) {
@@ -188,6 +176,7 @@ const MedicalRecord = () => {
       toast.error("Failed to save medical record.");
     }
   };
+
 
 
   return (
@@ -316,7 +305,6 @@ const MedicalRecord = () => {
                     )}
                   </ul>
                 </div>
-
 
                 <div className="mt-4">
                   <label className="text-blue-700 font-medium text-xl">Suggestions</label>

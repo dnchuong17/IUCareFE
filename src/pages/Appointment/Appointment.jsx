@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import { FaClock, FaSearch } from "react-icons/fa";
+import { FaClock, FaPlus } from "react-icons/fa";
 import SearchForm from "./SearchForm";
 // import Sidebar from "../../components/Sidebar"; // Adjust the path as necessary
 import { Api } from "../../utils/api.ts";
@@ -139,11 +139,11 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
         <div className="mt-4 ml-3">
           {/* Open SearchForm */}
           <button
-            className="flex items-center bg-blue-400 border border-blue-300 text-white px-1 py-1 rounded-lg  hover:bg-blue-700 transition duration-300 mt-1 mb-6"
+            className="flex items-center bg-blue-400 border border-blue-300 px-1 text-white rounded-full  hover:bg-blue-700 transition duration-300 mt-1 mb-6"
             onClick={() => setShowSearchPopup(true)}
           >
-            <FaSearch className="mr-2" />
-            Search Patient
+            <FaPlus className="mr-2 text-sm" />
+            Create Appointment
           </button>
 
           <SearchForm

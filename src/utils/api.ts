@@ -277,22 +277,21 @@ export class Api {
         }
     }
 
-    async getPatientRecordDetail(medical_record_id: number) {
-        try {
-            const response = await  this.axiosObject.get(`/medical_record/get/detail/${medical_record_id}`);
-            console.log("Detail response:", response.data);
-            return response.data;
-        } catch (error) {
-            console.error("Error getting record detail:", error.response?.data || error.message);
-            throw error;
-        }
-    }
 
     async getPreviousPatientRecord(patientId: number, date: Date) {
         try {
+            if (!patientId) {
+                throw new Error("Patient ID is required to fetch previous records.");
+            }
+
             const response = await this.axiosObject.get(`/medical_record/previous_record/${patientId}`, {
                 params: { date },
             });
+
+            if (!response.data || response.data.length === 0) {
+                console.warn("No previous records found for patientId:", patientId);
+            }
+
             console.log("Previous record response:", response.data);
             return response.data;
         } catch (error) {
@@ -300,6 +299,7 @@ export class Api {
             throw error;
         }
     }
+
 
     async getDetailByRecordId (recordId: number) {
         try {
@@ -311,5 +311,8 @@ export class Api {
             throw error;
         }
     }
+
+
+
 
 }

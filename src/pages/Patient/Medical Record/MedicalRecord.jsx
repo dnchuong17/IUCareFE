@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const MedicalRecord = () => {
+
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
   const [medicationList, setMedicationList] = useState([]);
@@ -42,53 +43,110 @@ const MedicalRecord = () => {
 
   useEffect(() => {
     const loadAppointmentDetails = async () => {
-      const appointment = location.state?.appointment;
-      if (appointment) {
-        try {
-          const [doctorDetails, patientDetails, record] = await Promise.all([
-            api.getDoctorById(appointment.doctorId),
-            api.getPatientInformation(appointment.studentId),
-            api.getDetailByRecordId(appointment.appointment_id), // Use your existing function
-          ]);
+      try {
+        const appointment = location.state?.appointment;
 
-          setFormData((prev) => ({
-            ...prev,
-            patient_name: patientDetails?.patient_name || "Unknown Patient",
-            doctor_name: doctorDetails?.doctor_name || "Unknown Doctor",
-            treatment: record?.treatment || "",
-            diagnosis: record?.diagnosis || "",
-            suggest: record?.suggest || "",
-            medical_record_id: record?.medical_record_id || "",
-            date: record?.date || appointment.appointment_time || "",
-            appointment_id: appointment.appointment_id || "",
-            appointment_time: appointment.appointment_time || "",
-            appointment_status: appointment.appointment_status || "",
-            doctorId: doctorDetails?.doctorId || appointment.doctorId || "",
-            patientId: patientDetails?.patientId || appointment.patientId || "",
-            medicines: record?.name_medicine || [],
-          }));
-
-          setPatientInfo({
-            allergy: patientDetails?.allergy || "No allergy information",
-            patient_name: patientDetails?.patient_name || "N/A",
-            student_id: patientDetails?.student_id || "N/A",
-            patient_phone: patientDetails?.patient_phone || "N/A",
-            patient_address: patientDetails?.patient_address || "N/A",
-            insurance_number: patientDetails?.insurance_number || "N/A",
-            insurance_name: patientDetails?.insurance_name || "N/A",
-            registered_hospital: patientDetails?.registered_hospital || "N/A",
-          });
-        } catch (error) {
-          console.error("Error fetching details:", error);
-          toast.error("Failed to load appointment details.");
+        if (!appointment) {
+          console.error("No appointment found in location.state.");
+          toast.error("No appointment data available.");
+          return;
         }
+
+        let doctorDetails = {};
+        let patientDetails = {};
+        let record = {};
+
+        try {
+          doctorDetails = await api.getDoctorById(appointment.doctorId);
+        } catch (error) {
+          console.error("Error fetching doctor details:", error.message);
+          toast.error("Failed to fetch doctor details.");
+        }
+
+        try {
+          patientDetails = await api.getPatientInformation(appointment.studentId);
+        } catch (error) {
+          console.error("Error fetching patient details:", error.message);
+          toast.error("Failed to fetch patient details.");
+        }
+
+        try {
+          record = await api.getDetailByRecordId(appointment.appointment_id);
+        } catch (error) {
+          console.error("Error fetching record details:", error.message);
+          toast.error("Failed to fetch record details.");
+        }
+
+        setFormData((prev) => ({
+          ...prev,
+          patient_name: patientDetails?.patient_name || "Unknown Patient",
+          doctor_name: doctorDetails?.doctor_name || "Unknown Doctor",
+          treatment: record?.treatment || "",
+          diagnosis: record?.diagnosis || "",
+          suggest: record?.suggest || "",
+          medical_record_id: record?.medical_record_id || "",
+          date: record?.date || appointment.appointment_time || "",
+          appointment_id: appointment.appointment_id || "",
+          appointment_time: appointment.appointment_time || "",
+          appointment_status: appointment.appointment_status || "",
+          doctorId: doctorDetails?.doctorId || appointment.doctorId || "",
+          patientId: patientDetails?.patientId || appointment.patientId || "",
+          medicines: record?.name_medicine || [],
+        }));
+
+        setPatientInfo({
+          allergy: patientDetails?.allergy || "No allergy information",
+          patient_name: patientDetails?.patient_name || "N/A",
+          student_id: patientDetails?.student_id || "N/A",
+          patient_phone: patientDetails?.patient_phone || "N/A",
+          patient_address: patientDetails?.patient_address || "N/A",
+          insurance_number: patientDetails?.insurance_number || "N/A",
+          insurance_name: patientDetails?.insurance_name || "N/A",
+          registered_hospital: patientDetails?.registered_hospital || "N/A",
+        });
+      } catch (error) {
+        console.error("Unexpected error loading appointment details:", error);
+        toast.error("Unexpected error occurred.");
       }
     };
 
-    loadAppointmentDetails();
-  }, [location.state]);
+
+    // Call the loadAppointmentDetails function only if appointment data is present in location.state
+    if (location.state?.appointment) {
+      loadAppointmentDetails();
+    }
 
 
+
+  const fetchMedicalRecord = async () => {
+          if (!formData.appointment_id) return;
+
+          // setLoading(true);
+          try {
+            const record = await api.getRecordByAppointmentId(Number(formData.appointment_id));
+            console.log("Fetched Medical Record:", record);
+            // setMedicalRecord(record);
+          } catch (error) {
+            console.error("Error fetching medical record:", error.message);
+            toast.error("Failed to fetch medical record.");
+          } finally {
+            // setLoading(false);
+          }
+        };
+
+    // Call the main logic
+    const initializeData = async () => {
+      if (location.state?.appointment) {
+        await loadAppointmentDetails();
+      }
+
+      if (formData.appointment_id) {
+        await fetchMedicalRecord();
+      }
+    };
+
+    initializeData();
+  }, [location.state, formData.appointment_id]);
 
 
 

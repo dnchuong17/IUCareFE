@@ -2,8 +2,6 @@ import moment from "moment";
 import PropTypes from "prop-types";
 
 const Calendar = ({ onDateSelected, daysWithAppointments }) => {
-  const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
-
   const getNext30Days = () => {
     const dates = [];
     const today = moment();
@@ -23,15 +21,8 @@ const Calendar = ({ onDateSelected, daysWithAppointments }) => {
 
   return (
     <div className="calendar-container p-4 min-h-screen">
-      <div className="grid grid-cols-7 gap-2">
-        {daysOfWeek.map((day, index) => (
-          <div key={index} className="calendar-box">
-            <div className="day text-center">{day}</div>
-          </div>
-        ))}
-      </div>
-      <div className="fixed right-12 top-6 rounded-xl shadow-md border border-lightblue-400 h-1/5 w-4/6 bg-blue-500 md:w-3/4 md:h-3/10 z-20 p-6 ">
-        <div className="text-first text-3xl font-semibold text-white mb-2">
+      <div className="fixed right-8 top-6 rounded-xl shadow-md border border-lightblue-400 h-1/5 w-4/6 bg-blue-500 md:w-3/4 md:h-3/10 z-20 p-6 ">
+        <div className="text-first text-3xl font-lg text-white mb-4">
           Our Appointment
         </div>
         <div className="overflow-x-auto h-full overflow-hidden scrollbar-hide">
@@ -44,7 +35,7 @@ const Calendar = ({ onDateSelected, daysWithAppointments }) => {
                   daysWithAppointments.includes(dateObj.fullDate)
                     ? "bg-green-500"
                     : "bg-gray-800"
-                } bg-opacity-50 text-white p-5 rounded-lg shadow-md hover:bg-blue-100 hover:bg-opacity-50 transition-colors duration-300`}
+                } bg-opacity-50 text-white p-5 rounded-lg shadow-md hover:bg-orange-400  transition-colors duration-300`}
               >
                 <div className="text-lg">{dateObj.day}</div>
                 <div className="text-2xl">{dateObj.date}</div>

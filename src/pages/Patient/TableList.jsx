@@ -1,11 +1,9 @@
 import React, { useState, useMemo } from "react";
 import { FiSearch } from "react-icons/fi";
 import { IoPerson } from "react-icons/io5";
-import { AiOutlineEye } from "react-icons/ai";
 import Sidebar from "../../components/Sidebar.jsx";
 import { Api } from "../../utils/api.ts";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 const TableList = () => {
   const [patientsCount, setPatientsCount] = useState(0);
@@ -15,9 +13,8 @@ const TableList = () => {
   const [patientRecords, setPatientRecords] = useState([]);
   const [selectedPatientInfo, setSelectedPatientInfo] = useState(null);
   const api = useMemo(() => new Api(), []);
-  const navigate = useNavigate();
 
-  // Fetch patient records by patientId
+// Fetch patient records by patientId
   const fetchPatientRecords = async (patientId) => {
     setLoading(true);
     try {
@@ -42,7 +39,6 @@ const TableList = () => {
           time: formattedTime,
           diagnosis: record.diagnosis || "N/A",
           treatment: record.treatment || "N/A",
-          doctorName: record.doctor_name || "N/A",
           appointmentId: record.appointmentId || "N/A",
         };
       });
@@ -58,6 +54,8 @@ const TableList = () => {
       setLoading(false);
     }
   };
+
+
 
   // Fetch patient suggestions based on query
   const fetchPatientSuggestions = async (query) => {
@@ -134,14 +132,8 @@ const TableList = () => {
     }
   };
 
-  // Handle View Detail navigation
-  const handleViewDetail = (appointmentId, date) => {
-    if (appointmentId && date) {
-      navigate(`/medicalRecord`);
-    } else {
-      toast.error("Appointment ID or date is missing.");
-    }
-  };
+
+
 
   return (
       <div className="flex min-h-screen">
@@ -197,44 +189,36 @@ const TableList = () => {
                   <th className="px-6 py-4 text-gray-700 font-semibold">Time</th>
                   <th className="px-6 py-4 text-gray-700 font-semibold">Diagnosis</th>
                   <th className="px-6 py-4 text-gray-700 font-semibold">Treatment</th>
-                  <th className="px-6 py-4 text-gray-700 font-semibold">Doctor</th>
                   <th className="px-6 py-4 text-gray-700 font-semibold">View Detail</th>
                 </tr>
                 </thead>
                 <tbody>
                 {loading ? (
                     <tr>
-                      <td colSpan="7" className="text-center py-10 text-gray-500 italic">
+                      <td colSpan="6" className="text-center py-10 text-gray-500 italic">
                         Loading...
                       </td>
                     </tr>
                 ) : patientRecords.length > 0 ? (
-                    patientRecords.map((record) => (
-                        <tr key={record.no} className="border-b">
-                          <td className="px-6 py-4">{record.no}</td>
-                          <td className="px-6 py-4">{record.date}</td>
-                          <td className="px-6 py-4">{record.time}</td>
-                          <td className="px-6 py-4">{record.diagnosis}</td>
-                          <td className="px-6 py-4">{record.treatment}</td>
-                          <td className="px-6 py-4">{record.doctorName}</td>
-                          <td className="px-6 py-4 text-center">
-                            <button
-                                onClick={() => handleViewDetail(record.appointmentId, record.date)}
-                                className="text-blue-600 hover:text-blue-800 transition"
-                            >
-                              <AiOutlineEye className="w-6 h-6" />
-                            </button>
-                          </td>
+                    patientRecords.map((records) => (
+                        <tr key={records.no} className="border-b">
+                          <td className="px-6 py-4">{records.no}</td>
+                          <td className="px-6 py-4">{records.date}</td>
+                          <td className="px-6 py-4">{records.time}</td>
+                          <td className="px-6 py-4">{records.diagnosis}</td>
+                          <td className="px-6 py-4">{records.treatment}</td>
+                          {/*<td className="px-6 py-4">{}</td>*/}
                         </tr>
                     ))
                 ) : (
                     <tr>
-                      <td colSpan="7" className="text-center py-10 text-gray-500 italic">
+                      <td colSpan="6" className="text-center py-10 text-gray-500 italic">
                         No medical records available
                       </td>
                     </tr>
                 )}
                 </tbody>
+
               </table>
             </div>
           </div>

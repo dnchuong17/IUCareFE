@@ -20,7 +20,7 @@ const Calendar = ({ onDateSelected, daysWithAppointments }) => {
   const monthDates = getNext30Days();
 
   return (
-    <div className="calendar-container p-4 ml-72">
+    <div className="absolute h-screen p-4 max-h-screen w-4/5">
       <div className=" rounded-xl shadow-md border border-lightblue-400 bg-blue-600 p-6 ">
         <div className="text-first text-3xl font-lg text-white mb-4">
           Our Appointment

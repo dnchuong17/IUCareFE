@@ -12,7 +12,7 @@ export class Api {
 
     constructor() {
         this.axiosObject = axios.create({
-            baseURL: "http://localhost:2024",
+            baseURL: "https://iucarebe-production.up.railway.app",
             withCredentials: true,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -189,27 +189,6 @@ export class Api {
     }
 
 
-    async updateStatusAppointment(appointment_id: number, newStatus: string): Promise<any> {
-        try {
-            // Kiểm tra trạng thái có hợp lệ không
-            const validStatuses = ["APPROVED", "DONE", "CANCELLED"];
-            if (!validStatuses.includes(newStatus)) {
-                throw new Error("Invalid status. Allowed values are: APPROVED, DONE, CANCELLED");
-            }
-
-            const response = await this.axiosObject.patch(`/appointment/updateStatus/${appointment_id}`, {
-                status: newStatus,
-            });
-
-            console.log("Status updated successfully:", response.data);
-            return response.data;
-        } catch (error) {
-            console.error("Error updating status:", error.response?.data || error.message);
-            throw error;
-        }
-    }
-
-
     async getRecordByAppointmentId(appointment_id: number) {
         try {
             const response = await this.axiosObject.get(`/medical_record/get/${appointment_id}`);
@@ -220,7 +199,6 @@ export class Api {
             throw error;
         }
     }
-
 
 
     async createMedicalRecord(recordId: number, recordRequest: RecordRequest) {
@@ -280,6 +258,19 @@ export class Api {
     }
 
 
+
+    async getDetailByRecordId (recordId: number) {
+        try {
+            const response = await  this.axiosObject.get(`/medical_record/get/detail/${recordId}`);
+            console.log("Response detail:", response.data);
+            return response.data;
+        } catch (error) {
+            console.log("Error getting detail:", error.response?.data || error.message )
+            throw error;
+        }
+    }
+
+
     async getPreviousPatientRecord(patientId: number, date: Date) {
         try {
             if (!patientId) {
@@ -302,19 +293,25 @@ export class Api {
         }
     }
 
-
-    async getDetailByRecordId (recordId: number) {
+    async updateStatusAppointment(appointment_id: number, newStatus: string): Promise<any> {
         try {
-            const response = await  this.axiosObject.get(`/medical_record/get/detail/${recordId}`);
-            console.log("Response detail:", response.data);
+            // Kiểm tra trạng thái có hợp lệ không
+            const validStatuses = ["APPROVED", "DONE", "CANCELLED"];
+            if (!validStatuses.includes(newStatus)) {
+                throw new Error("Invalid status. Allowed values are: APPROVED, DONE, CANCELLED");
+            }
+
+            const response = await this.axiosObject.patch(`/appointment/updateStatus/${appointment_id}`, {
+                status: newStatus,
+            });
+
+            console.log("Status updated successfully:", response.data);
             return response.data;
         } catch (error) {
-            console.log("Error getting detail:", error.response?.data || error.message )
+            console.error("Error updating status:", error.response?.data || error.message);
             throw error;
         }
     }
-
-
 
 
 }

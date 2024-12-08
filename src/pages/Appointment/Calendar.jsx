@@ -20,8 +20,11 @@ const Calendar = ({ onDateSelected, daysWithAppointments }) => {
   const monthDates = getNext30Days();
 
   return (
-    <div className="calendar-container p-4 min-h-screen">
-      <div className="fixed right-8 top-6 rounded-xl shadow-md border border-lightblue-400 h-1/5 w-4/6 bg-blue-500 md:w-3/4 md:h-3/10 z-20 p-6 ">
+    <div
+      className="calendar-container p-4 min-h-screen ml-72 h-3/10"
+      style={{ width: "calc(66.6667% - 90px)" }}
+    >
+      <div className=" rounded-xl shadow-md border border-lightblue-400 w-4/6 bg-blue-500 md:w-3/4 md:h-3/10 z-20 p-6 ">
         <div className="text-first text-3xl font-lg text-white mb-4">
           Our Appointment
         </div>

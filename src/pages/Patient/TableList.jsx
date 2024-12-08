@@ -4,6 +4,8 @@ import { IoPerson } from "react-icons/io5";
 import Sidebar from "../../components/Sidebar.jsx";
 import { Api } from "../../utils/api.ts";
 import { toast } from "react-toastify";
+import {useNavigate} from "react-router-dom";
+import appointment from "../Home/Appointment.jsx";
 
 const TableList = () => {
   const [patientsCount, setPatientsCount] = useState(0);
@@ -12,6 +14,8 @@ const TableList = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [patientRecords, setPatientRecords] = useState([]);
   const [selectedPatientInfo, setSelectedPatientInfo] = useState(null);
+  const [appointmentId, setAppointmentId] = useState("");
+  const navigate = useNavigate();
   const api = useMemo(() => new Api(), []);
 
 // Fetch patient records by patientId
@@ -24,8 +28,16 @@ const TableList = () => {
         return;
       }
 
+      // Fetch records from the API
       const records = await api.getRecordByPatientId(patientId);
       console.log("Patient Records Response:", records);
+
+      if (!records || records.length === 0) {
+        toast.info("No records found for this patient.");
+        setPatientRecords([]);
+        setPatientsCount(0);
+        return;
+      }
 
       // Format records for display
       const formattedRecords = records.map((record, index) => {
@@ -33,20 +45,23 @@ const TableList = () => {
         const [date, time] = dateTime !== "N/A" ? dateTime.split("T") : ["N/A", "N/A"];
         const formattedTime = time ? time.split(".")[0] : "N/A";
 
+        console.log("Appointment ID:", record.appointment_id);
+
         return {
           no: index + 1,
           date: date,
           time: formattedTime,
           diagnosis: record.diagnosis || "N/A",
           treatment: record.treatment || "N/A",
-          appointmentId: record.appointmentId || "N/A",
+          appointmentId: record.appointment_id || "N/A", // Use the correct field name for appointmentId
         };
       });
 
+      // Set the patient records and appointment ID
       setPatientRecords(formattedRecords);
-
-      // Update patient count
       setPatientsCount(formattedRecords.length);
+
+      console.log("Formatted Records:", formattedRecords);
     } catch (error) {
       console.error("Error fetching patient records:", error.message);
       toast.error("Failed to fetch patient records.");
@@ -133,6 +148,25 @@ const TableList = () => {
   };
 
 
+  const handleViewDetail = async (appointmentId) => {
+    if (!appointmentId || appointmentId === "N/A") {
+      toast.error("No appointment ID available for this record.");
+      return;
+    }
+
+    try {
+      // Fetch specific record using appointmentId
+      const specificRecord = await api.getRecordByAppointmentId(appointmentId);
+      console.log("Fetched Appointment Record:", specificRecord);
+
+      // Navigate to the detailed page with the fetched record
+      navigate("/medicalRecord", { state: { appointment: specificRecord } });
+    } catch (error) {
+      console.error("Error fetching appointment record:", error.message);
+      toast.error("Failed to fetch appointment record.");
+    }
+  };
+
 
 
   return (
@@ -200,14 +234,21 @@ const TableList = () => {
                       </td>
                     </tr>
                 ) : patientRecords.length > 0 ? (
-                    patientRecords.map((records) => (
-                        <tr key={records.no} className="border-b">
-                          <td className="px-6 py-4">{records.no}</td>
-                          <td className="px-6 py-4">{records.date}</td>
-                          <td className="px-6 py-4">{records.time}</td>
-                          <td className="px-6 py-4">{records.diagnosis}</td>
-                          <td className="px-6 py-4">{records.treatment}</td>
-                          {/*<td className="px-6 py-4">{}</td>*/}
+                    patientRecords.map((record, index) => (
+                        <tr key={record.no} className="border-b">
+                          <td className="px-6 py-4">{record.no}</td>
+                          <td className="px-6 py-4">{record.date}</td>
+                          <td className="px-6 py-4">{record.time}</td>
+                          <td className="px-6 py-4">{record.diagnosis}</td>
+                          <td className="px-6 py-4">{record.treatment}</td>
+                          <td className="px-6 py-4">
+                            <button
+                                onClick={() => handleViewDetail(record.appointmentId)}
+                                className="text-blue-500 hover:text-blue-700 font-semibold underline"
+                            >
+                              View Detail
+                            </button>
+                          </td>
                         </tr>
                     ))
                 ) : (
@@ -218,6 +259,7 @@ const TableList = () => {
                     </tr>
                 )}
                 </tbody>
+
 
               </table>
             </div>

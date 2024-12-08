@@ -263,13 +263,6 @@ const MedicalRecord = () => {
           formData.appointment_time
       );
 
-      // // Update local state after success
-      // setFormData((prev) => ({
-      //   ...prev,
-      //   appointment_status: "DONE",
-      // }));
-
-
       toast.success("Medical record updated successfully.");
     } catch (error) {
       console.error("Error submitting medical record:", error);
@@ -286,7 +279,7 @@ const MedicalRecord = () => {
         </div>
 
         <div className="flex-grow p-8 space-y-6">
-          <form onSubmit={handleSubmit}>
+          <div >
             <div className="bg-gradient-to-b from-blue-500 via-blue-400 to-blue-300 shadow-lg rounded-lg p-6">
               <h1 className="text-3xl font-bold text-white mb-6">Medical Record</h1>
 
@@ -319,6 +312,7 @@ const MedicalRecord = () => {
 
                 {/* Submit Button */}
                 <button
+                    onClick={handleSubmit}
                     type="submit"
                     className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-lg font-semibold mt-8"
                 >
@@ -547,7 +541,7 @@ const MedicalRecord = () => {
               </div>
             </div>
 
-          </form>
+          </div>
         </div>
 
         <ToastContainer/>

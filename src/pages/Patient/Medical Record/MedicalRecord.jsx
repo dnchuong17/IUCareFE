@@ -241,6 +241,7 @@ const MedicalRecord = () => {
 
 
 
+
   return (
       <div className="flex min-h-screen ">
         <div className="w-1/5 bg-white shadow-lg">

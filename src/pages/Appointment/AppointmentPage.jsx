@@ -4,44 +4,42 @@ import Calendar from "./Calendar";
 import Appointment from "./Appointment";
 
 const AppointmentPage = () => {
-    const [selectedDate, setSelectedDate] = useState("");
-    const [daysWithAppointments, setDaysWithAppointments] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [daysWithAppointments, setDaysWithAppointments] = useState([]);
 
-    //  khi người dùng chọn một ngày trên Calendar
-    const handleDateSelected = (date) => {
-        setSelectedDate(date);
-    };
+  //  khi người dùng chọn một ngày trên Calendar
+  const handleDateSelected = (date) => {
+    setSelectedDate(date);
+  };
 
-    // cập nhật danh sách các ngày có cuộc hẹn từ Appointment
-    const handleDaysWithAppointmentsChange = (days) => {
-        setDaysWithAppointments(days);
-    };
+  // cập nhật danh sách các ngày có cuộc hẹn từ Appointment
+  const handleDaysWithAppointmentsChange = (days) => {
+    setDaysWithAppointments(days);
+  };
 
-    return (
-        <div className="flex h-screen overflow-x-hidden">
-            {/* Sidebar */}
-            <Sidebar />
+  return (
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <div className="w-1/5 bg-white shadow-lg h-screen">
+        <Sidebar />
+      </div>
 
-            {/* Main  */}
-            <div className="flex-1 flex flex-col p-2 gap-8">
-                {/* Calendar */}
-                <div className="w-1/2 h-3/10 mr-4">
-                    <Calendar
-                        onDateSelected={handleDateSelected}
-                        daysWithAppointments={daysWithAppointments}
-                    />
-                </div>
-
-                {/* Appointment List */}
-                <div className="w-1/2 h-1/2 mr-4">
-                    <Appointment
-                        selectedDate={selectedDate}
-                        onDaysWithAppointmentsChange={handleDaysWithAppointmentsChange}
-                    />
-                </div>
-            </div>
+      {/* Main */}
+      <div className="w-full flex items-center justify-center mr-40">
+        {/* Content Wrapper */}
+        <div className="w-full">
+          <Calendar
+            onDateSelected={handleDateSelected}
+            daysWithAppointments={daysWithAppointments}
+          />
+          <Appointment
+            selectedDate={selectedDate}
+            onDaysWithAppointmentsChange={handleDaysWithAppointmentsChange}
+          />
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default AppointmentPage;

@@ -4,7 +4,7 @@ import { IoPerson } from "react-icons/io5";
 import Sidebar from "../../components/Sidebar.jsx";
 import { Api } from "../../utils/api.ts";
 import { toast } from "react-toastify";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import appointment from "../Home/Appointment.jsx";
 
 const TableList = () => {
@@ -18,13 +18,15 @@ const TableList = () => {
   const navigate = useNavigate();
   const api = useMemo(() => new Api(), []);
 
-// Fetch patient records by patientId
+  // Fetch patient records by patientId
   const fetchPatientRecords = async (patientId) => {
     setLoading(true);
     try {
       if (!patientId) {
         console.error("Patient ID is undefined.");
-        toast.error("Failed to fetch patient records due to missing Patient ID.");
+        toast.error(
+          "Failed to fetch patient records due to missing Patient ID."
+        );
         return;
       }
 
@@ -42,7 +44,8 @@ const TableList = () => {
       // Format records for display
       const formattedRecords = records.map((record, index) => {
         const dateTime = record.date || "N/A";
-        const [date, time] = dateTime !== "N/A" ? dateTime.split("T") : ["N/A", "N/A"];
+        const [date, time] =
+          dateTime !== "N/A" ? dateTime.split("T") : ["N/A", "N/A"];
         const formattedTime = time ? time.split(".")[0] : "N/A";
 
         console.log("Appointment ID:", record.appointment_id);
@@ -70,8 +73,6 @@ const TableList = () => {
     }
   };
 
-
-
   // Fetch patient suggestions based on query
   const fetchPatientSuggestions = async (query) => {
     setLoading(true);
@@ -79,10 +80,10 @@ const TableList = () => {
       const results = await api.searchPatient(query);
       if (results?.data?.length > 0) {
         setSearchResults(
-            results.data.map((patient) => ({
-              studentId: patient.studentId,
-              patientName: patient.patientName,
-            }))
+          results.data.map((patient) => ({
+            studentId: patient.studentId,
+            patientName: patient.patientName,
+          }))
         );
       } else {
         setSearchResults([]);
@@ -147,7 +148,6 @@ const TableList = () => {
     }
   };
 
-
   const handleViewDetail = async (appointmentId) => {
     if (!appointmentId || appointmentId === "N/A") {
       toast.error("No appointment ID available for this record.");
@@ -167,105 +167,119 @@ const TableList = () => {
     }
   };
 
-
-
   return (
-      <div className="flex min-h-screen">
-        <div className="w-1/5">
-          <Sidebar />
-        </div>
-        <div className="flex-grow flex justify-center items-start py-28 px-4">
-          <div className="w-full max-w-5xl bg-white border-l-4 border-blue-500 rounded-lg shadow-lg p-10">
-            <div className="flex justify-between items-center mb-10">
-              <div className="flex items-center space-x-4">
-                <div className="bg-gray-200 p-4 rounded-full flex items-center justify-center">
-                  <IoPerson className="h-8 w-8 text-blue-600" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-semibold text-gray-800">Patients</h1>
-                  <p className="text-gray-500 text-base">{patientsCount}</p>
-                </div>
+    <div className="flex min-h-screen">
+      <div className="w-1/5">
+        <Sidebar />
+      </div>
+      <div className="flex-grow flex justify-center items-start py-28 px-4">
+        <div className="w-full max-w-5xl bg-white border-l-4 border-blue-500 rounded-lg shadow-lg p-10">
+          <div className="flex justify-between items-center mb-10">
+            <div className="flex items-center space-x-4">
+              <div className="bg-gray-200 p-4 rounded-full flex items-center justify-center">
+                <IoPerson className="h-8 w-8 text-blue-600" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-semibold text-gray-800">
+                  Patients
+                </h1>
+                <p className="text-gray-500 text-base">{patientsCount}</p>
               </div>
             </div>
-            {/* Search Bar */}
-            <div className="relative mb-8">
-              <div className="flex items-center">
-                <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xl" />
-                <input
-                    type="text"
-                    placeholder="Search by Student ID..."
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    className="w-full border border-gray-300 rounded-md pl-10 pr-4 py-2 text-base focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
-                />
-              </div>
-              {searchResults.length > 0 && (
-                  <ul className="absolute z-10 bg-white border rounded-md shadow-lg mt-2 w-full max-h-48 overflow-y-auto">
-                    {searchResults.map((result) => (
-                        <li
-                            key={result.studentId}
-                            className="cursor-pointer px-4 py-2 hover:bg-gray-100"
-                            onClick={() => handleSelectPatient(result)}
-                        >
-                          {result.patientName} ({result.studentId})
-                        </li>
-                    ))}
-                  </ul>
-              )}
+          </div>
+          {/* Search Bar */}
+          <div className="relative mb-8">
+            <div className="flex items-center">
+              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xl" />
+              <input
+                type="text"
+                placeholder="Search by Student ID..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="w-full border border-gray-300 rounded-md pl-10 pr-4 py-2 text-base focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+              />
             </div>
-            {/* Patient Records */}
-            <div className="overflow-x-auto rounded-lg shadow">
-              <table className="w-full text-left border-collapse">
-                <thead>
+            {searchResults.length > 0 && (
+              <ul className="absolute z-10 bg-white border rounded-md shadow-lg mt-2 w-full max-h-48 overflow-y-auto">
+                {searchResults.map((result) => (
+                  <li
+                    key={result.studentId}
+                    className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                    onClick={() => handleSelectPatient(result)}
+                  >
+                    {result.patientName} ({result.studentId})
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          {/* Patient Records */}
+          <div className="overflow-x-auto rounded-lg shadow">
+            <table className="w-full text-left border-collapse">
+              <thead>
                 <tr className="bg-blue-100">
                   <th className="px-6 py-4 text-gray-700 font-semibold">No.</th>
-                  <th className="px-6 py-4 text-gray-700 font-semibold">Date</th>
-                  <th className="px-6 py-4 text-gray-700 font-semibold">Time</th>
-                  <th className="px-6 py-4 text-gray-700 font-semibold">Diagnosis</th>
-                  <th className="px-6 py-4 text-gray-700 font-semibold">Treatment</th>
-                  <th className="px-6 py-4 text-gray-700 font-semibold">View Detail</th>
+                  <th className="px-6 py-4 text-gray-700 font-semibold">
+                    Date
+                  </th>
+                  <th className="px-6 py-4 text-gray-700 font-semibold">
+                    Time
+                  </th>
+                  <th className="px-6 py-4 text-gray-700 font-semibold">
+                    Diagnosis
+                  </th>
+                  <th className="px-6 py-4 text-gray-700 font-semibold">
+                    Treatment
+                  </th>
+                  <th className="px-6 py-4 text-gray-700 font-semibold">
+                    View Detail
+                  </th>
                 </tr>
-                </thead>
-                <tbody>
+              </thead>
+              <tbody>
                 {loading ? (
-                    <tr>
-                      <td colSpan="6" className="text-center py-10 text-gray-500 italic">
-                        Loading...
-                      </td>
-                    </tr>
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="text-center py-10 text-gray-500 italic"
+                    >
+                      Loading...
+                    </td>
+                  </tr>
                 ) : patientRecords.length > 0 ? (
-                    patientRecords.map((record, index) => (
-                        <tr key={record.no} className="border-b">
-                          <td className="px-6 py-4">{record.no}</td>
-                          <td className="px-6 py-4">{record.date}</td>
-                          <td className="px-6 py-4">{record.time}</td>
-                          <td className="px-6 py-4">{record.diagnosis}</td>
-                          <td className="px-6 py-4">{record.treatment}</td>
-                          <td className="px-6 py-4">
-                            <button
-                                onClick={() => handleViewDetail(record.appointmentId)}
-                                className="text-blue-500 hover:text-blue-700 font-semibold underline"
-                            >
-                              View Detail
-                            </button>
-                          </td>
-                        </tr>
-                    ))
-                ) : (
-                    <tr>
-                      <td colSpan="6" className="text-center py-10 text-gray-500 italic">
-                        No medical records available
+                  patientRecords.map((record, index) => (
+                    <tr key={record.no} className="border-b">
+                      <td className="px-6 py-4">{record.no}</td>
+                      <td className="px-6 py-4">{record.date}</td>
+                      <td className="px-6 py-4">{record.time}</td>
+                      <td className="px-6 py-4">{record.diagnosis}</td>
+                      <td className="px-6 py-4">{record.treatment}</td>
+                      <td className="px-6 py-4">
+                        <button
+                          onClick={() => handleViewDetail(record.appointmentId)}
+                          className="text-blue-500 hover:text-blue-700 font-semibold underline"
+                        >
+                          View Detail
+                        </button>
                       </td>
                     </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="text-center py-10 text-gray-500 italic"
+                    >
+                      No medical records available
+                    </td>
+                  </tr>
                 )}
-                </tbody>
-
-
-              </table>
-            </div>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
+    </div>
   );
 };
 

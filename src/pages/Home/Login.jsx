@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Api } from "../../utils/api";
 import { LoginRequest } from "../../utils/request/loginRequest";

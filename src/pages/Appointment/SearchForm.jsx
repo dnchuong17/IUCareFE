@@ -55,7 +55,14 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
     };
     fetchDoctorInfo();
   }, [api]);
-
+  useEffect(() => {
+    if (!isOpen && !isInfoFormOpen) {
+      setSelectedPatient(null);
+      setAppointmentDateTime("");
+      setMessage("");
+      setSearchTerm("");
+    }
+  }, [isOpen, isInfoFormOpen]);
   const handleSearchChange = async (e) => {
     const searchTerm = e.target.value.trim();
     setSearchTerm(searchTerm);
@@ -114,7 +121,15 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
     try {
       setIsLoading(true);
       await api.createAppointment(appointmentRequest);
-      setMessage("Appointment created successfully!");
+      toast.success("Create appointment successfully!", {
+        position: "top-right",
+        autoClose: 800,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        onClose: () => onClose(),
+      });
       setSelectedPatient(null);
       setAppointmentDateTime("");
       onAppointmentCreated?.({

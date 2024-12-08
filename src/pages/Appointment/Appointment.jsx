@@ -219,12 +219,12 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                       </p>
                       <p className="text-gray-700">{appointment.studentId}</p>
                     </div>
-                    <div className="flex justify-between text-gray-700">
-                      <p className="font-light text-gray-400">
-                        <strong>Status</strong>
-                      </p>
-                      <p className="text-gray-700">{appointment.appointment_status}</p>
-                    </div>
+                    {/*<div className="flex justify-between text-gray-700">*/}
+                    {/*  <p className="font-light text-gray-400">*/}
+                    {/*    <strong>Status</strong>*/}
+                    {/*  </p>*/}
+                    {/*  <p className="text-gray-700">{appointment.appointment_status}</p>*/}
+                    {/*</div>*/}
                     <hr className="my-5 border-gray-300 border-dashed"/>
                     <div className="flex justify-between items-center text-gray-700">
                       <div>
@@ -254,14 +254,25 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                     </div>
                     <hr className="my-5 border-gray-300 border-dashed"/>
 
-                    <div className="flex justify-end">
+                    <div className="flex justify-between items-center mt-4">
+                      {/* Status nằm bên trái */}
+                      <p
+                          className={`text-sm font-semibold ${
+                              appointment.appointment_status === "APPROVED" ? "text-green-500" : "text-gray-700"
+                          }`}
+                      >
+                        {appointment.appointment_status}
+                      </p>
+
+                      {/* Edit nằm bên phải */}
                       <button
-                          className="text-orange-500 text-end cursor-pointer"
+                          className="text-orange-500 font-medium cursor-pointer hover:underline"
                           onClick={() => handleEditClick(appointment.appointment_id)}
                       >
                         Edit
                       </button>
 
+                      {/* Pop-up Edit */}
                       {activeEditPopup === appointment.appointment_id && (
                           <div
                               className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 shadow-md rounded-md z-50"
@@ -287,8 +298,8 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                             </button>
                           </div>
                       )}
-
                     </div>
+
                   </div>
               ))
             ) : (
@@ -299,29 +310,29 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                     }}
                 >
                   {/* Left Section */}
-                <div className="flex flex-col items-center justify-center space-x-8 ml-60">
-                  <div className="justify-center">
-                    <p className="text-xl font-semibold text-orange-300 whitespace-nowrap">
-                      You have no appointment today
-                    </p>
-                    <p className="text-md ml-10 text-gray-300 whitespace-nowrap">
-                      Keep calm and have a rest day
-                    </p>
+                  <div className="flex flex-col items-center justify-center space-x-8 ml-60">
+                    <div className="justify-center">
+                      <p className="text-xl font-semibold text-orange-300 whitespace-nowrap">
+                        You have no appointment today
+                      </p>
+                      <p className="text-md ml-10 text-gray-300 whitespace-nowrap">
+                        Keep calm and have a rest day
+                      </p>
+                    </div>
+                    <img
+                        src="src/assets/rb_16294.png" // Replace with your image path
+                        alt="No appointments"
+                        className="w-56 h-56 gap-4"
+                    />
                   </div>
-                  <img
-                    src="src/assets/rb_16294.png" // Replace with your image path
-                    alt="No appointments"
-                    className="w-56 h-56 gap-4"
-                  />
                 </div>
-              </div>
             )}
           </div>
         </div>
 
         {editingAppointment && (
-          <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-30">
-            <div className="bg-white rounded-lg shadow-xl p-7 w-full max-w-lg mx-4 md:mx-0 md:w-1/2">
+            <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-30">
+              <div className="bg-white rounded-lg shadow-xl p-7 w-full max-w-lg mx-4 md:mx-0 md:w-1/2">
 
               <h3 className="text-2xl mt-4 font-semibold text-center text-gray-600 w-full mb-4">
                 Edit Appointment

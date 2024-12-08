@@ -220,7 +220,6 @@ export class Api {
   }
 
 
-
   async createMedicalRecord(recordId: number, recordRequest: RecordRequest) {
     console.log("Creating Medical Record with ID:", recordId);
     console.log("Payload:", recordRequest);

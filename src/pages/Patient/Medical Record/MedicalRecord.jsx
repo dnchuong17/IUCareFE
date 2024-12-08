@@ -25,6 +25,8 @@ const MedicalRecord = () => {
     appointment_status: "",
     doctorId: "",
     patientId: "",
+    patient_name: "",
+    student_id:"",
     medicines: [],
   });
   const [patientInfo, setPatientInfo] = useState({
@@ -44,7 +46,8 @@ const MedicalRecord = () => {
   useEffect(() => {
     const loadAppointmentDetails = async () => {
       try {
-        const appointment = location.state?.appointment;
+        const appointment = location.state?.appointment
+        console.log(appointment);
 
         if (!appointment) {
           console.error("No appointment found in location.state.");
@@ -64,7 +67,8 @@ const MedicalRecord = () => {
         }
 
         try {
-          patientDetails = await api.getPatientInformation(appointment.studentId);
+          patientDetails = await api.getPatientInformation(appointment.student_id);
+          console.log(patientDetails);
         } catch (error) {
           console.error("Error fetching patient details:", error.message);
           toast.error("Failed to fetch patient details.");
@@ -238,7 +242,7 @@ const MedicalRecord = () => {
 
 
   return (
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen ">
         <div className="w-1/5 bg-white shadow-lg">
           <Sidebar/>
         </div>
@@ -274,7 +278,7 @@ const MedicalRecord = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-3 gap-6 mt-8">
               <div className="col-span-2 bg-white shadow-lg rounded-lg p-6 space-y-4">
                 <div>
                   <label className="text-blue-700 font-medium text-xl">Diagnosis</label>

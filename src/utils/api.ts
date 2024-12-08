@@ -123,10 +123,12 @@ export class Api {
 
     // Method to get patient information by studentId
     async getPatientInformation(studentId: string) {
+        console.log(studentId);
         try {
-            const response = await this.axiosObject.get(`/patient/information`, {
+            const response = await this.axiosObject.get("/patient/information", {
                 params: {studentId},
             });
+            console.log("Patient information:", response.data);
             return response.data; // Return patient information
         } catch (error) {
             console.error("Error fetching patient information:", error.response?.data || error.message);

@@ -279,7 +279,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                           >
                             <button
                                 className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
-                                onClick={() => setActiveEditPopup(null)} // Đóng pop-up khi nhấn X
+                                onClick={() => setActiveEditPopup(null)}
                             >
                               <FaTimes size={20}/>
                             </button>

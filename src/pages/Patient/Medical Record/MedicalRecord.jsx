@@ -13,6 +13,7 @@ const MedicalRecord = () => {
   const [medicationList, setMedicationList] = useState([]);
   const [filteredMedications, setFilteredMedications] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [latestRecord, setLatestRecord] = useState(null);
   const [activeSections, setActiveSections] = useState([]);
   const [formData, setFormData] = useState({
     treatment: "",
@@ -157,11 +158,23 @@ const MedicalRecord = () => {
 
 
 
-  const toggleSection = (section) => {
+  const toggleSection = async (section) => {
     setActiveSections((prev) =>
         prev.includes(section) ? prev.filter((s) => s !== section) : [...prev, section]
     );
+
+    if (section === "latestRecord" && !latestRecord) {
+      try {
+        const previousRecord = await api.getPreviousPatientRecord(formData.patientId, formData.date);
+        setLatestRecord(previousRecord);
+      } catch (error) {
+        console.error("Error fetching latest record:", error);
+        toast.error("Failed to fetch the latest record.");
+      }
+    }
   };
+
+
 
   const handleSearchChange = async (e) => {
     const query = e.target.value;
@@ -448,19 +461,55 @@ const MedicalRecord = () => {
                   </button>
                   {activeSections.includes("latestRecord") && (
                       <div className="mt-2 p-4 bg-gray-50 rounded-lg shadow-inner">
-                        <p className="text-gray-700">{patientInfo.latestRecord}</p>
+                        {latestRecord ? (
+                            <>
+                              <p className="text-gray-700">
+                                <strong>Medical Record ID:</strong> {latestRecord.medical_record_id || "N/A"}
+                              </p>
+                              <p className="text-gray-700">
+                                <strong>Date:</strong> {new Date(latestRecord.date).toLocaleString() || "N/A"}
+                              </p>
+                              <p className="text-gray-700">
+                                <strong>Diagnosis:</strong> {latestRecord.diagnosis || "N/A"}
+                              </p>
+                              <p className="text-gray-700">
+                                <strong>Treatment:</strong> {latestRecord.treatment || "N/A"}
+                              </p>
+                              <p className="text-gray-700">
+                                <strong>Suggestions:</strong> {latestRecord.suggest || "N/A"}
+                              </p>
+                              <p className="text-gray-700">
+                                <strong>Medicines:</strong>{" "}
+                                {latestRecord.name_medicine && latestRecord.name_medicine.length > 0
+                                    ? latestRecord.name_medicine.join(", ")
+                                    : "No medicines prescribed."}
+                              </p>
+                              <p className="text-gray-700">
+                                <strong>Patient Name:</strong> {latestRecord.patient_name || "N/A"}
+                              </p>
+                              <p className="text-gray-700">
+                                <strong>Student ID:</strong> {latestRecord.student_id || "N/A"}
+                              </p>
+                              <p className="text-gray-700">
+                                <strong>Patient Address:</strong> {latestRecord.patient_address || "N/A"}
+                              </p>
+                              <p className="text-gray-700">
+                                <strong>Patient Phone:</strong> {latestRecord.patient_phone || "N/A"}
+                              </p>
+                              <p className="text-gray-700">
+                                <strong>Allergy:</strong> {latestRecord.allergy || "N/A"}
+                              </p>
+                            </>
+                        ) : (
+                            <p className="text-gray-500">No previous records found.</p>
+                        )}
                       </div>
                   )}
+
                 </div>
               </div>
             </div>
 
-            <button
-                type="submit"
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-lg font-semibold mt-4"
-            >
-              Submit
-            </button>
           </form>
         </div>
 

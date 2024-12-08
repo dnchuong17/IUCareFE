@@ -254,6 +254,22 @@ const MedicalRecord = () => {
       // Submit the medical record update
       await api.createMedicalRecord(medicalRecordId, recordRequest);
 
+      // Update appointment status to DONE
+      await api.updateStatusAppointment(
+          formData.appointment_id,
+          "DONE",
+          formData.doctorId,
+          formData.patientId,
+          formData.appointment_time
+      );
+
+      // // Update local state after success
+      // setFormData((prev) => ({
+      //   ...prev,
+      //   appointment_status: "DONE",
+      // }));
+
+
       toast.success("Medical record updated successfully.");
     } catch (error) {
       console.error("Error submitting medical record:", error);

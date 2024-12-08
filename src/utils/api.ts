@@ -301,6 +301,15 @@ export class Api {
     }
   }
 
-
+    async getDetailByRecordId (recordId: number) {
+        try {
+            const response = await  this.axiosObject.get(`/medical_record/get/detail/${recordId}`);
+            console.log("Response detail:", response.data);
+            return response.data;
+        } catch (error) {
+            console.log("Error getting detail:", error.response?.data || error.message )
+            throw error;
+        }
+    }
 
 }

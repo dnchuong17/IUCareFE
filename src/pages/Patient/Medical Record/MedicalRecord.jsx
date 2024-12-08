@@ -531,12 +531,6 @@ const MedicalRecord = () => {
               </div>
             </div>
 
-            <button
-                type="submit"
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-lg font-semibold mt-4"
-            >
-              Submit
-            </button>
           </form>
         </div>
 

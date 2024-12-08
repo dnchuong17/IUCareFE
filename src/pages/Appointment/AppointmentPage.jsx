@@ -7,31 +7,33 @@ const AppointmentPage = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [daysWithAppointments, setDaysWithAppointments] = useState([]);
 
-  //  khi người dùng chọn một ngày trên Calendar
+  // Handle when a date is selected on the Calendar
   const handleDateSelected = (date) => {
     setSelectedDate(date);
   };
 
-  // cập nhật danh sách các ngày có cuộc hẹn từ Appointment
+  // Update the list of days with appointments from Appointment
   const handleDaysWithAppointmentsChange = (days) => {
     setDaysWithAppointments(days);
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen overflow-x-hidden gap-1">
       {/* Sidebar */}
       <div className="w-1/5 bg-white shadow-lg h-screen">
         <Sidebar />
       </div>
 
-      {/* Main */}
-      <div className="w-full flex items-center justify-center mr-40">
-        {/* Content Wrapper */}
+      {/* Main Content */}
+      <div className="flex flex-col items-center gap-64 justify-start w-4/5 p-1">
         <div className="w-full">
+          {/* Adjusted width based on screen size */}
           <Calendar
             onDateSelected={handleDateSelected}
             daysWithAppointments={daysWithAppointments}
           />
+        </div>
+        <div className="w-full">
           <Appointment
             selectedDate={selectedDate}
             onDaysWithAppointmentsChange={handleDaysWithAppointmentsChange}

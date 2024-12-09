@@ -258,12 +258,15 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                               <p
                                   className={`text-sm font-semibold ${
                                       appointment.appointment_status === "APPROVED"
-                                          ? "text-green-500"
-                                          : "text-gray-700"
+                                          ? "text-blue-500"
+                                          : appointment.appointment_status === "CANCELLED"
+                                              ? "text-red-500"
+                                              : "text-green-500"
                                   }`}
                               >
                                 {appointment.appointment_status}
                               </p>
+
 
                               {/* Edit */}
                               <button

@@ -13,7 +13,7 @@ const Sidebar = () => {
           className="w-full h-auto mb-4 md:p-1 md:top-0 hover:scale-105 rounded transition-transform duration-300 top-4 left-4"
         />
         <div className="flex flex-col space-y-5 mb-12 ">
-          <div className="group flexCenter space-x-1 mt-4 bg-white-500 text-gray-600 p-2 md:p-1 rounded-lg mt-5 cursor-pointer px-3 hover:bg-blue-200 hover:bg-opacity-50 hover:text-blue-700 transition-colors duration-300">
+          <div className="group flexCenter space-x-1 bg-white-500 text-gray-600 p-2 md:p-1 rounded-lg mt-5 cursor-pointer px-3 hover:bg-blue-200 hover:bg-opacity-50 hover:text-blue-700 transition-colors duration-300">
             <HiHome className="text-blue-300 group-hover:text-blue-700 ml-5 text-2xl" />
             <Link
               to="/appointmentPage"

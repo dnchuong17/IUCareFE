@@ -201,7 +201,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                   {/* Plus Button */}
                   <div className="border border-gray p-4 rounded-lg flex items-center justify-center border-dashed border-gray-400">
                     <div
-                        className="flex items-center justify-center w-10 h-10 border-2 border-dashed border-gray-400 rounded-full hover:bg-gray-00 hover:border-white transition duration-300"
+                        className="flex items-center justify-center w-10 h-10 border-2 border-dashed border-gray-400 rounded-full hover:bg-gray-200 transition duration-300 hover:border-gray-700 cursor-pointer"
                         onClick={() => setShowSearchPopup(true)}
                     >
                       <FaPlus className="text-gray-400 text-2xl"/>

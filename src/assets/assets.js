@@ -13,6 +13,8 @@ import about3 from './about3.jpg'
 
 import appointment from './appointment.jpg'
 
+import restday from "./restday.png";
+
 
 
 export const assets = {

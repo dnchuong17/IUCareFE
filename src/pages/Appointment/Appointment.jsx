@@ -187,196 +187,158 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
   };
 
   return (
-    <div className="absolute h-screen p-4 max-h-[550] w-4/5 overflow-y-auto">
-      {/* Left Section */}
-      <div className="bg-white p-6 rounded-lg shadow-lg">
-        <div className="mt-4 ml-3">
-          {/* Open SearchForm */}
-          <button
-            className="flex items-center bg-blue-400 border border-blue-300 px-5 py-2 text-white rounded-full hover:bg-blue-700 transition duration-300 mt-1 mb-6 "
-            onClick={() => setShowSearchPopup(true)}
-          >
-            <FaPlus className="mr-2 text-sm" />
-            Create Appointment
-          </button>
+      <div className="absolute h-screen p-4 max-h-[550px] w-4/5 overflow-y-auto">
+        {/* Left Section */}
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="mt-4 ml-3">
+            {/* Appointments and Plus Button Wrapper */}
+              <div className="flex flex-wrap gap-4">
+              {/* Appointments Grid */}
 
-          <SearchForm
-            isOpen={showSearchPopup}
-            onClose={() => setShowSearchPopup(false)}
-          />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {appointments.length > 0 ? (
-              appointments.map((appointment, index) => (
-                  <div
-                      key={index}
-                      className="border border-gray p-4 rounded-lg relative"
-                  >
-                    <div className="flex justify-between text-gray-700">
-                      <p className="font-light text-gray-400">
-                        <strong>Name</strong>
-                      </p>
-                      <p className="text-gray-700">{appointment.patientName}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full ml-4">
+
+                  {/* Plus Button */}
+                  <div className="border border-gray p-4 rounded-lg flex items-center justify-center border-dashed border-gray-400">
+                    <div
+                        className="flex items-center justify-center w-10 h-10 border-2 border-dashed border-gray-400 rounded-full hover:bg-gray-00 hover:border-white transition duration-300"
+                        onClick={() => setShowSearchPopup(true)}
+                    >
+                      <FaPlus className="text-gray-400 text-2xl"/>
                     </div>
-                    <div className="flex justify-between text-gray-700">
-                      <p className="font-light text-gray-400">
-                        <strong>Student ID</strong>
-                      </p>
-                      <p className="text-gray-700">{appointment.studentId}</p>
-                    </div>
-                    {/*<div className="flex justify-between text-gray-700">*/}
-                    {/*  <p className="font-light text-gray-400">*/}
-                    {/*    <strong>Status</strong>*/}
-                    {/*  </p>*/}
-                    {/*  <p className="text-gray-700">{appointment.appointment_status}</p>*/}
-                    {/*</div>*/}
-                    <hr className="my-5 border-gray-300 border-dashed"/>
-                    <div className="flex justify-between items-center text-gray-700">
-                      <div>
-                        <p className="font-light">
-                          <FaClock className="inline-block mr-1 text-black-100"/>{" "}
-                          {appointment.time}
-                        </p>
-                        <p className="font-light mx-5">
-                          {new Date(appointment.date).toLocaleDateString(
-                              "en-US",
-                              {
-                                weekday: "short",
-                                day: "numeric",
-                                month: "short",
-                              }
-                          )}
-                        </p>
-                      </div>
-                      <div>
-                        <button
-                            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-                            onClick={() => handleExamine(appointment)}
-                        >
-                          Examine
-                        </button>
-                      </div>
-                    </div>
-                    <hr className="my-5 border-gray-300 border-dashed"/>
-
-                    <div className="flex justify-between items-center mt-4">
-                      {/* Status */}
-                      <p
-                          className={`text-sm font-semibold ${
-                              appointment.appointment_status === "APPROVED" ? "text-green-500" : "text-gray-700"
-                          }`}
-                      >
-                        {appointment.appointment_status}
-                      </p>
-
-                      {/* Edit */}
-                      <button
-                          className="text-orange-500 font-medium cursor-pointer hover:underline"
-                          onClick={() => handleEditClick(appointment.appointment_id)}
-                      >
-                        Edit
-                      </button>
-
-                      {/* Pop-up Edit */}
-                      {activeEditPopup === appointment.appointment_id && (
+                  </div>
+                  {appointments.length > 0 ? (
+                      appointments.map((appointment, index) => (
                           <div
-                              className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 shadow-md rounded-md z-50"
+                              key={index}
+                              className="border border-gray p-4 rounded-lg relative"
                           >
-                            <button
-                                className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
-                                onClick={() => setActiveEditPopup(null)}
-                            >
-                              <FaTimes size={20}/>
-                            </button>
+                            <div className="flex justify-between text-gray-700">
+                              <p className="font-light text-gray-400">
+                                <strong>Name</strong>
+                              </p>
+                              <p className="text-gray-700">{appointment.patientName}</p>
+                            </div>
+                            <div className="flex justify-between text-gray-700">
+                              <p className="font-light text-gray-400">
+                                <strong>Student ID</strong>
+                              </p>
+                              <p className="text-gray-700">{appointment.studentId}</p>
+                            </div>
+                            <hr className="my-5 border-gray-300 border-dashed"/>
+                            <div className="flex justify-between items-center text-gray-700">
+                              <div>
+                                <p className="font-light">
+                                  <FaClock className="inline-block mr-1 text-black-100"/>{" "}
+                                  {appointment.time}
+                                </p>
+                                <p className="font-light mx-5">
+                                  {new Date(appointment.date).toLocaleDateString("en-US", {
+                                    weekday: "short",
+                                    day: "numeric",
+                                    month: "short",
+                                  })}
+                                </p>
+                              </div>
+                              <button
+                                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                                  onClick={() => handleExamine(appointment)}
+                              >
+                                Examine
+                              </button>
+                            </div>
+                            <hr className="my-5 border-gray-300 border-dashed"/>
 
-                            <button
-                                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                onClick={() => handleEditAppointment(appointment)}
-                            >
-                              Edit Appointment
-                            </button>
-                            <button
-                                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                onClick={() => handleCancelAppointment(appointment.appointment_id)}
-                            >
-                              Cancel
-                            </button>
+                            <div className="flex justify-between items-center mt-4">
+                              {/* Status */}
+                              <p
+                                  className={`text-sm font-semibold ${
+                                      appointment.appointment_status === "APPROVED"
+                                          ? "text-green-500"
+                                          : "text-gray-700"
+                                  }`}
+                              >
+                                {appointment.appointment_status}
+                              </p>
+
+                              {/* Edit */}
+                              <button
+                                  className="text-orange-500 font-medium cursor-pointer hover:underline"
+                                  onClick={() => handleEditClick(appointment.appointment_id)}
+                              >
+                                Edit
+                              </button>
+
+                              {/* Pop-up Edit */}
+                              {activeEditPopup === appointment.appointment_id && (
+                                  <div
+                                      className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 shadow-md rounded-md z-50">
+                                    <button
+                                        className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+                                        onClick={() => setActiveEditPopup(null)}
+                                    >
+                                      <FaTimes size={20}/>
+                                    </button>
+
+                                    <button
+                                        className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                        onClick={() => handleEditAppointment(appointment)}
+                                    >
+                                      Edit Appointment
+                                    </button>
+                                    <button
+                                        className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                        onClick={() =>
+                                            handleCancelAppointment(appointment.appointment_id)
+                                        }
+                                    >
+                                      Cancel
+                                    </button>
+                                  </div>
+
+                              )}
+                            </div>
                           </div>
-                      )}
-                    </div>
+                      ))
+                  ) : (
+                      <div
+                          className="ml-72 mr-32 mb-20 z-20 height-80 flex items-center justify-center"
+                          style={{
+                            width: "calc(66.6667% - 90px)",
+                          }}
+                      >
+                        {/* Left Section */}
+                        <div className="flex flex-col items-center justify-center space-x-8 ml-96">
+                          <div className="justify-center">
+                            <p className="text-xl font-semibold text-orange-300 whitespace-nowrap">
+                              You have no appointment today
+                            </p>
+                            <p className="text-md ml-10 text-gray-300 whitespace-nowrap">
+                              Keep calm and have a rest day
+                            </p>
+                          </div>
+                          <img
+                              src="src/assets/rb_16294.png"
+                              alt="No appointments"
+                              className="w-56 h-56 gap-4"
+                          />
+                        </div>
+                      </div>
+                  )}
 
-                  </div>
-              ))
-            ) : (
-                <div
-                    className="ml-72 mr-32 mb-20 z-20 height-80 flex items-center justify-center"
-                    style={{
-                      width: "calc(66.6667% - 90px)",
-                    }}
-                >
-                  {/* Left Section */}
-                  <div className="flex flex-col items-center justify-center space-x-8 ml-96">
-                    <div className="justify-center">
-                      <p className="text-xl font-semibold text-orange-300 whitespace-nowrap">
-                        You have no appointment today
-                      </p>
-                      <p className="text-md ml-10 text-gray-300 whitespace-nowrap">
-                        Keep calm and have a rest day
-                      </p>
-                    </div>
-                    <img
-                        src="src/assets/rb_16294.png"
-                        alt="No appointments"
-                        className="w-56 h-56 gap-4"
-                    />
-                  </div>
                 </div>
-            )}
+
+              </div>
+
+            {/* Search Form */}
+            <SearchForm
+                isOpen={showSearchPopup}
+                onClose={() => setShowSearchPopup(false)}
+            />
           </div>
         </div>
-
-        {editingAppointment && (
-            <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-30">
-              <div className="bg-white rounded-lg shadow-xl p-7 w-full max-w-lg mx-4 md:mx-0 md:w-1/2">
-
-              <h3 className="text-2xl mt-4 font-semibold text-center text-gray-600 w-full mb-4">
-                Edit Appointment
-              </h3>
-              <div className="mb-8">
-                <label
-                  htmlFor="datetime"
-                  className="tblock mb-2 font-medium text-blue-800 mt-4"
-                >
-                  New Date and Time:
-                </label>
-                <input
-                  type="datetime-local"
-                  id="datetime"
-                  className="w-full py-2 px-1 pl-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={newDateTime}
-                  onChange={(e) => setNewDateTime(e.target.value)}
-                />
-              </div>
-              <div className="flex justify-end space-x-2">
-                <button
-                  className="bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400 transition"
-                  onClick={() => setEditingAppointment(null)}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                  onClick={handleSaveDateTime}
-                >
-                  Save
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-                <ToastContainer />
       </div>
-    </div>
+
   );
 };
 Appointment.propTypes = {

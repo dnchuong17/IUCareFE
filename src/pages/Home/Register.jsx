@@ -23,7 +23,7 @@ const Register = () => {
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [departmentNumber, setDepartmentNumber] = useState(""); // Chọn phòng ban
+  const [departmentNumber, setDepartmentNumber] = useState("");
   const [departments, setDepartments] = useState([]);
 
 

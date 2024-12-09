@@ -187,7 +187,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
   };
 
   return (
-      <div className="absolute h-screen p-4 max-h-[550px] w-4/5 overflow-y-auto">
+      <div className="absolute p-4 max-h-[550px] w-4/5 overflow-y-auto">
         {/* Left Section */}
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <div className="mt-4 ml-3">
@@ -199,14 +199,18 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full ml-4">
 
                   {/* Plus Button */}
-                  <div className="border border-gray p-4 rounded-lg flex items-center justify-center border-dashed border-gray-400">
+                  <button
+                      className=" hover:bg-gray-200 hover:border-gray-700 cursor-pointer"
+                      onClick={() => setShowSearchPopup(true)}
+                  >
+                  <div className="border border-gray p-4 rounded-lg flex items-center justify-center border-dashed border-gray-40 h-[250px]">
                     <div
-                        className="flex items-center justify-center w-10 h-10 border-2 border-dashed border-gray-400 rounded-full hover:bg-gray-200 transition duration-300 hover:border-gray-700 cursor-pointer"
-                        onClick={() => setShowSearchPopup(true)}
+                        className="flex items-center justify-center w-10 h-10 border-2 border-dashed border-gray-400 rounded-full transition duration-300"
                     >
                       <FaPlus className="text-gray-400 text-2xl"/>
                     </div>
                   </div>
+                  </button>
                   {appointments.length > 0 ? (
                       appointments.map((appointment, index) => (
                           <div
@@ -307,8 +311,8 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                             width: "calc(66.6667% - 90px)",
                           }}
                       >
-                        {/* Left Section */}
-                        <div className="flex flex-col items-center justify-center space-x-8 ml-96">
+                        {/*/!* Left Section *!/*/}
+                        <div className="flex flex-col items-center justify-center space-x-8 ml-26 mt-8">
                           <div className="justify-center">
                             <p className="text-xl font-semibold text-orange-300 whitespace-nowrap">
                               You have no appointment today
@@ -317,11 +321,11 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                               Keep calm and have a rest day
                             </p>
                           </div>
-                          <img
-                              src="src/assets/rb_16294.png"
-                              alt="No appointments"
-                              className="w-56 h-56 gap-4"
-                          />
+                        {/*  <img*/}
+                        {/*      src="src/assets/rb_16294.png"*/}
+                        {/*      alt="No appointments"*/}
+                        {/*      className="w-56 h-56 gap-4"*/}
+                        {/*  />*/}
                         </div>
                       </div>
                   )}

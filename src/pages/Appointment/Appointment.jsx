@@ -100,8 +100,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
 
   const handleSaveDateTime = async () => {
     if (!newDateTime) {
-      alert("Please provide a new date and time.");
-      return;
+       toast.info("No records found for this patient.");      return;
     }
 
     try {
@@ -142,7 +141,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
         "Error updating appointment:",
         error.response?.data || error.message
       );
-      alert("Failed to update appointment. Please try again.");
+      toast.error("Failed to update appointment. Please try again.");
     }
   };
 
@@ -150,7 +149,14 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
     try {
       const appointment = appointments.find(app => app.appointment_id === appointmentId);
       if (!appointment) {
-        alert("Appointment not found");
+        toast.error("Appointment not found", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
         return;
       }
 
@@ -170,12 +176,27 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
           )
       );
 
-      alert("Appointment status updated to CANCELLED.");
+      toast.success("Appointment status updated to CANCELLED.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+
       setActiveEditPopup(null);
 
     } catch (error) {
       console.error("Error cancelling appointment:", error.response?.data || error.message);
-      alert("Failed to cancel appointment. Please try again.");
+      toast.error("Failed to cancel appointment. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
@@ -344,6 +365,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             />
           </div>
         </div>
+        <ToastContainer />
       </div>
 
   );

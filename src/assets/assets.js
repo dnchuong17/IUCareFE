@@ -32,4 +32,6 @@ export const assets = {
     about3,
 
     appointment,
+
+    restday,
 }

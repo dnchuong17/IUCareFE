@@ -5,6 +5,8 @@ import {FaClock, FaPlus, FaTimes} from "react-icons/fa";
 import SearchForm from "./SearchForm";
 // import Sidebar from "../../components/Sidebar"; // Adjust the path as necessary
 import { Api } from "../../utils/api.ts";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
   const [appointments, setAppointments] = useState([]);
@@ -131,7 +133,10 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
 
 
       setEditingAppointment(null);
-      alert("Appointment time updated successfully.");
+      toast.success("Appointment time updated successfully."),
+        {
+          autoclose: 1000,
+        };
     } catch (error) {
       console.error(
         "Error updating appointment:",
@@ -369,6 +374,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             </div>
           </div>
         )}
+                <ToastContainer />
       </div>
     </div>
   );

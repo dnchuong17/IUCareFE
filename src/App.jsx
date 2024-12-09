@@ -1,4 +1,4 @@
-import {BrowserRouter as Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import TableList from "./pages/Patient/TableList.jsx";
 import MedicalRecord from "./pages/Patient/Medical Record/MedicalRecord.jsx";
 import HomePage from "./pages/Home/HomePage.jsx";
@@ -34,7 +34,6 @@ const App = () => {
                     <Route path="/medicalRecord" element={<MedicalRecord />} />
                     <Route path="/information" element={<InformationForm />} />
                     <Route path="/doctorProfile" element={<DoctorProfile />} />
-                    <Route path = "*" element={<h1>Page Not Found</h1>} />
                 </Routes>
             </div>
             {/* Footer */}

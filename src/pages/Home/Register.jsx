@@ -23,7 +23,9 @@ const Register = () => {
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [department_id, setDepartment_id] = useState("");
+  const [departmentNumber, setDepartmentNumber] = useState(""); // Chọn phòng ban
+  const [departments, setDepartments] = useState([]);
+
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -32,6 +34,7 @@ const Register = () => {
   const [errorMessages, setErrorMessages] = useState({});
   const navigate = useNavigate();
   const api = new Api();
+
 
   const validateInputs = () => {
     const errors = {};
@@ -46,8 +49,8 @@ const Register = () => {
       errors.password = "Password must be at least 6 characters.";
     if (password !== confirmPassword)
       errors.confirmPassword = "Passwords do not match.";
-    if (!department_id || department_id <= 0)
-      errors.department_id = "Department ID must be a positive number.";
+    if (!departmentNumber)
+      errors.departmentNumber = "Please select a department.";
     if (!policyAgreement)
       errors.policyAgreement = "You must agree to the terms and conditions.";
 
@@ -70,8 +73,7 @@ const Register = () => {
       doctorName,
       address,
       phone,
-      departmentId: department_id ? Number(department_id) : undefined,
-    };
+      departmentNumber,    };
 
     try {
       const result2 = await api.register(registerRequest);
@@ -129,165 +131,176 @@ const Register = () => {
           <form className="mt-5 space-y-4" onSubmit={onSubmitHandler}>
             <div>
               <label className="text-lg font-medium flex items-center gap-2">
-                <FiUser className="text-gray-500" /> Doctor Name
+                <FiUser className="text-gray-500"/> Doctor Name
               </label>
               <input
-                type="text"
-                value={doctorName}
-                onChange={(e) => setDoctorName(e.target.value)}
-                className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
-                placeholder="Enter your name"
-                required
+                  type="text"
+                  value={doctorName}
+                  onChange={(e) => setDoctorName(e.target.value)}
+                  className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
+                  placeholder="Enter your name"
+                  required
               />
               {errorMessages.doctorName && (
-                <p className="text-red-500">{errorMessages.doctorName}</p>
+                  <p className="text-red-500">{errorMessages.doctorName}</p>
               )}
             </div>
 
             <div>
               <label className="text-lg font-medium flex items-center gap-2">
-                <FiHome className="text-gray-500" /> Address
+                <FiHome className="text-gray-500"/> Address
               </label>
               <input
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
-                placeholder="Enter your address"
-                required
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
+                  placeholder="Enter your address"
+                  required
               />
               {errorMessages.address && (
-                <p className="text-red-500">{errorMessages.address}</p>
+                  <p className="text-red-500">{errorMessages.address}</p>
               )}
             </div>
 
             <div>
               <label className="text-lg font-medium flex items-center gap-2">
-                <FiPhone className="text-gray-500" /> Phone Number
+                <FiPhone className="text-gray-500"/> Phone Number
               </label>
               <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
-                placeholder="Enter your phone number"
-                required
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
+                  placeholder="Enter your phone number"
+                  required
               />
               {errorMessages.phone && (
-                <p className="text-red-500">{errorMessages.phone}</p>
+                  <p className="text-red-500">{errorMessages.phone}</p>
               )}
             </div>
 
             <div>
               <label className="text-lg font-medium flex items-center gap-2">
-                <FiUserCheck className="text-gray-500" /> Account
+                <FiUserCheck className="text-gray-500"/> Account
               </label>
               <input
-                type="email"
-                value={account}
-                onChange={(e) => setAccount(e.target.value)}
-                className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
-                placeholder="Enter your email"
-                required
+                  type="email"
+                  value={account}
+                  onChange={(e) => setAccount(e.target.value)}
+                  className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
+                  placeholder="Enter your email"
+                  required
               />
               {errorMessages.account && (
-                <p className="text-red-500">{errorMessages.account}</p>
+                  <p className="text-red-500">{errorMessages.account}</p>
               )}
             </div>
 
             <div>
               <label className="text-lg font-medium flex items-center gap-2">
-                <FiLock className="text-gray-500" /> Password
+                <FiLock className="text-gray-500"/> Password
               </label>
               <div className="relative flex">
                 <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
-                  placeholder="Enter your password"
-                  required
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
+                    placeholder="Enter your password"
+                    required
                 />
                 <div
-                  className="absolute right-3 inset-y-0 flex items-center cursor-pointer"
-                  onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 inset-y-0 flex items-center cursor-pointer"
+                    onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                  {showPassword ? <FiEyeOff/> : <FiEye/>}
                 </div>
               </div>
               {errorMessages.password && (
-                <p className="text-red-500">{errorMessages.password}</p>
+                  <p className="text-red-500">{errorMessages.password}</p>
               )}
             </div>
 
             <div>
               <label className="text-lg font-medium flex items-center gap-2">
-                <FiLock className="text-gray-500" /> Confirm Password
+                <FiLock className="text-gray-500"/> Confirm Password
               </label>
               <div className="relative flex">
                 <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
-                  placeholder="Confirm your password"
-                  required
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
+                    placeholder="Confirm your password"
+                    required
                 />
                 <div
-                  className="absolute right-3 inset-y-0 flex items-center cursor-pointer"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 inset-y-0 flex items-center cursor-pointer"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
-                  {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+                  {showConfirmPassword ? <FiEyeOff/> : <FiEye/>}
                 </div>
               </div>
               {errorMessages.confirmPassword && (
-                <p className="text-red-500">{errorMessages.confirmPassword}</p>
+                  <p className="text-red-500">{errorMessages.confirmPassword}</p>
               )}
             </div>
 
             <div>
               <label className="text-lg font-medium flex items-center gap-2">
-                <FiClipboard className="text-gray-500" /> Department ID
+                <FiClipboard className="text-gray-500"/> Department Number
               </label>
-              <input
-                type="number"
-                value={department_id}
-                onChange={(e) => setDepartment_id(e.target.value)}
-                className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
-                placeholder="Enter your department ID"
-                required
-              />
-              {errorMessages.department_id && (
-                <p className="text-red-500">{errorMessages.department_id}</p>
+              <select
+                  value={departmentNumber}
+                  onChange={(e) => setDepartmentNumber(e.target.value)}
+                  className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
+                  required
+              >
+                <option value="" disabled>
+                  Select your department number
+                </option>
+                <option value="203">203</option>
+                <option value="302">302</option>
+                <option value="408">408</option>
+                <option value="610">610</option>
+                <option value="612">612</option>
+                <option value="613">613</option>
+                <option value="666">666</option>
+
+              </select>
+              {errorMessages.departmentNumber && (
+                  <p className="text-red-500">{errorMessages.departmentNumber}</p>
               )}
             </div>
 
             {/* Policy Agreement Checkbox */}
             <div className="flex items-center gap-2">
               <input
-                type="checkbox"
-                checked={policyAgreement}
-                onChange={(e) => setPolicyAgreement(e.target.checked)}
-                className="w-5 h-5"
+                  type="checkbox"
+                  checked={policyAgreement}
+                  onChange={(e) => setPolicyAgreement(e.target.checked)}
+                  className="w-5 h-5"
               />
               <label className="text-gray-700">
                 I agree to the terms and conditions.
               </label>
             </div>
             {errorMessages.policyAgreement && (
-              <p className="text-red-500">{errorMessages.policyAgreement}</p>
+                <p className="text-red-500">{errorMessages.policyAgreement}</p>
             )}
 
             <div className="flex flex-col mt-8 gap-y-4">
               <button
-                type="submit"
-                className="active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all py-3 rounded-xl bg-blue-500 text-white text-lg font-bold"
+                  type="submit"
+                  className="active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all py-3 rounded-xl bg-blue-500 text-white text-lg font-bold"
               >
                 Register
               </button>
               <div className="flexCenter gap-2 rounded-xl border-2 border-gray-100">
-                <FcGoogle />
-                <button className="flex items-center py-3 justify-center gap-4 active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all text-lg">
+                <FcGoogle/>
+                <button
+                    className="flex items-center py-3 justify-center gap-4 active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all text-lg">
                   Sign in with Google
                 </button>
               </div>
@@ -296,8 +309,8 @@ const Register = () => {
             <div className="mt-8 flex justify-center items-center">
               <p className="font-medium text-base">Have an account?</p>
               <button
-                onClick={() => navigate("/login")}
-                className="text-blue-500 text-base font-medium ml-2"
+                  onClick={() => navigate("/login")}
+                  className="text-blue-500 text-base font-medium ml-2"
               >
                 Sign in
               </button>
@@ -305,7 +318,7 @@ const Register = () => {
           </form>
         </div>
       </div>
-      <ToastContainer />
+      <ToastContainer/>
     </motion.div>
   );
 };

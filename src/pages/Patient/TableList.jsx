@@ -5,7 +5,7 @@ import Sidebar from "../../components/Sidebar.jsx";
 import { Api } from "../../utils/api.ts";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import appointment from "../Home/Appointment.jsx";
+import { motion } from 'framer-motion'
 
 const TableList = () => {
   const [patientsCount, setPatientsCount] = useState(0);
@@ -168,11 +168,21 @@ const TableList = () => {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div
+        className="flex min-h-screen">
       <div className="w-1/5">
         <Sidebar />
       </div>
-      <div className="flex-grow flex justify-center items-start py-28 px-4">
+
+      <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 0.75,
+            delay: 0.5,
+            ease: [0, 0.71, 0.2, 1.01],
+          }}
+          className="flex-grow flex justify-center items-start py-28 px-4">
         <div className="w-full max-w-5xl bg-white border-l-4 border-blue-500 rounded-lg shadow-lg p-10">
           <div className="flex justify-between items-center mb-10">
             <div className="flex items-center space-x-4">
@@ -278,7 +288,7 @@ const TableList = () => {
             </table>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

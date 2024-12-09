@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "../../components/Sidebar.jsx";
 import { HiOutlinePencilAlt } from "react-icons/hi";
+import { motion } from 'framer-motion'
 
 const Profile = () => {
   const [info, setInfo] = useState({
@@ -140,7 +141,15 @@ const Profile = () => {
       </div>
 
       {/* Profile Content */}
-      <div className="w-4/5 min-h-screen flex items-center justify-center  p-6">
+      <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 0.75,
+            delay: 0.5,
+            ease: [0, 0.71, 0.2, 1.01],
+          }}
+          className="w-4/5 min-h-screen flex items-center justify-center  p-6">
         <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-10 border-l-4 border-blue-500 relative">
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
@@ -260,7 +269,7 @@ const Profile = () => {
             )}
           </form>
         </div>
-      </div>
+      </motion.div>
       <ToastContainer />
     </div>
   );

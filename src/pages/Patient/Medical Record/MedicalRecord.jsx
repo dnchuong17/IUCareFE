@@ -5,6 +5,7 @@ import { FiSearch, FiTrash } from "react-icons/fi";
 import { Api } from "../../../utils/api.ts";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { motion } from "framer-motion"
 
 const MedicalRecord = () => {
 
@@ -278,7 +279,15 @@ const MedicalRecord = () => {
           <Sidebar/>
         </div>
 
-        <div className="flex-grow p-8 space-y-6">
+        <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 0.75,
+              delay: 0.5,
+              ease: [0, 0.71, 0.2, 1.01],
+            }}
+            className="flex-grow p-8 space-y-6">
           <div >
             <div className="bg-gradient-to-b from-blue-500 via-blue-400 to-blue-300 shadow-lg rounded-lg p-6">
               <h1 className="text-3xl font-bold text-white mb-6">Medical Record</h1>
@@ -542,7 +551,7 @@ const MedicalRecord = () => {
             </div>
 
           </div>
-        </div>
+        </motion.div>
 
         <ToastContainer/>
       </div>

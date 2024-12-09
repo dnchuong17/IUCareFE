@@ -1,5 +1,7 @@
 import moment from "moment";
 import PropTypes from "prop-types";
+import { motion } from 'framer-motion'
+
 
 const Calendar = ({ onDateSelected, daysWithAppointments }) => {
   const getNext30Days = () => {
@@ -20,6 +22,12 @@ const Calendar = ({ onDateSelected, daysWithAppointments }) => {
   const monthDates = getNext30Days();
 
   return (
+      <motion.div
+          initial={{ y: -100 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="z-50 top-0">
+
     <div className="absolute h-screen p-4 max-h-screen w-4/5">
       <div className=" rounded-xl shadow-md border border-lightblue-400 bg-blue-600 p-6 ">
         <div className="text-first text-3xl font-lg text-white mb-4">
@@ -48,6 +56,7 @@ const Calendar = ({ onDateSelected, daysWithAppointments }) => {
         </div>
       </div>
     </div>
+      </motion.div>
   );
 };
 Calendar.propTypes = {

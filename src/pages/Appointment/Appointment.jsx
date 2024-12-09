@@ -171,7 +171,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
       );
 
       alert("Appointment status updated to CANCELLED.");
-      setActiveEditPopup(null); // Close popup after cancel
+      setActiveEditPopup(null);
 
     } catch (error) {
       console.error("Error cancelling appointment:", error.response?.data || error.message);
@@ -193,7 +193,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
         <div className="mt-4 ml-3">
           {/* Open SearchForm */}
           <button
-            className="flex items-center bg-blue-400 border border-blue-300 px-1 text-white rounded-full  hover:bg-blue-700 transition duration-300 mt-1 mb-6"
+            className="flex items-center bg-blue-400 border border-blue-300 px-5 py-2 text-white rounded-full hover:bg-blue-700 transition duration-300 mt-1 mb-6 "
             onClick={() => setShowSearchPopup(true)}
           >
             <FaPlus className="mr-2 text-sm" />

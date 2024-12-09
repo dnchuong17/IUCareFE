@@ -4,15 +4,13 @@ import { RegisterRequest } from "./request/registerRequest";
 import { DoctorInforModel } from "../model/doctorInfor.model";
 import {AppointmentRequest} from "./request/appointmentRequest";
 import {RecordRequest} from "./request/recordRequest";
-import * as dotenv from 'dotenv';
 
-dotenv.config();
 export class Api {
     private axiosObject: AxiosInstance;
 
     constructor() {
         this.axiosObject = axios.create({
-            baseURL: process.env.REACT_APP_API_URL,
+            baseURL: "https://iucarebe-production.up.railway.app",
             withCredentials: true,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

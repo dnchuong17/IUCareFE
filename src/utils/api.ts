@@ -3,22 +3,24 @@ import { LoginRequest } from "./request/loginRequest";
 import { RegisterRequest } from "./request/registerRequest";
 import { DoctorInforModel } from "../model/doctorInfor.model";
 import {AppointmentRequest} from "./request/appointmentRequest";
-import {MedicalRequest} from "./request/medicalRequest";
 import {RecordRequest} from "./request/recordRequest";
-import {DetailedMedicalRequest} from "./request/detailedMedicalRequest";
+import * as dotenv from 'dotenv';
 
+dotenv.config();
 export class Api {
     private axiosObject: AxiosInstance;
 
     constructor() {
         this.axiosObject = axios.create({
-            baseURL: "https://iucarebe-production.up.railway.app",
+            baseURL: process.env.REACT_APP_API_URL,
             withCredentials: true,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
     }
+
+
 
     getAxiosObject() {
         return this.axiosObject;

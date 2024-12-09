@@ -35,7 +35,7 @@ const TableList = () => {
       console.log("Patient Records Response:", records);
 
       if (!records || records.length === 0) {
-        toast.info("No records found for this patient.");
+        // toast.info("No records found for this patient.");
         setPatientRecords([]);
         setPatientsCount(0);
         return;

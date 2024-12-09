@@ -7,6 +7,7 @@ import SearchForm from "./SearchForm";
 import { Api } from "../../utils/api.ts";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { assets } from "../../assets/assets";
 
 const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
   const [appointments, setAppointments] = useState([]);
@@ -345,11 +346,11 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                               Keep calm and have a rest day
                             </p>
                           </div>
-                        {/*  <img*/}
-                        {/*      src="src/assets/rb_16294.png"*/}
-                        {/*      alt="No appointments"*/}
-                        {/*      className="w-56 h-56 gap-4"*/}
-                        {/*  />*/}
+                        <img
+                    src={assets.restday} // Replace with your image path
+                    alt="No appointments"
+                    className="w-56 h-56 gap-4"
+                  />
                         </div>
                       </div>
                   )}

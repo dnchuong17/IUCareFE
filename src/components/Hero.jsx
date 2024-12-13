@@ -29,9 +29,11 @@ const Hero = () => {
                 </div>
 
                 {/* Title */}
-                <h1 className="text-3xl sm:text-5xl font-extrabold text-blue-900 mb-4 font-poppins leading-tight">
-                    WELCOME TO <span className="text-blue-600">IU HEALTHCARE</span>
+                <h1 className="text-3xl sm:text-5xl font-extrabold text-blue-900 mb-4 font-poppins leading-tight text-center">
+                    <div>WELCOME TO</div>
+                    <div className="text-blue-600">IU HEALTHCARE</div>
                 </h1>
+
 
                 {/* Subtitle */}
                 <p className="text-gray-600 text-lg sm:text-2xl mb-8 leading-relaxed max-w-3xl mx-auto">

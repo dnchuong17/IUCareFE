@@ -60,24 +60,29 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
 
       if (Array.isArray(appointmentsArray)) {
         const filteredAppointments = appointmentsArray.map((appointment) => {
-          const dateTime = new Date(appointment.appointment_time);
+          const [datePart, timePart] = appointment.appointment_time.split('T');
+          const appointmentDate = new Date(appointment.appointment_time);
+          const formattedDate = appointmentDate.toLocaleDateString("UTC", { timeZone: "Asia/Ho_Chi_Minh" });
+          const formattedTime = appointmentDate.toLocaleTimeString("UTC", {
+            hour: "2-digit",
+            minute: "2-digit",
+            timeZone: "Asia/Ho_Chi_Minh",
+          });
+
           return {
             ...appointment,
             patientName: appointment.patient_name || "N/A",
             studentId: appointment.student_id || "N/A",
-            date: dateTime.toLocaleDateString("en-US"),
-            time: dateTime.toLocaleTimeString("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
+            date: formattedDate,
+            time: formattedTime,
           };
         });
 
         setAppointments(filteredAppointments);
       } else {
         console.error(
-          "Unexpected response format: appointments is not an array.",
-          appointmentsArray
+            "Unexpected response format: appointments is not an array.",
+            appointmentsArray
         );
         setAppointments([]);
       }
@@ -86,6 +91,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
       setAppointments([]);
     }
   };
+
 
   const handleEditClick = (appointmentId) => {
     setActiveEditPopup((prev) => (prev === appointmentId ? null : appointmentId));

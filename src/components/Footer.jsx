@@ -10,31 +10,31 @@ import {
 const Footer = () => {
   return (
       <div className="flex flex-col min-h-screen">
-        {/* Main Content (Replace with your actual content) */}
+        {/* Main Content */}
         <div className="flex-grow">
           {/* Add your main page content here */}
         </div>
         {/* Footer Section */}
         <footer className="bg-white">
           <div className="container mx-auto px-8 md:px-16 lg:px-24 my-16 py-20">
-            <div className="flex flex-col mb-12 text-sm lg:flex-row lg:justify-between lg:items-start">
+            <div className="flex flex-col mb-12 text-sm lg:flex-row lg:justify-between lg:items-start lg:text-left text-center gap-8">
               {/* Logo and Description */}
-              <div className="flex flex-col items-center lg:items-start mb-10 lg:mb-0 lg:w-1/3 text-center lg:text-left">
+              <div className="flex flex-col items-center lg:items-start mb-10 lg:mb-0 lg:w-1/3">
                 <img
                     src={assets.logo}
-                    className="mb-5 w-32 ml-20"
+                    className="mb-5 w-32"
                     alt="IU Health Care Logo"
                 />
-                <p className="w-full md:w-2/3 text-gray-600 text-center">
+                <p className="w-full md:w-2/3 text-gray-600">
                   Your health is our passion. We provide compassionate,
-                  personalized care for your well-being
+                  personalized care for your well-being.
                 </p>
               </div>
 
               {/* Links Section */}
               <div className="flex flex-col lg:flex-row gap-6 lg:gap-0 justify-between lg:w-2/3">
-                <div className="flex-1 mb-10 lg:mb-0">
-                  <p className="text-xl font-semibold mb-4 text-center lg:text-left">
+                <div className="flex-1">
+                  <p className="text-xl font-semibold mb-4">
                     Learn more
                   </p>
                   <ul className="flex flex-col gap-2 text-gray-600">
@@ -54,11 +54,11 @@ const Footer = () => {
                 </div>
 
                 {/* Contact Section */}
-                <div className="flex-1 mb-10 lg:mb-0">
-                  <p className="text-xl font-semibold mb-4 text-center lg:text-left">
+                <div className="flex-1">
+                  <p className="text-xl font-semibold mb-4">
                     Contact
                   </p>
-                  <ul className="flex flex-col gap-2 text-gray-600 text-center lg:text-left">
+                  <ul className="flex flex-col gap-2 text-gray-600">
                     <li>123 Health St.</li>
                     <li>Quarter 6, Linh Trung Ward, Thu Duc City</li>
                     <li>Phone: (123) 456-7890</li>
@@ -67,11 +67,11 @@ const Footer = () => {
                 </div>
 
                 {/* Social Media Section */}
-                <div className="flex-1 flex flex-col items-center lg:items-start">
-                  <p className="text-xl font-semibold mb-4 text-center lg:text-left">
+                <div className="flex-1">
+                  <p className="text-xl font-semibold mb-4">
                     Follow Us
                   </p>
-                  <ul className="flex gap-4">
+                  <ul className="flex justify-center lg:justify-start gap-4">
                     <li>
                       <div className="p-2 rounded-full bg-gray-200 hover:bg-blue-300 transition-all">
                         <a

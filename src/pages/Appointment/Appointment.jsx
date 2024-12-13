@@ -7,11 +7,11 @@ import SearchForm from "./SearchForm";
 import { Api } from "../../utils/api.ts";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { assets } from "../../assets/assets";
+
 
 const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
   const [appointments, setAppointments] = useState([]);
-  const [daysWithAppointments, setDaysWithAppointments] = useState([]);
+  const [  setDaysWithAppointments] = useState([]);
   const [showSearchPopup, setShowSearchPopup] = useState(false);
   const [editingAppointment, setEditingAppointment] = useState(null);
   const [newDateTime, setNewDateTime] = useState("");
@@ -60,13 +60,18 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
 
       if (Array.isArray(appointmentsArray)) {
         const filteredAppointments = appointmentsArray.map((appointment) => {
-          const [datePart, timePart] = appointment.appointment_time.split('T');
           const appointmentDate = new Date(appointment.appointment_time);
-          const formattedDate = appointmentDate.toLocaleDateString("UTC", { timeZone: "Asia/Ho_Chi_Minh" });
-          const formattedTime = appointmentDate.toLocaleTimeString("UTC", {
+          appointmentDate.setHours(appointmentDate.getHours() - 7); // Điều chỉnh múi giờ
+
+          const formattedDate = appointmentDate.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+
+          const formattedTime = appointmentDate.toLocaleTimeString("en-GB", {
             hour: "2-digit",
             minute: "2-digit",
-            timeZone: "Asia/Ho_Chi_Minh",
           });
 
           return {
@@ -91,7 +96,6 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
       setAppointments([]);
     }
   };
-
 
   const handleEditClick = (appointmentId) => {
     setActiveEditPopup((prev) => (prev === appointmentId ? null : appointmentId));
@@ -261,12 +265,9 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                                 {appointment.time}
                               </p>
                               <p className="font-light mx-5">
-                                {new Date(appointment.date).toLocaleDateString("en-US", {
-                                  weekday: "short",
-                                  day: "numeric",
-                                  month: "short",
-                                })}
+                                {appointment.date}
                               </p>
+
                             </div>
                             <button
                                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"

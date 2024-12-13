@@ -9,7 +9,6 @@ const Sidebar = () => {
 
     return (
         <div className="flex">
-            {/* Mobile Toggle Button */}
             <button
                 className="md:hidden fixed top-4 left-4 z-50 text-gray-800"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -63,7 +62,6 @@ const Sidebar = () => {
     );
 };
 
-// Menu Item Component
 const MenuItem = ({ to, icon, label, extraClass = "" }) => (
     <div
         className={`group flex items-center space-x-24 text-2xl p-3 rounded-lg cursor-pointer hover:bg-blue-200 hover:bg-opacity-50 hover:text-blue-700 transition-colors duration-300 ml-1 mr-1 ${extraClass}`}

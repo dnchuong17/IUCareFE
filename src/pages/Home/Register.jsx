@@ -105,221 +105,202 @@ const Register = () => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.5 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{
-        duration: 0.5,
-        delay: 0.75,
-        ease: [0, 0.71, 0.2, 1.01],
-      }}
-      className="relative px-20"
-    >
-      <div className="flex flex-col lg:flex-row bg-white px-30 rounded-3xl border-2 border-blue-500 py-35">
-        <div className="w-full lg:w-2/5 flex flex-col items-center justify-center p-12 bg-cover bg-center">
-          <h1 className="text-5xl font-semibold text-blue-500 drop-shadow-lg text-center">
-            Welcome to <br /> IU Health Care
-          </h1>
-          <p className="font-medium text-lg text-gray-500 mt-4 text-center">
-            Please enter your details.
-          </p>
-        </div>
+      <motion.div
+          initial={{opacity: 0, scale: 0.5}}
+          animate={{opacity: 1, scale: 1}}
+          transition={{
+            duration: 0.5,
+            delay: 0.75,
+            ease: [0, 0.71, 0.2, 1.01],
+          }}
+          className="relative px-4 sm:px-8 md:px-20"
+      >
+        <div
+            className="flex flex-col lg:flex-row bg-white rounded-3xl border-2 border-blue-500 p-6 sm:p-10 md:p-16 shadow-lg">
+          {/* Left Section */}
+          <div className="w-full lg:w-2/5 flex flex-col items-center justify-center p-8 md:p-12 bg-cover bg-center">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-blue-500 drop-shadow-lg text-center">
+              Welcome to <br/> IU Health Care
+            </h1>
+            <p className="font-medium text-base sm:text-lg text-gray-500 mt-4 text-center">
+              Please enter your details.
+            </p>
+          </div>
 
-        <div className="w-full lg:w-1/2 py-10 px-10">
-          <p className="text-3xl mb-4">Create your account.</p>
+          {/* Right Section */}
+          <div className="w-full lg:w-3/5 py-8 px-6 sm:px-10 md:px-16">
+            <p className="text-2xl sm:text-3xl mb-4 text-center lg:text-left">
+              Create your account
+            </p>
 
-          <form className="mt-5 space-y-4" onSubmit={onSubmitHandler}>
-            <div>
-              <label className="text-lg font-medium flex items-center gap-2">
-                <FiUser className="text-gray-500"/> Doctor Name
-              </label>
-              <input
-                  type="text"
-                  value={doctorName}
-                  onChange={(e) => setDoctorName(e.target.value)}
-                  className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
-                  placeholder="Enter your name"
-                  required
-              />
-              {errorMessages.doctorName && (
-                  <p className="text-red-500">{errorMessages.doctorName}</p>
-              )}
-            </div>
+            <form className="mt-5 space-y-6" onSubmit={onSubmitHandler}>
+              {/* Input Fields */}
+              {[
+                {
+                  label: "Doctor Name",
+                  icon: <FiUser/>,
+                  type: "text",
+                  value: doctorName,
+                  onChange: setDoctorName,
+                  placeholder: "Enter your name",
+                  error: errorMessages.doctorName,
+                },
+                {
+                  label: "Address",
+                  icon: <FiHome/>,
+                  type: "text",
+                  value: address,
+                  onChange: setAddress,
+                  placeholder: "Enter your address",
+                  error: errorMessages.address,
+                },
+                {
+                  label: "Phone Number",
+                  icon: <FiPhone/>,
+                  type: "tel",
+                  value: phone,
+                  onChange: setPhone,
+                  placeholder: "Enter your phone number",
+                  error: errorMessages.phone,
+                },
+                {
+                  label: "Account",
+                  icon: <FiUserCheck/>,
+                  type: "email",
+                  value: account,
+                  onChange: setAccount,
+                  placeholder: "Enter your email",
+                  error: errorMessages.account,
+                },
+              ].map(({label, icon, type, value, onChange, placeholder, error}, index) => (
+                  <div key={index}>
+                    <label className="text-lg font-medium flex items-center gap-2">
+                      {icon} {label}
+                    </label>
+                    <input
+                        type={type}
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                        className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
+                        placeholder={placeholder}
+                        required
+                    />
+                    {error && <p className="text-red-500">{error}</p>}
+                  </div>
+              ))}
 
-            <div>
-              <label className="text-lg font-medium flex items-center gap-2">
-                <FiHome className="text-gray-500"/> Address
-              </label>
-              <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
-                  placeholder="Enter your address"
-                  required
-              />
-              {errorMessages.address && (
-                  <p className="text-red-500">{errorMessages.address}</p>
-              )}
-            </div>
+              {/* Password Fields */}
+              {[{
+                label: "Password",
+                value: password,
+                setValue: setPassword,
+                show: showPassword,
+                setShow: setShowPassword,
+                error: errorMessages.password,
+              }, {
+                label: "Confirm Password",
+                value: confirmPassword,
+                setValue: setConfirmPassword,
+                show: showConfirmPassword,
+                setShow: setShowConfirmPassword,
+                error: errorMessages.confirmPassword,
+              }].map(({label, value, setValue, show, setShow, error}, index) => (
+                  <div key={index}>
+                    <label className="text-lg font-medium flex items-center gap-2">
+                      <FiLock className="text-gray-500"/> {label}
+                    </label>
+                    <div className="relative flex">
+                      <input
+                          type={show ? "text" : "password"}
+                          value={value}
+                          onChange={(e) => setValue(e.target.value)}
+                          className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
+                          placeholder={`Enter your ${label.toLowerCase()}`}
+                          required
+                      />
+                      <div
+                          className="absolute right-3 inset-y-0 flex items-center cursor-pointer"
+                          onClick={() => setShow(!show)}
+                      >
+                        {show ? <FiEyeOff/> : <FiEye/>}
+                      </div>
+                    </div>
+                    {error && <p className="text-red-500">{error}</p>}
+                  </div>
+              ))}
 
-            <div>
-              <label className="text-lg font-medium flex items-center gap-2">
-                <FiPhone className="text-gray-500"/> Phone Number
-              </label>
-              <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
-                  placeholder="Enter your phone number"
-                  required
-              />
-              {errorMessages.phone && (
-                  <p className="text-red-500">{errorMessages.phone}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="text-lg font-medium flex items-center gap-2">
-                <FiUserCheck className="text-gray-500"/> Account
-              </label>
-              <input
-                  type="email"
-                  value={account}
-                  onChange={(e) => setAccount(e.target.value)}
-                  className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
-                  placeholder="Enter your email"
-                  required
-              />
-              {errorMessages.account && (
-                  <p className="text-red-500">{errorMessages.account}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="text-lg font-medium flex items-center gap-2">
-                <FiLock className="text-gray-500"/> Password
-              </label>
-              <div className="relative flex">
-                <input
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+              {/* Department Select */}
+              <div>
+                <label className="text-lg font-medium flex items-center gap-2">
+                  <FiClipboard className="text-gray-500"/> Department Number
+                </label>
+                <select
+                    value={departmentNumber}
+                    onChange={(e) => setDepartmentNumber(e.target.value)}
                     className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
-                    placeholder="Enter your password"
                     required
-                />
-                <div
-                    className="absolute right-3 inset-y-0 flex items-center cursor-pointer"
-                    onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <FiEyeOff/> : <FiEye/>}
-                </div>
+                  <option value="" disabled>
+                    Select your department number
+                  </option>
+                  {["203", "302", "408", "610", "612", "613", "666"].map((dept) => (
+                      <option key={dept} value={dept}>
+                        {dept}
+                      </option>
+                  ))}
+                </select>
+                {errorMessages.departmentNumber && (
+                    <p className="text-red-500">{errorMessages.departmentNumber}</p>
+                )}
               </div>
-              {errorMessages.password && (
-                  <p className="text-red-500">{errorMessages.password}</p>
-              )}
-            </div>
 
-            <div>
-              <label className="text-lg font-medium flex items-center gap-2">
-                <FiLock className="text-gray-500"/> Confirm Password
-              </label>
-              <div className="relative flex">
+              {/* Policy Agreement */}
+              <div className="flex items-center gap-2">
                 <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
-                    placeholder="Confirm your password"
-                    required
+                    type="checkbox"
+                    checked={policyAgreement}
+                    onChange={(e) => setPolicyAgreement(e.target.checked)}
+                    className="w-5 h-5"
                 />
-                <div
-                    className="absolute right-3 inset-y-0 flex items-center cursor-pointer"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? <FiEyeOff/> : <FiEye/>}
-                </div>
+                <label className="text-gray-700">
+                  I agree to the terms and conditions.
+                </label>
               </div>
-              {errorMessages.confirmPassword && (
-                  <p className="text-red-500">{errorMessages.confirmPassword}</p>
+              {errorMessages.policyAgreement && (
+                  <p className="text-red-500">{errorMessages.policyAgreement}</p>
               )}
-            </div>
 
-            <div>
-              <label className="text-lg font-medium flex items-center gap-2">
-                <FiClipboard className="text-gray-500"/> Department Number
-              </label>
-              <select
-                  value={departmentNumber}
-                  onChange={(e) => setDepartmentNumber(e.target.value)}
-                  className="border border-gray-300 py-2 px-4 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent shadow-lg"
-                  required
-              >
-                <option value="" disabled>
-                  Select your department number
-                </option>
-                <option value="203">203</option>
-                <option value="302">302</option>
-                <option value="408">408</option>
-                <option value="610">610</option>
-                <option value="612">612</option>
-                <option value="613">613</option>
-                <option value="666">666</option>
-
-              </select>
-              {errorMessages.departmentNumber && (
-                  <p className="text-red-500">{errorMessages.departmentNumber}</p>
-              )}
-            </div>
-
-            {/* Policy Agreement Checkbox */}
-            <div className="flex items-center gap-2">
-              <input
-                  type="checkbox"
-                  checked={policyAgreement}
-                  onChange={(e) => setPolicyAgreement(e.target.checked)}
-                  className="w-5 h-5"
-              />
-              <label className="text-gray-700">
-                I agree to the terms and conditions.
-              </label>
-            </div>
-            {errorMessages.policyAgreement && (
-                <p className="text-red-500">{errorMessages.policyAgreement}</p>
-            )}
-
-            <div className="flex flex-col mt-8 gap-y-4">
-              <button
-                  type="submit"
-                  className="active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all py-3 rounded-xl bg-blue-500 text-white text-lg font-bold"
-              >
-                Register
-              </button>
-              <div className="flexCenter gap-2 rounded-xl border-2 border-gray-100">
-                <FcGoogle/>
+              {/* Submit and Google Sign-In */}
+              <div className="flex flex-col mt-8 gap-y-4">
                 <button
-                    className="flex items-center py-3 justify-center gap-4 active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all text-lg">
-                  Sign in with Google
+                    type="submit"
+                    className="py-3 rounded-xl bg-blue-500 text-white text-lg font-bold hover:scale-[1.01] transition-all"
+                >
+                  Register
+                </button>
+                <div className="flex items-center justify-center gap-2 rounded-xl border-2 border-gray-100">
+                  <FcGoogle/>
+                  <button className="py-3 text-lg hover:scale-[1.01] transition-all">
+                    Sign in with Google
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-8 flex justify-center items-center">
+                <p className="font-medium text-base">Have an account?</p>
+                <button
+                    onClick={() => navigate("/login")}
+                    className="text-blue-500 text-base font-medium ml-2"
+                >
+                  Sign in
                 </button>
               </div>
-            </div>
-
-            <div className="mt-8 flex justify-center items-center">
-              <p className="font-medium text-base">Have an account?</p>
-              <button
-                  onClick={() => navigate("/login")}
-                  className="text-blue-500 text-base font-medium ml-2"
-              >
-                Sign in
-              </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
-      </div>
-      <ToastContainer/>
-    </motion.div>
+        <ToastContainer/>
+      </motion.div>
+
   );
 };
 

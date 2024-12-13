@@ -1,66 +1,82 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { assets } from "../assets/assets.js";
-import { FaCalendarAlt, FaUser, FaSignOutAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaUser, FaSignOutAlt, FaBars } from "react-icons/fa";
 import { HiHome } from "react-icons/hi2";
 
 const Sidebar = () => {
-  return (
-    <div className="flex">
-      <div className="absolute left-0 top-0 h-screen w-1/5 md:w-1/5.5 bg-white p-4 overflow-y-auto max-h-screen">
-        <Link to="/appointmentPage">
-          <img
-            src={assets.sidebar_logo}
-            alt="Sidebar Logo"
-            className="w-full h-auto mb-4 md:p-1 md:top-0 hover:scale-105  rounded transition-transform duration-300 top-4 left-4"
-          />
-        </Link>
-        <div className="flex flex-col space-y-5 mb-12 ">
-          <div className="group flexCenter space-x-1 bg-white-500 text-gray-600 p-2 md:p-1 rounded-lg mt-5 cursor-pointer px-3 hover:bg-blue-200 hover:bg-opacity-50 hover:text-blue-700 transition-colors duration-300">
-            <HiHome className="text-blue-300 group-hover:text-blue-700 ml-5 text-2xl" />
-            <Link
-              to="/appointmentPage"
-              className="flex items-center space-x-1 w-full"
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    return (
+        <div className="flex">
+            {/* Mobile Toggle Button */}
+            <button
+                className="md:hidden fixed top-4 left-4 z-50 text-gray-800"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              <button className="w-full text-left ml-10 mr-10 text-lg md:text-base lg:text-lg p-2 md:p-1 lg:p-3">
-                Home
-              </button>
-            </Link>
-          </div>
-          <div className="group flexCenter space-x-1 bg-white-500 text-gray-600 p-2 md:p-1 rounded-lg mt-5 cursor-pointer px-3 hover:bg-blue-200 hover:bg-opacity-50 hover:text-blue-700 transition-colors duration-300">
-            <FaCalendarAlt className="text-blue-300 group-hover:text-blue-700 ml-5 text-2xl" />
-            <Link
-              to="/tableList"
-              className="flex items-center space-x-1 w-full"
-            >
-              <button className="w-full text-left ml-10 text-lg md:text-base lg:text-lg p-2 md:p-1 lg:p-3">
-                Patient
-              </button>
-            </Link>
-          </div>
-          <div className="group flexCenter space-x-1 bg-white-500 text-gray-600 p-2 md:p-1 rounded-lg mt-5 cursor-pointer px-3 hover:bg-blue-200 hover:bg-opacity-50 hover:text-blue-700 transition-colors duration-300">
-            <FaUser className="text-blue-300 group-hover:text-blue-700 ml-5 text-2xl" />
-            <Link
-              to="/doctorProfile"
-              className="flex items-center space-x-1 w-full"
-            >
-              <button className="w-full text-left ml-10 text-lg md:text-base lg:text-lg p-2 md:p-1 lg:p-3">
-                Profile
-              </button>
-            </Link>
-          </div>
-        </div>
-        <div className="border-b-2 border-gray-100 mt-28"></div>
-        <div className="group flexCenter space-x-1 bg-white-500 text-gray-600 p-6 md:p-1 rounded-lg mt-5 cursor-pointer px-3 hover:bg-blue-200 hover:bg-opacity-50 hover:text-blue-700 transition-colors duration-300">
-          <FaSignOutAlt className="text-blue-300 group-hover:text-blue-700 ml-5 text-2xl" />
-          <Link to="/" className="flex items-center space-x-1 w-full">
-            <button className="w-full text-left ml-10 text-lg md:text-base lg:text-lg p-2 md:p-1 lg:p-3">
-              Logout
+                <FaBars className="text-3xl" />
             </button>
-          </Link>
+
+            <div
+                className={`absolute left-0 top-0 h-screen w-1/5 md:w-1/5.5 bg-white p-4 overflow-y-auto max-h-screen ${
+                    isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+                } md:translate-x-0 md:w-1/5 md:max-h-screen`}
+            >
+                <Link to="/">
+                    <img
+                        src={assets.sidebar_logo}
+                        alt="Sidebar Logo"
+                        className="w-full h-auto mb-4 md:p-1 md:top-0 hover:scale-105  rounded transition-transform duration-300 top-4 left-4"
+                    />
+                </Link>
+
+                <div className="flex flex-col space-y-5 mb-12 ">
+                    <MenuItem
+                        to="/appointmentPage"
+                        icon={<HiHome />}
+                        label="Home"
+                        className="flex items-center space-x-1 w-full"
+                    />
+                    <MenuItem
+                        to="/tableList"
+                        icon={<FaCalendarAlt />}
+                        label="Patient"
+                        className="flex items-center space-x-1 w-full"
+                    />
+                    <MenuItem
+                        to="/doctorProfile"
+                        icon={<FaUser />}
+                        label="Profile"
+                    />
+                </div>
+
+                <div className="border-b-2 border-gray-100 mt-28"></div>
+
+                <MenuItem
+                    to="/"
+                    icon={<FaSignOutAlt />}
+                    label="Logout"
+                    extraClass="mt-5"
+                />
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
+
+// Menu Item Component
+const MenuItem = ({ to, icon, label, extraClass = "" }) => (
+    <div
+        className={`group flex items-center space-x-24 text-2xl p-3 rounded-lg cursor-pointer hover:bg-blue-200 hover:bg-opacity-50 hover:text-blue-700 transition-colors duration-300 ml-1 mr-1 ${extraClass}`}
+    >
+        <div className="text-blue-300 group-hover:text-blue-700 text-2xl">
+            {icon}
+        </div>
+        <Link to={to} className="flex-grow">
+            <button className="w-full text-left text-lg md:text-base lg:text-lg">
+                {label}
+            </button>
+        </Link>
+    </div>
+);
 
 export default Sidebar;

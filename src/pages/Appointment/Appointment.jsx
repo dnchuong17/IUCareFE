@@ -7,6 +7,8 @@ import SearchForm from "./SearchForm";
 import { Api } from "../../utils/api.ts";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaCalendarAlt } from "react-icons/fa";
+
 
 
 const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
@@ -264,11 +266,12 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                                 <FaClock className="inline-block mr-1 text-black-100"/>
                                 {appointment.time}
                               </p>
-                              <p className="font-light mx-5">
+                              <p className="font-light">
+                                <FaCalendarAlt className="inline-block mr-1 text-black-100"/>
                                 {appointment.date}
                               </p>
-
                             </div>
+
                             <button
                                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
                                 onClick={() => handleExamine(appointment)}
@@ -276,6 +279,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                               Examine
                             </button>
                           </div>
+
 
                           <hr className="my-5 border-gray-300 border-dashed"/>
 

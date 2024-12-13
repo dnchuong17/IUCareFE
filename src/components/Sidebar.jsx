@@ -68,9 +68,11 @@ const MenuItem = ({ to, icon, label, extraClass = "" }) => (
     <div
         className={`group flex items-center space-x-24 text-2xl p-3 rounded-lg cursor-pointer hover:bg-blue-200 hover:bg-opacity-50 hover:text-blue-700 transition-colors duration-300 ml-1 mr-1 ${extraClass}`}
     >
-        <div className="text-blue-300 group-hover:text-blue-700 text-2xl">
+        <Link to={to}>
+        <button className="text-blue-300 group-hover:text-blue-700 text-2xl">
             {icon}
-        </div>
+        </button>
+        </Link>
         <Link to={to} className="flex-grow">
             <button className="w-full text-left text-lg md:text-base lg:text-lg">
                 {label}

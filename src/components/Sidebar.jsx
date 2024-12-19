@@ -21,7 +21,7 @@ const Sidebar = () => {
                     isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
                 } md:translate-x-0 md:w-1/5 md:max-h-screen`}
             >
-                <Link to="/">
+                <Link to="/appointmentPage">
                     <img
                         src={assets.sidebar_logo}
                         alt="Sidebar Logo"

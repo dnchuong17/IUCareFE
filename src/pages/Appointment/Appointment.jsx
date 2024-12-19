@@ -7,13 +7,11 @@ import SearchForm from "./SearchForm";
 import { Api } from "../../utils/api.ts";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaCalendarAlt } from "react-icons/fa";
-
-
+import { assets } from "../../assets/assets";
 
 const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
   const [appointments, setAppointments] = useState([]);
-  const [  setDaysWithAppointments] = useState([]);
+  const [daysWithAppointments, setDaysWithAppointments] = useState([]);
   const [showSearchPopup, setShowSearchPopup] = useState(false);
   const [editingAppointment, setEditingAppointment] = useState(null);
   const [newDateTime, setNewDateTime] = useState("");
@@ -45,8 +43,8 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
       setAppointments(appointmentsArray);
 
       const days = appointmentsArray.map(
-        (appointment) =>
-          new Date(appointment.appointment_time).toISOString().split("T")[0]
+          (appointment) =>
+              new Date(appointment.appointment_time).toISOString().split("T")[0]
       );
       setDaysWithAppointments(days);
       onDaysWithAppointmentsChange(days);
@@ -62,18 +60,13 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
 
       if (Array.isArray(appointmentsArray)) {
         const filteredAppointments = appointmentsArray.map((appointment) => {
+          const [datePart, timePart] = appointment.appointment_time.split('T');
           const appointmentDate = new Date(appointment.appointment_time);
-          appointmentDate.setHours(appointmentDate.getHours() - 7); // Điều chỉnh múi giờ
-
-          const formattedDate = appointmentDate.toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-          });
-
-          const formattedTime = appointmentDate.toLocaleTimeString("en-GB", {
+          const formattedDate = appointmentDate.toLocaleDateString("UTC", { timeZone: "Asia/Ho_Chi_Minh" });
+          const formattedTime = appointmentDate.toLocaleTimeString("UTC", {
             hour: "2-digit",
             minute: "2-digit",
+            timeZone: "Asia/Ho_Chi_Minh",
           });
 
           return {
@@ -99,6 +92,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
     }
   };
 
+
   const handleEditClick = (appointmentId) => {
     setActiveEditPopup((prev) => (prev === appointmentId ? null : appointmentId));
   };
@@ -113,7 +107,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
 
   const handleSaveDateTime = async () => {
     if (!newDateTime) {
-       toast.info("No records found for this patient.");      return;
+      toast.info("No records found for this patient.");      return;
     }
 
     try {
@@ -146,13 +140,13 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
 
       setEditingAppointment(null);
       toast.success("Appointment time updated successfully."),
-        {
-          autoclose: 1000,
-        };
+          {
+            autoclose: 1000,
+          };
     } catch (error) {
       console.error(
-        "Error updating appointment:",
-        error.response?.data || error.message
+          "Error updating appointment:",
+          error.response?.data || error.message
       );
       toast.error("Failed to update appointment. Please try again.");
     }
@@ -221,57 +215,63 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
   };
 
   return (
-      <div className="container mx-auto p-4 md:p-8 lg:p-12">
+      <div className="absolute p-4 max-h-[550px] w-4/5 overflow-y-auto">
+        {/* Left Section */}
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <div className="mt-4 ml-3">
-            {/* Appointment Section */}
+            {/* Appointments and Plus Button Wrapper */}
             <div className="flex flex-wrap gap-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+              {/* Appointments Grid */}
 
-                {/* Add New Appointment Button */}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full ml-4">
+
+                {/* Plus Button */}
                 <button
-                    className="hover:bg-gray-100 cursor-pointer"
+                    className=" hover:bg-gray-200 hover:border-gray-700 cursor-pointer"
                     onClick={() => setShowSearchPopup(true)}
                 >
-                  <div
-                      className="border border-gray-300 p-6 rounded-lg flex items-center justify-center border-dashed h-[250px]">
+                  <div className="border border-gray p-4 rounded-lg flex items-center justify-center border-dashed border-gray-40 h-[250px]">
                     <div
-                        className="flex items-center justify-center w-10 h-10 border-2 border-dashed border-gray-400 rounded-full transition duration-300">
+                        className="flex items-center justify-center w-10 h-10 border-2 border-dashed border-gray-400 rounded-full transition duration-300"
+                    >
                       <FaPlus className="text-gray-400 text-2xl"/>
                     </div>
                   </div>
                 </button>
-
-                {/* Appointment Cards */}
                 {appointments.length > 0 ? (
                     appointments.map((appointment, index) => (
                         <div
                             key={index}
-                            className="border border-gray-300 p-4 rounded-lg relative"
+                            className="border border-gray p-4 rounded-lg relative"
                         >
                           <div className="flex justify-between text-gray-700">
-                            <p className="font-light text-gray-400">Name</p>
+                            <p className="font-light text-gray-400">
+                              <strong>Name</strong>
+                            </p>
                             <p className="text-gray-700">{appointment.patientName}</p>
                           </div>
                           <div className="flex justify-between text-gray-700">
-                            <p className="font-light text-gray-400">Student ID</p>
+                            <p className="font-light text-gray-400">
+                              <strong>Student ID</strong>
+                            </p>
                             <p className="text-gray-700">{appointment.studentId}</p>
                           </div>
-
                           <hr className="my-5 border-gray-300 border-dashed"/>
-
                           <div className="flex justify-between items-center text-gray-700">
                             <div>
                               <p className="font-light">
-                                <FaClock className="inline-block mr-1 text-black-100"/>
+                                <FaClock className="inline-block mr-1 text-black-100"/>{" "}
                                 {appointment.time}
                               </p>
-                              <p className="font-light">
-                                <FaCalendarAlt className="inline-block mr-1 text-black-100"/>
-                                {appointment.date}
+                              <p className="font-light mx-5">
+                                {new Date(appointment.date).toLocaleDateString("en-US", {
+                                  weekday: "short",
+                                  day: "numeric",
+                                  month: "short",
+                                })}
                               </p>
                             </div>
-
                             <button
                                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
                                 onClick={() => handleExamine(appointment)}
@@ -279,11 +279,10 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                               Examine
                             </button>
                           </div>
-
-
                           <hr className="my-5 border-gray-300 border-dashed"/>
 
                           <div className="flex justify-between items-center mt-4">
+                            {/* Status */}
                             <p
                                 className={`text-sm font-semibold ${
                                     appointment.appointment_status === "APPROVED"
@@ -296,6 +295,8 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                               {appointment.appointment_status}
                             </p>
 
+
+                            {/* Edit */}
                             <button
                                 className="text-orange-500 font-medium cursor-pointer hover:underline"
                                 onClick={() => handleEditClick(appointment.appointment_id)}
@@ -303,7 +304,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                               Edit
                             </button>
 
-                            {/* Edit Pop-up */}
+                            {/* Pop-up Edit */}
                             {activeEditPopup === appointment.appointment_id && (
                                 <div
                                     className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 shadow-md rounded-md z-50">
@@ -329,19 +330,39 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                                     Cancel
                                   </button>
                                 </div>
+
                             )}
                           </div>
                         </div>
                     ))
                 ) : (
-                    <div className="flex flex-col items-center justify-center space-y-4 mt-8">
-                      <p className="text-xl font-semibold text-orange-300">
-                        You have no appointment today
-                      </p>
-                      <p className="text-md text-gray-300">Keep calm and have a rest day</p>
+                    <div
+                        className="ml-72 mr-32 mb-20 z-20 height-80 flex items-center justify-center"
+                        style={{
+                          width: "calc(66.6667% - 90px)",
+                        }}
+                    >
+                      {/*/!* Left Section *!/*/}
+                      <div className="flex flex-col items-center justify-center space-x-8 ml-26 mt-8">
+                        <div className="justify-center">
+                          <p className="text-xl font-semibold text-orange-300 whitespace-nowrap">
+                            You have no appointment today
+                          </p>
+                          <p className="text-md ml-10 text-gray-300 whitespace-nowrap">
+                            Keep calm and have a rest day
+                          </p>
+                        </div>
+                        {/*      <img*/}
+                        {/*  src={assets.restday} // Replace with your image path*/}
+                        {/*  alt="No appointments"*/}
+                        {/*  className="w-56 h-56 gap-4"*/}
+                        {/*/>*/}
+                      </div>
                     </div>
                 )}
+
               </div>
+
             </div>
 
             {/* Search Form */}
@@ -351,9 +372,8 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             />
           </div>
         </div>
-        <ToastContainer/>
+        <ToastContainer />
       </div>
-
 
   );
 };

@@ -25,22 +25,20 @@ const Sidebar = () => {
                     <img
                         src={assets.sidebar_logo}
                         alt="Sidebar Logo"
-                        className="w-full h-auto mb-4 md:p-1 md:top-0 hover:scale-105  rounded transition-transform duration-300 top-4 left-4"
+                        className="w-full h-auto mb-4 md:p-1 md:top-0 hover:scale-105 rounded transition-transform duration-300 top-4 left-4"
                     />
                 </Link>
 
-                <div className="flex flex-col space-y-5 mb-12 ">
+                <div className="flex flex-col space-y-5 mb-12">
                     <MenuItem
                         to="/appointmentPage"
                         icon={<HiHome />}
                         label="Home"
-                        className="flex items-center space-x-1 w-full"
                     />
                     <MenuItem
                         to="/tableList"
                         icon={<FaCalendarAlt />}
                         label="Patient"
-                        className="flex items-center space-x-1 w-full"
                     />
                     <MenuItem
                         to="/doctorProfile"
@@ -56,20 +54,24 @@ const Sidebar = () => {
                     icon={<FaSignOutAlt />}
                     label="Logout"
                     extraClass="mt-5"
+                    onClick={() => {
+                        localStorage.clear(); // Xóa toàn bộ dữ liệu
+                    }}
                 />
             </div>
         </div>
     );
 };
 
-const MenuItem = ({ to, icon, label, extraClass = "" }) => (
+const MenuItem = ({ to, icon, label, extraClass = "", onClick }) => (
     <div
         className={`group flex items-center space-x-24 text-2xl p-3 rounded-lg cursor-pointer hover:bg-blue-200 hover:bg-opacity-50 hover:text-blue-700 transition-colors duration-300 ml-1 mr-1 ${extraClass}`}
+        onClick={onClick}
     >
         <Link to={to}>
-        <button className="text-blue-300 group-hover:text-blue-700 text-2xl">
-            {icon}
-        </button>
+            <button className="text-blue-300 group-hover:text-blue-700 text-2xl">
+                {icon}
+            </button>
         </Link>
         <Link to={to} className="flex-grow">
             <button className="w-full text-left text-lg md:text-base lg:text-lg">

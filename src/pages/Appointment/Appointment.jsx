@@ -59,7 +59,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
       if (Array.isArray(appointmentsArray)) {
         const filteredAppointments = appointmentsArray.map((appointment) => {
           const appointmentDate = new Date(appointment.appointment_time);
-          appointmentDate.setHours(appointmentDate.getHours() - 7); // Điều chỉnh múi giờ
+          appointmentDate.setHours(appointmentDate.getHours() - 7); // Adjust timezone
 
           const formattedDate = appointmentDate.toLocaleDateString("en-GB", {
             day: "2-digit",
@@ -72,31 +72,29 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             minute: "2-digit",
           });
 
+          // Check if the appointment time has passed
+          const currentDateTime = new Date();
+          const isPastAppointment = currentDateTime >= appointmentDate;
+
           return {
             ...appointment,
             patientName: appointment.patient_name || "N/A",
             studentId: appointment.student_id || "N/A",
             date: formattedDate,
             time: formattedTime,
+            isPastAppointment, // Add flag to indicate if the appointment has passed
           };
         });
-
         setAppointments(filteredAppointments);
-      } else {
-        console.error(
-            "Unexpected response format: appointments is not an array.",
-            appointmentsArray
-        );
-        setAppointments([]);
       }
     } catch (error) {
-      console.error("Error fetching appointments for day:", error);
-      setAppointments([]);
+      console.error("Error fetching appointments for the day:", error);
     }
   };
 
 
-  const handleEditClick = (appointmentId) => {
+
+      const handleEditClick = (appointmentId) => {
     setActiveEditPopup((prev) => (prev === appointmentId ? null : appointmentId));
   };
 
@@ -112,6 +110,14 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
   const handleSaveDateTime = async () => {
     if (!newDateTime) {
       toast.info("Please select a new date and time.");
+      return;
+    }
+
+    const selectedDateTime = new Date (newDateTime);
+    const currentDateTime = new Date();
+
+    if (selectedDateTime <= currentDateTime) {
+      toast.error("Selected time must be in the future.");
       return;
     }
 
@@ -208,25 +214,25 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
   };
 
 
+      const handleExamine = (appointment) => {
+        if (appointment.isPastAppointment) {
+          // appointment time has passed
+          navigate("/medicalRecord", { state: { appointment } });
+        } else {
+          //appointment time has not passed
+          toast.info("You cannot access the medical record before the appointment time", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+        }
+      };
 
 
-  const handleExamine = (appointment) => {
-    const appointmentDateTime = new Date (appointment.appointment_time);
-    const currentDateTime = new Date();
 
-    if (appointmentDateTime > currentDateTime) {
-      toast.info("You cannot access the medical record before the appointment time", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
-      return;
-    }
-    navigate("/medicalRecord", { state: { appointment } });
-  };
 
   return (
       <div className="absolute p-4 max-h-[550px] w-4/5 overflow-y-auto">
@@ -328,13 +334,16 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                                   {editingAppointment &&
                                   editingAppointment.appointment_id === appointment.appointment_id ? (
                                       <div>
-                                        <label className="block text-gray-600 font-medium mb-2">New Appointment Time</label>
+                                        <label className="block text-gray-600 font-medium mb-2">New Appointment
+                                          Time</label>
                                         <input
                                             type="datetime-local"
                                             value={newDateTime}
                                             onChange={(e) => setNewDateTime(e.target.value)}
+                                            min={new Date().toISOString().slice(0, 16)}
                                             className="block w-full px-4 py-2 border rounded-md mb-4"
                                         />
+
 
                                         <button
                                             onClick={handleSaveDateTime}

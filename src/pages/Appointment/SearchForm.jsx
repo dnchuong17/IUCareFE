@@ -166,26 +166,26 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
                   Booking Appointment
                 </h2>
                 <div className="flex justify-center mb-4">
-                  <button
-                      className={`px-4 py-2 rounded-l-full ${
-                          isSearchMode
-                              ? "bg-blue-600 text-white"
-                              : "bg-gray-200 text-gray-700"
-                      }`}
-                      onClick={() => setIsSearchMode(true)}
-                  >
-                    Search Mode
-                  </button>
-                  <button
-                      className={`px-4 py-2 rounded-r-full ${
-                          !isSearchMode
-                              ? "bg-blue-600 text-white"
-                              : "bg-gray-200 text-gray-700"
-                      }`}
-                      onClick={() => setIsSearchMode(false)}
-                  >
-                    Form Mode
-                  </button>
+                  {/*<button*/}
+                  {/*    className={`px-4 py-2 rounded-l-full ${*/}
+                  {/*        isSearchMode*/}
+                  {/*            ? "bg-blue-600 text-white"*/}
+                  {/*            : "bg-gray-200 text-gray-700"*/}
+                  {/*    }`}*/}
+                  {/*    onClick={() => setIsSearchMode(true)}*/}
+                  {/*>*/}
+                  {/*  Search Mode*/}
+                  {/*</button>*/}
+                  {/*<button*/}
+                  {/*    className={`px-4 py-2 rounded-r-full ${*/}
+                  {/*        !isSearchMode*/}
+                  {/*            ? "bg-blue-600 text-white"*/}
+                  {/*            : "bg-gray-200 text-gray-700"*/}
+                  {/*    }`}*/}
+                  {/*    onClick={() => setIsSearchMode(false)}*/}
+                  {/*>*/}
+                  {/*  Form Mode*/}
+                  {/*</button>*/}
                 </div>
                 <hr className="mb-4" />
 

@@ -3,11 +3,9 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import {FaClock, FaPlus, FaTimes} from "react-icons/fa";
 import SearchForm from "./SearchForm";
-// import Sidebar from "../../components/Sidebar"; // Adjust the path as necessary
 import { Api } from "../../utils/api.ts";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { assets } from "../../assets/assets";
 
 const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
   const [appointments, setAppointments] = useState([]);

@@ -211,6 +211,20 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
 
 
   const handleExamine = (appointment) => {
+    const appointmentDateTime = new Date (appointment.appointment_time);
+    const currentDateTime = new Date();
+
+    if (appointmentDateTime > currentDateTime) {
+      toast.info("You cannot access the medical record before the appointment time", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      return;
+    }
     navigate("/medicalRecord", { state: { appointment } });
   };
 

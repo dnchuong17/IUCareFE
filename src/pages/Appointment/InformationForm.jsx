@@ -66,7 +66,10 @@ const InformationForm = ({ isOpen, onClose }) => {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          onClose: () => navigate("/appointmentPage"),
+          onClose: () => {
+            navigate("/appointmentPage");
+            onClose(); // Close the popup after the toast
+          },
         });
       } else {
         toast.error(

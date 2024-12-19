@@ -121,15 +121,17 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
     try {
       setIsLoading(true);
       await api.createAppointment(appointmentRequest);
-      toast.success("Create appointment successfully!", {
+
+      toast.success("Appointment created successfully!", {
         position: "top-right",
-        autoClose: 800,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        onClose: () => onClose(),
+        autoClose: 2000,  // Close after 2 seconds
+        onClose: () => {
+          setIsInfoFormOpen(false);
+          onClose();  // Close the main pop-up
+        }
       });
+
+      // Reset form state
       setSelectedPatient(null);
       setAppointmentDateTime("");
       onAppointmentCreated?.({
@@ -144,6 +146,7 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
       setIsLoading(false);
     }
   };
+
 
   if (!isOpen && !isInfoFormOpen) return null;
 

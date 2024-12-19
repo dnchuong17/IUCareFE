@@ -112,6 +112,19 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
       return;
     }
 
+    // Convert appointmentDateTime to a Date object
+    const selectedDateTime = new Date(appointmentDateTime);
+    const currentDateTime = new Date();
+
+    // Check if the selected appointment date and time is in the past
+    if (selectedDateTime < currentDateTime) {
+      toast.error("Appointment date and time cannot be in the past.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
     const appointmentRequest = {
       doctorId,
       patientId: selectedPatient.patientId,
@@ -124,11 +137,11 @@ const SearchForm = ({ isOpen, onClose, onAppointmentCreated }) => {
 
       toast.success("Appointment created successfully!", {
         position: "top-right",
-        autoClose: 2000,  // Close after 2 seconds
+        autoClose: 2000, // Close after 2 seconds
         onClose: () => {
           setIsInfoFormOpen(false);
-          onClose();  // Close the main pop-up
-        }
+          onClose(); // Close the main pop-up
+        },
       });
 
       // Reset form state

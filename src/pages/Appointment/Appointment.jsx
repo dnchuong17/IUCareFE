@@ -82,15 +82,13 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             studentId: appointment.student_id || "N/A",
             date: formattedDate,
             time: formattedTime,
-            isPastAppointment: new Date() >= appointmentDate, // Check if time has passed
+            isPastAppointment, // Add flag to indicate if the appointment has passed
           };
         });
         setAppointments(filteredAppointments);
       }
     } catch (error) {
       console.error("Error fetching appointments for the day:", error);
-      toast.error("Failed to fetch appointments for the day.");
-
     }
   };
 
@@ -115,11 +113,11 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
       return;
     }
 
-    const selectedDateTime = new Date(newDateTime);
+    const selectedDateTime = new Date (newDateTime);
     const currentDateTime = new Date();
 
     if (selectedDateTime <= currentDateTime) {
-      toast.error("Appointment time must be in the future!");
+      toast.error("Selected time must be in the future.");
       return;
     }
 
@@ -130,46 +128,34 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
         time: newDateTime,
       };
 
-      const response = await api.updateAppointmentTime(
+      await api.updateAppointmentTime(
           editingAppointment.appointment_id,
           appointmentRequest
       );
 
-      if (response.message === "Appointment time must be in the future!") {
-        toast.error("Appointment time must be in the future!");
-      } else if (response.message === "Please select a different time slot!") {
-        toast.error("This time slot is already booked. Please choose another time!");
-      } else {
-        // Update the appointment list
-        setAppointments((prevAppointments) =>
-            prevAppointments.map((appointment) =>
-                appointment.appointment_id === editingAppointment.appointment_id
-                    ? {
-                      ...appointment,
-                      date: selectedDateTime.toLocaleDateString("en-US"),
-                      time: selectedDateTime.toLocaleTimeString("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      }),
-                    }
-                    : appointment
-            )
-        );
+      setAppointments((prevAppointments) =>
+          prevAppointments.map((appointment) =>
+              appointment.appointment_id === editingAppointment.appointment_id
+                  ? {
+                    ...appointment,
+                    date: new Date(newDateTime).toLocaleDateString("en-US"),
+                    time: new Date(newDateTime).toLocaleTimeString("en-US", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    }),
+                  }
+                  : appointment
+          )
+      );
 
-        setEditingAppointment(null);
-        setActiveEditPopup(null);
-        toast.success("Appointment updated successfully.");
-      }
+      setEditingAppointment(null);
+      setActiveEditPopup(null);
+      toast.success("Appointment updated successfully.");
     } catch (error) {
       console.error("Error updating appointment:", error);
-
-      const errorMessage = error.response?.data?.message || error.message;
-      toast.error(errorMessage || "Failed to update appointment. Please try again.");
+      toast.error("Failed to update appointment. Please try again.");
     }
   };
-
-
-
 
 
   const handleCancelAppointment = async (appointmentId) => {

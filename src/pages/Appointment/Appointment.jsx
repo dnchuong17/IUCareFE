@@ -3,10 +3,9 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import {FaClock, FaPlus, FaTimes} from "react-icons/fa";
 import SearchForm from "./SearchForm";
-// import Sidebar from "../../components/Sidebar"; // Adjust the path as necessary
 import { Api } from "../../utils/api.ts";
-import { motion } from 'framer-motion'
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
   const [appointments, setAppointments] = useState([]);
@@ -59,32 +58,41 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
 
       if (Array.isArray(appointmentsArray)) {
         const filteredAppointments = appointmentsArray.map((appointment) => {
-          const dateTime = new Date(appointment.appointment_time);
+          const appointmentDate = new Date(appointment.appointment_time);
+          appointmentDate.setHours(appointmentDate.getHours() - 7); // Adjust timezone
+
+          const formattedDate = appointmentDate.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+
+          const formattedTime = appointmentDate.toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+
+          // Check if the appointment time has passed
+          const currentDateTime = new Date();
+          const isPastAppointment = currentDateTime >= appointmentDate;
+
           return {
             ...appointment,
             patientName: appointment.patient_name || "N/A",
             studentId: appointment.student_id || "N/A",
-            date: dateTime.toLocaleDateString("en-US"),
-            time: dateTime.toLocaleTimeString("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
+            date: formattedDate,
+            time: formattedTime,
+            isPastAppointment, // Add flag to indicate if the appointment has passed
           };
         });
-
         setAppointments(filteredAppointments);
-      } else {
-        console.error(
-            "Unexpected response format: appointments is not an array.",
-            appointmentsArray
-        );
-        setAppointments([]);
       }
     } catch (error) {
-      console.error("Error fetching appointments for day:", error);
-      setAppointments([]);
+      console.error("Error fetching appointments for the day:", error);
     }
   };
+
+
 
   const handleEditClick = (appointmentId) => {
     setActiveEditPopup((prev) => (prev === appointmentId ? null : appointmentId));
@@ -94,13 +102,22 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
   const handleEditAppointment = (appointment) => {
     setEditingAppointment(appointment);
     setNewDateTime("");
-    setActiveEditPopup(null);
+    setActiveEditPopup(appointment.appointment_id);
   };
+
 
 
   const handleSaveDateTime = async () => {
     if (!newDateTime) {
-      alert("Please provide a new date and time.");
+      toast.info("Please select a new date and time.");
+      return;
+    }
+
+    const selectedDateTime = new Date (newDateTime);
+    const currentDateTime = new Date();
+
+    if (selectedDateTime <= currentDateTime) {
+      toast.error("Selected time must be in the future.");
       return;
     }
 
@@ -131,23 +148,28 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
           )
       );
 
-
       setEditingAppointment(null);
-      alert("Appointment time updated successfully.");
+      setActiveEditPopup(null);
+      toast.success("Appointment updated successfully.");
     } catch (error) {
-      console.error(
-          "Error updating appointment:",
-          error.response?.data || error.message
-      );
-      alert("Failed to update appointment. Please try again.");
+      console.error("Error updating appointment:", error);
+      toast.error("Failed to update appointment. Please try again.");
     }
   };
+
 
   const handleCancelAppointment = async (appointmentId) => {
     try {
       const appointment = appointments.find(app => app.appointment_id === appointmentId);
       if (!appointment) {
-        alert("Appointment not found");
+        toast.error("Appointment not found", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
         return;
       }
 
@@ -167,87 +189,106 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
           )
       );
 
-      alert("Appointment status updated to CANCELLED.");
-      setActiveEditPopup(null); // Close popup after cancel
+      toast.success("Appointment status updated to CANCELLED.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+
+      setActiveEditPopup(null);
 
     } catch (error) {
       console.error("Error cancelling appointment:", error.response?.data || error.message);
-      alert("Failed to cancel appointment. Please try again.");
+      toast.error("Failed to cancel appointment. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    }
+  };
+
+
+  const handleExamine = (appointment) => {
+    if (appointment.isPastAppointment) {
+      // appointment time has passed
+      navigate("/medicalRecord", { state: { appointment } });
+    } else {
+      //appointment time has not passed
+      toast.info("You cannot access the medical record before the appointment time", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
 
 
 
-  const handleExamine = (appointment) => {
-    navigate("/medicalRecord", { state: { appointment } });
-  };
-
   return (
-      <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            duration: 0.75,
-            delay: 0.75,
-            ease: [0, 0.71, 0.2, 1.01],
-          }}
-          className="absolute h-screen p-4 max-h-screen w-4/5">
+      <div className="absolute p-4 max-h-[550px] w-4/5 overflow-y-auto">
         {/* Left Section */}
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <div className="mt-4 ml-3">
-            {/* Open SearchForm */}
-            <button
-                className="flex items-center bg-blue-400 border border-blue-300 text-white rounded-full  hover:bg-blue-700 transition duration-300 mt-1 mb-6 py-1 px-3"
-                onClick={() => setShowSearchPopup(true)}
-            >
-              <FaPlus className="mr-2 text-sm"/>
-              Create Appointment
-            </button>
+            {/* Appointments and Plus Button Wrapper */}
+            <div className="flex flex-wrap gap-4">
+              {/* Appointments Grid */}
 
-            <SearchForm
-                isOpen={showSearchPopup}
-                onClose={() => setShowSearchPopup(false)}
-            />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {appointments.length > 0 ? (
-                  appointments.map((appointment, index) => (
-                      <div
-                          key={index}
-                          className="border border-gray p-4 rounded-lg relative"
-                      >
-                        <div className="flex justify-between text-gray-700">
-                          <p className="font-light text-gray-400">
-                            <strong>Name</strong>
-                          </p>
-                          <p className="text-gray-700">{appointment.patientName}</p>
-                        </div>
-                        <div className="flex justify-between text-gray-700">
-                          <p className="font-light text-gray-400">
-                            <strong>Student ID</strong>
-                          </p>
-                          <p className="text-gray-700">{appointment.studentId}</p>
-                        </div>
-                        <hr className="my-5 border-gray-300 border-dashed"/>
-                        <div className="flex justify-between items-center text-gray-700">
-                          <div>
-                            <p className="font-light">
-                              <FaClock className="inline-block mr-1 text-black-100"/>{" "}
-                              {appointment.time}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full ml-4">
+
+                {/* Plus Button */}
+                <button
+                    className=" hover:bg-gray-200 hover:border-gray-700 cursor-pointer"
+                    onClick={() => setShowSearchPopup(true)}
+                >
+                  <div className="border border-gray p-4 rounded-lg flex items-center justify-center border-dashed border-gray-40 h-[250px]">
+                    <div
+                        className="flex items-center justify-center w-10 h-10 border-2 border-dashed border-gray-400 rounded-full transition duration-300"
+                    >
+                      <FaPlus className="text-gray-400 text-2xl"/>
+                    </div>
+                  </div>
+                </button>
+                {appointments.length > 0 ? (
+                    appointments.map((appointment, index) => (
+                        <div
+                            key={index}
+                            className="border border-gray p-4 rounded-lg relative"
+                        >
+                          <div className="flex justify-between text-gray-700">
+                            <p className="font-light text-gray-400">
+                              <strong>Name</strong>
                             </p>
-                            <p className="font-light mx-5">
-                              {new Date(appointment.date).toLocaleDateString(
-                                  "en-US",
-                                  {
-                                    weekday: "short",
-                                    day: "numeric",
-                                    month: "short",
-                                  }
-                              )}
-                            </p>
+                            <p className="text-gray-700">{appointment.patientName}</p>
                           </div>
-                          <div>
+                          <div className="flex justify-between text-gray-700">
+                            <p className="font-light text-gray-400">
+                              <strong>Student ID</strong>
+                            </p>
+                            <p className="text-gray-700">{appointment.studentId}</p>
+                          </div>
+                          <hr className="my-5 border-gray-300 border-dashed"/>
+                          <div className="flex justify-between items-center text-gray-700">
+                            <div>
+                              <p className="font-light">
+                                <FaClock className="inline-block mr-1 text-black-100"/>{" "}
+                                {appointment.time}
+                              </p>
+                              <p className="font-light mx-5">
+                                {appointment.date}
+
+                              </p>
+                            </div>
                             <button
                                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
                                 onClick={() => handleExamine(appointment)}
@@ -255,126 +296,134 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
                               Examine
                             </button>
                           </div>
-                        </div>
-                        <hr className="my-5 border-gray-300 border-dashed"/>
+                          <hr className="my-5 border-gray-300 border-dashed"/>
 
-                        <div className="flex justify-between items-center mt-4">
-                          {/* Status*/}
-                          <p
-                              className={`text-sm font-semibold ${
-                                  appointment.appointment_status === "APPROVED" ? "text-green-500" : "text-gray-700"
-                              }`}
-                          >
-                            {appointment.appointment_status}
+                          <div className="flex justify-between items-center mt-4">
+                            {/* Status */}
+                            <p
+                                className={`text-sm font-semibold ${
+                                    appointment.appointment_status === "APPROVED"
+                                        ? "text-blue-500"
+                                        : appointment.appointment_status === "CANCELLED"
+                                            ? "text-red-500"
+                                            : "text-green-500"
+                                }`}
+                            >
+                              {appointment.appointment_status}
+                            </p>
+
+
+                            {/* Edit */}
+                            <button
+                                className="text-orange-500 font-medium cursor-pointer hover:underline"
+                                onClick={() => handleEditClick(appointment.appointment_id)}
+                            >
+                              Edit
+                            </button>
+
+                            {/* Pop-up Edit */}
+                            {activeEditPopup === appointment.appointment_id && (
+                                <div className="absolute right-0 mt-2 w-60 bg-white border border-gray-300 shadow-md rounded-md p-4 z-50">
+                                  <button
+                                      className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+                                      onClick={() => setActiveEditPopup(null)}
+                                  >
+                                    <FaTimes size={20} />
+                                  </button>
+
+                                  {editingAppointment &&
+                                  editingAppointment.appointment_id === appointment.appointment_id ? (
+                                      <div>
+                                        <label className="block text-gray-600 font-medium mb-2">New Appointment
+                                          Time</label>
+                                        <input
+                                            type="datetime-local"
+                                            value={newDateTime}
+                                            onChange={(e) => setNewDateTime(e.target.value)}
+                                            min={new Date().toISOString().slice(0, 16)}
+                                            className="block w-full px-4 py-2 border rounded-md mb-4"
+                                        />
+
+
+                                        <button
+                                            onClick={handleSaveDateTime}
+                                            className="w-full text-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+                                        >
+                                          Save
+                                        </button>
+
+                                        <button
+                                            onClick={() => setEditingAppointment(null)}
+                                            className="w-full text-center px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400 transition mt-2"
+                                        >
+                                          Cancel
+                                        </button>
+                                      </div>
+                                  ) : (
+                                      <>
+                                        <button
+                                            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                            onClick={() => handleEditAppointment(appointment)}
+                                        >
+                                          Edit Appointment
+                                        </button>
+                                        <button
+                                            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                            onClick={() => handleCancelAppointment(appointment.appointment_id)}
+                                        >
+                                          Cancel Appointment
+                                        </button>
+                                      </>
+                                  )}
+                                </div>
+                            )}
+
+
+                          </div>
+                        </div>
+                    ))
+                ) : (
+                    <div
+                        className="ml-72 mr-32 mb-20 z-20 height-80 flex items-center justify-center"
+                        style={{
+                          width: "calc(66.6667% - 90px)",
+                        }}
+                    >
+                      {/*/!* Left Section *!/*/}
+                      <div className="flex flex-col items-center justify-center space-x-8 ml-26 mt-8">
+                        <div className="justify-center">
+                          <p className="text-xl font-semibold text-orange-300 whitespace-nowrap">
+                            You have no appointment today
                           </p>
-
-                          {/* Edit */}
-                          <button
-                              className="text-orange-500 font-medium cursor-pointer hover:underline"
-                              onClick={() => handleEditClick(appointment.appointment_id)}
-                          >
-                            Edit
-                          </button>
-
-                          {/* Pop-up */}
-                          {activeEditPopup === appointment.appointment_id && (
-                              <div
-                                  className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 shadow-md rounded-md z-50"
-                              >
-                                <button
-                                    className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
-                                    onClick={() => setActiveEditPopup(null)}
-                                >
-                                  <FaTimes size={20}/>
-                                </button>
-
-                                <button
-                                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                    onClick={() => handleEditAppointment(appointment)}
-                                >
-                                  Edit Appointment
-                                </button>
-                                <button
-                                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                    onClick={() => handleCancelAppointment(appointment.appointment_id)}
-                                >
-                                  Cancel
-                                </button>
-                              </div>
-                          )}
+                          <p className="text-md ml-10 text-gray-300 whitespace-nowrap">
+                            Keep calm and have a rest day
+                          </p>
                         </div>
-
+                        {/*      <img*/}
+                        {/*  src={assets.restday} // Replace with your image path*/}
+                        {/*  alt="No appointments"*/}
+                        {/*  className="w-56 h-56 gap-4"*/}
+                        {/*/>*/}
                       </div>
-                  ))
-              ) : (
-                  <div
-                      className="ml-72 mr-32 mb-20 z-20 height-80 flex items-center justify-center"
-                      style={{
-                        width: "calc(66.6667% - 90px)",
-                      }}
-                  >
-                    {/* Left Section */}
-                    <div className="flex flex-col space-x-8 flexCenter ml-96 ">
-                      <div className="justify-center items-center">
-                        <p className="text-xl font-semibold text-orange-300 whitespace-nowrap">
-                          You have no appointment today
-                        </p>
-                        <p className="text-md ml-10 text-gray-300 whitespace-nowrap ">
-                          Keep calm and have a rest day
-                        </p>
-                      </div>
-                      <img
-                          src="src/assets/rb_16294.png" // Replace with your image path
-                          alt="No appointments"
-                          className="w-56 h-56 gap-4"
-                      />
                     </div>
-                  </div>
-              )}
-            </div>
-          </div>
+                )}
 
-          {editingAppointment && (
-              <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-30">
-                <div className="bg-white rounded-lg shadow-xl p-7 w-full max-w-lg mx-4 md:mx-0 md:w-1/2">
-
-                  <h3 className="text-2xl mt-4 font-semibold text-center text-gray-600 w-full mb-4">
-                    Edit Appointment
-                  </h3>
-                  <div className="mb-8">
-                    <label
-                        htmlFor="datetime"
-                        className="tblock mb-2 font-medium text-blue-800 mt-4"
-                    >
-                      New Date and Time:
-                    </label>
-                    <input
-                        type="datetime-local"
-                        id="datetime"
-                        className="w-full py-2 px-1 pl-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={newDateTime}
-                        onChange={(e) => setNewDateTime(e.target.value)}
-                    />
-                  </div>
-                  <div className="flex justify-end space-x-2">
-                    <button
-                        className="bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400 transition"
-                        onClick={() => setEditingAppointment(null)}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                        onClick={handleSaveDateTime}
-                    >
-                      Save
-                    </button>
-                  </div>
-                </div>
               </div>
-          )}
+
+            </div>
+
+            {/* Search Form */}
+            <SearchForm
+                isOpen={showSearchPopup}
+                onClose={() => setShowSearchPopup(false)}
+            />
+          </div>
         </div>
-      </motion.div>
+
+
+        <ToastContainer />
+      </div>
+
   );
 };
 Appointment.propTypes = {

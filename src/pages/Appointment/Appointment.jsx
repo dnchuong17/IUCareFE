@@ -99,13 +99,15 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
   const handleEditAppointment = (appointment) => {
     setEditingAppointment(appointment);
     setNewDateTime("");
-    setActiveEditPopup(null);
+    setActiveEditPopup(appointment.appointment_id);
   };
+
 
 
   const handleSaveDateTime = async () => {
     if (!newDateTime) {
-      toast.info("No records found for this patient.");      return;
+      toast.info("Please select a new date and time.");
+      return;
     }
 
     try {
@@ -135,20 +137,15 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
           )
       );
 
-
       setEditingAppointment(null);
-      toast.success("Appointment time updated successfully."),
-          {
-            autoclose: 1000,
-          };
+      setActiveEditPopup(null);
+      toast.success("Appointment updated successfully.");
     } catch (error) {
-      console.error(
-          "Error updating appointment:",
-          error.response?.data || error.message
-      );
+      console.error("Error updating appointment:", error);
       toast.error("Failed to update appointment. Please try again.");
     }
   };
+
 
   const handleCancelAppointment = async (appointmentId) => {
     try {
@@ -304,32 +301,59 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
 
                             {/* Pop-up Edit */}
                             {activeEditPopup === appointment.appointment_id && (
-                                <div
-                                    className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 shadow-md rounded-md z-50">
+                                <div className="absolute right-0 mt-2 w-60 bg-white border border-gray-300 shadow-md rounded-md p-4 z-50">
                                   <button
                                       className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
                                       onClick={() => setActiveEditPopup(null)}
                                   >
-                                    <FaTimes size={20}/>
+                                    <FaTimes size={20} />
                                   </button>
 
-                                  <button
-                                      className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                      onClick={() => handleEditAppointment(appointment)}
-                                  >
-                                    Edit Appointment
-                                  </button>
-                                  <button
-                                      className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                      onClick={() =>
-                                          handleCancelAppointment(appointment.appointment_id)
-                                      }
-                                  >
-                                    Cancel
-                                  </button>
+                                  {editingAppointment &&
+                                  editingAppointment.appointment_id === appointment.appointment_id ? (
+                                      <div>
+                                        <label className="block text-gray-600 font-medium mb-2">New Appointment Time</label>
+                                        <input
+                                            type="datetime-local"
+                                            value={newDateTime}
+                                            onChange={(e) => setNewDateTime(e.target.value)}
+                                            className="block w-full px-4 py-2 border rounded-md mb-4"
+                                        />
+
+                                        <button
+                                            onClick={handleSaveDateTime}
+                                            className="w-full text-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+                                        >
+                                          Save
+                                        </button>
+
+                                        <button
+                                            onClick={() => setEditingAppointment(null)}
+                                            className="w-full text-center px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400 transition mt-2"
+                                        >
+                                          Cancel
+                                        </button>
+                                      </div>
+                                  ) : (
+                                      <>
+                                        <button
+                                            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                            onClick={() => handleEditAppointment(appointment)}
+                                        >
+                                          Edit Appointment
+                                        </button>
+                                        <button
+                                            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                            onClick={() => handleCancelAppointment(appointment.appointment_id)}
+                                        >
+                                          Cancel Appointment
+                                        </button>
+                                      </>
+                                  )}
                                 </div>
-
                             )}
+
+
                           </div>
                         </div>
                     ))
@@ -370,6 +394,8 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
             />
           </div>
         </div>
+
+
         <ToastContainer />
       </div>
 

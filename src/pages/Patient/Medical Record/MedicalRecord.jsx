@@ -292,7 +292,7 @@ const MedicalRecord = () => {
                       name="patient_name"
                       value={formData.patient_name}
                       readOnly
-                      className="border border-gray-400 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-gray-500 bg-gray-300"
+                      className="border border-gray-400 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-gray-500 bg-gray-200"
                       placeholder="Patient name will appear here"
                   />
                 </div>
@@ -305,7 +305,7 @@ const MedicalRecord = () => {
                       name="doctor_name"
                       value={formData.doctor_name}
                       readOnly
-                      className="border border-blue-400 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-gray-500 bg-gray-300"
+                      className="border border-blue-400 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-gray-500 bg-gray-200"
                       placeholder="Doctor name will appear here"
                   />
                 </div>

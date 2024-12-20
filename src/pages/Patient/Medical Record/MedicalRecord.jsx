@@ -515,21 +515,21 @@ const MedicalRecord = () => {
                                     ? latestRecord.name_medicine.join(", ")
                                     : "No medicines prescribed."}
                               </p>
-                              <p className="text-gray-700">
-                                <strong>Patient Name:</strong> {latestRecord.patient_name || "N/A"}
-                              </p>
-                              <p className="text-gray-700">
-                                <strong>Student ID:</strong> {latestRecord.student_id || "N/A"}
-                              </p>
-                              <p className="text-gray-700">
-                                <strong>Patient Address:</strong> {latestRecord.patient_address || "N/A"}
-                              </p>
-                              <p className="text-gray-700">
-                                <strong>Patient Phone:</strong> {latestRecord.patient_phone || "N/A"}
-                              </p>
-                              <p className="text-gray-700">
-                                <strong>Allergy:</strong> {latestRecord.allergy || "N/A"}
-                              </p>
+                              {/*<p className="text-gray-700">*/}
+                              {/*  <strong>Patient Name:</strong> {latestRecord.patient_name || "N/A"}*/}
+                              {/*</p>*/}
+                              {/*<p className="text-gray-700">*/}
+                              {/*  <strong>Student ID:</strong> {latestRecord.student_id || "N/A"}*/}
+                              {/*</p>*/}
+                              {/*<p className="text-gray-700">*/}
+                              {/*  <strong>Patient Address:</strong> {latestRecord.patient_address || "N/A"}*/}
+                              {/*</p>*/}
+                              {/*<p className="text-gray-700">*/}
+                              {/*  <strong>Patient Phone:</strong> {latestRecord.patient_phone || "N/A"}*/}
+                              {/*</p>*/}
+                              {/*<p className="text-gray-700">*/}
+                              {/*  <strong>Allergy:</strong> {latestRecord.allergy || "N/A"}*/}
+                              {/*</p>*/}
                             </>
                         ) : (
                             <p className="text-gray-500">No previous records found.</p>

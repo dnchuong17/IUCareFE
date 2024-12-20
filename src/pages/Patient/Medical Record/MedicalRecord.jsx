@@ -498,7 +498,7 @@ const MedicalRecord = () => {
                                 <strong>Medical Record ID:</strong> {latestRecord.medical_record_id || "N/A"}
                               </p>
                               <p className="text-gray-700">
-                                <strong>Date:</strong> {new Date(latestRecord.date).toLocaleString() || "N/A"}
+                                <strong>Date:</strong> {new Date(latestRecord.appointment_time).toLocaleString() || "N/A"}
                               </p>
                               <p className="text-gray-700">
                                 <strong>Diagnosis:</strong> {latestRecord.diagnosis || "N/A"}

@@ -34,10 +34,10 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
     }
   }, [selectedDate]);
 
-  const fetchAllAppointments = async () => {
+  const fetchAllAppointments = async (date) => {
     try {
-      const response = await api.getAllAppointments();
-      const appointmentsArray = response.appointments || [];
+      const response = await api.getAppointment(date);
+      const appointmentsArray = response.appointment|| [];
       setAppointments(appointmentsArray);
 
       const days = appointmentsArray.map(
@@ -52,6 +52,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
   };
 
   const fetchAppointmentsForDay = async (date) => {
+    console.log(date);
     try {
       const response = await api.getAppointment(date);
       const appointmentsArray = response || [];
@@ -215,12 +216,28 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
 
 
   const handleExamine = (appointment) => {
-    if (appointment.isPastAppointment) {
-      // appointment time has passed
+    const currentTime = new Date(); // Thời gian hiện tại
+    const appointmentTime = new Date(appointment.time); // Giả sử appointment.time là thời gian của lịch hẹn
+    const timeDifference = appointmentTime - currentTime; // Khoảng cách thời gian
+
+    const FIFTEEN_MINUTES = 15 * 60 * 1000; // 15 phút tính bằng milliseconds
+
+    if (appointment.isPastAppointment || (timeDifference > 0 && timeDifference <= FIFTEEN_MINUTES)) {
+      // Thời gian đã qua hoặc gần với thời gian khám
       navigate("/medicalRecord", { state: { appointment } });
-    } else {
-      //appointment time has not passed
+    } else if (timeDifference > FIFTEEN_MINUTES) {
+      // Thời gian chưa gần tới giờ khám
       toast.info("You cannot access the medical record before the appointment time", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } else {
+      // Thời gian đã qua (không cần điều kiện đặc biệt ở đây vì đã xử lý trong if đầu tiên)
+      toast.error("The appointment time has already passed.", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -230,6 +247,7 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
       });
     }
   };
+
 
 
 

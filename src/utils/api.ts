@@ -10,7 +10,7 @@ export class Api {
 
     constructor() {
         this.axiosObject = axios.create({
-            baseURL: "https://iucarebe-production.up.railway.app",
+            baseURL: "http://localhost:2024",
             withCredentials: true,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -161,9 +161,10 @@ export class Api {
     }
 
 
-    async getAppointment(date: Date) {
+    async getAppointment(date: Date, doctorId: number) {
+        console.log("DoctorId: ", doctorId);
         try {
-            const response = await this.axiosObject.get(`/appointment/check`, {
+            const response = await this.axiosObject.get(`/appointment/check/${doctorId}`, {
                 params: { date },
             });
             console.log(response.data)

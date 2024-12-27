@@ -10,7 +10,7 @@ export class Api {
 
     constructor() {
         this.axiosObject = axios.create({
-            baseURL: "http://localhost:2024",
+            baseURL: "https://iucarebe-production.up.railway.app",
             withCredentials: true,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

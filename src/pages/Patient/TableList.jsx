@@ -1,10 +1,11 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { FiSearch } from "react-icons/fi";
 import { IoPerson } from "react-icons/io5";
 import Sidebar from "../../components/Sidebar.jsx";
 import { Api } from "../../utils/api.ts";
 import { toast } from "react-toastify";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import appointment from "../Home/Appointment.jsx";
 
 const TableList = () => {
   const [patientsCount, setPatientsCount] = useState(0);
@@ -12,17 +13,20 @@ const TableList = () => {
   const [loading, setLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [patientRecords, setPatientRecords] = useState([]);
-  const [ setSelectedPatientInfo] = useState(null);
+  const [selectedPatientInfo, setSelectedPatientInfo] = useState(null);
+  const [appointmentId, setAppointmentId] = useState("");
   const navigate = useNavigate();
   const api = useMemo(() => new Api(), []);
 
-// Fetch patient records by patientId
+  // Fetch patient records by patientId
   const fetchPatientRecords = async (patientId) => {
     setLoading(true);
     try {
       if (!patientId) {
         console.error("Patient ID is undefined.");
-        toast.error("Failed to fetch patient records due to missing Patient ID.");
+        toast.error(
+            "Failed to fetch patient records due to missing Patient ID."
+        );
         return;
       }
 
@@ -40,7 +44,8 @@ const TableList = () => {
       // Format records for display
       const formattedRecords = records.map((record, index) => {
         const dateTime = record.date || "N/A";
-        const [date, time] = dateTime !== "N/A" ? dateTime.split("T") : ["N/A", "N/A"];
+        const [date, time] =
+            dateTime !== "N/A" ? dateTime.split("T") : ["N/A", "N/A"];
         const formattedTime = time ? time.split(".")[0] : "N/A";
 
         console.log("Appointment ID:", record.appointment_id);
@@ -67,8 +72,6 @@ const TableList = () => {
       setLoading(false);
     }
   };
-
-
 
   // Fetch patient suggestions based on query
   const fetchPatientSuggestions = async (query) => {
@@ -145,7 +148,6 @@ const TableList = () => {
     }
   };
 
-
   const handleViewDetail = async (appointmentId) => {
     if (!appointmentId || appointmentId === "N/A") {
       toast.error("No appointment ID available for this record.");
@@ -165,8 +167,6 @@ const TableList = () => {
     }
   };
 
-
-
   return (
       <div className="flex min-h-screen">
         <div className="w-1/5">
@@ -180,7 +180,9 @@ const TableList = () => {
                   <IoPerson className="h-8 w-8 text-blue-600" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-semibold text-gray-800">Patients</h1>
+                  <h1 className="text-2xl font-semibold text-gray-800">
+                    Patients
+                  </h1>
                   <p className="text-gray-500 text-base">{patientsCount}</p>
                 </div>
               </div>
@@ -217,22 +219,35 @@ const TableList = () => {
                 <thead>
                 <tr className="bg-blue-100">
                   <th className="px-6 py-4 text-gray-700 font-semibold">No.</th>
-                  <th className="px-6 py-4 text-gray-700 font-semibold">Date</th>
-                  <th className="px-6 py-4 text-gray-700 font-semibold">Time</th>
-                  <th className="px-6 py-4 text-gray-700 font-semibold">Diagnosis</th>
-                  <th className="px-6 py-4 text-gray-700 font-semibold">Treatment</th>
-                  <th className="px-6 py-4 text-gray-700 font-semibold">View Detail</th>
+                  <th className="px-6 py-4 text-gray-700 font-semibold">
+                    Date
+                  </th>
+                  <th className="px-6 py-4 text-gray-700 font-semibold">
+                    Time
+                  </th>
+                  <th className="px-6 py-4 text-gray-700 font-semibold">
+                    Diagnosis
+                  </th>
+                  <th className="px-6 py-4 text-gray-700 font-semibold">
+                    Treatment
+                  </th>
+                  <th className="px-6 py-4 text-gray-700 font-semibold">
+                    View Detail
+                  </th>
                 </tr>
                 </thead>
                 <tbody>
                 {loading ? (
                     <tr>
-                      <td colSpan="6" className="text-center py-10 text-gray-500 italic">
+                      <td
+                          colSpan="6"
+                          className="text-center py-10 text-gray-500 italic"
+                      >
                         Loading...
                       </td>
                     </tr>
                 ) : patientRecords.length > 0 ? (
-                    patientRecords.map((record) => (
+                    patientRecords.map((record, index) => (
                         <tr key={record.no} className="border-b">
                           <td className="px-6 py-4">{record.no}</td>
                           <td className="px-6 py-4">{record.date}</td>
@@ -251,14 +266,15 @@ const TableList = () => {
                     ))
                 ) : (
                     <tr>
-                      <td colSpan="6" className="text-center py-10 text-gray-500 italic">
+                      <td
+                          colSpan="6"
+                          className="text-center py-10 text-gray-500 italic"
+                      >
                         No medical records available
                       </td>
                     </tr>
                 )}
                 </tbody>
-
-
               </table>
             </div>
           </div>

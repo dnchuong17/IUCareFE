@@ -36,8 +36,25 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
 
   const fetchAllAppointments = async (date) => {
     try {
-      const response = await api.getAppointment(date);
-      const appointmentsArray = response.appointment|| [];
+      // Retrieve doctor account from local storage
+      const account = localStorage.getItem("account");
+      if (!account) {
+        console.error("Doctor account not found in local storage.");
+        return;
+      }
+
+      // Fetch the doctor by account to get the doctor_id
+      const doctorResponse = await api.getDoctorByAccount(account);
+      const doctorId = doctorResponse?.doctor_id; // Use `doctor_id` from the response
+
+      if (!doctorId) {
+        console.error("Doctor ID not found for the account:", account);
+        return;
+      }
+
+      // Fetch appointments using the doctor_id
+      const response = await api.getAppointment(date, doctorId);
+      const appointmentsArray = response.appointment || [];
       setAppointments(appointmentsArray);
 
       const days = appointmentsArray.map(
@@ -51,10 +68,29 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
     }
   };
 
+
+
   const fetchAppointmentsForDay = async (date) => {
     console.log(date);
     try {
-      const response = await api.getAppointment(date);
+      // Retrieve doctor account from local storage
+      const account = localStorage.getItem("account");
+      if (!account) {
+        console.error("Doctor account not found in local storage.");
+        return;
+      }
+
+      // Fetch the doctor by account to get the doctor_id
+      const doctorResponse = await api.getDoctorByAccount(account);
+      const doctorId = doctorResponse?.doctor_id; // Use `doctor_id` from the response
+
+      if (!doctorId) {
+        console.error("Doctor ID not found for the account:", account);
+        return;
+      }
+
+      // Fetch appointments for the specific day using the doctor_id
+      const response = await api.getAppointment(date, doctorId);
       const appointmentsArray = response || [];
 
       if (Array.isArray(appointmentsArray)) {
@@ -92,6 +128,9 @@ const Appointment = ({ selectedDate, onDaysWithAppointmentsChange }) => {
       console.error("Error fetching appointments for the day:", error);
     }
   };
+
+
+
 
 
 
